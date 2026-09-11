@@ -2,7 +2,7 @@
 :root {
   --bg: #f7f7f2;
   --ink: #242620;
-  --muted: #767970;
+  --muted: #6b6f64;
   --border: #dddfd6;
   --accent: #bd4c2a;
   --panel: #fff;
@@ -1644,7 +1644,7 @@ a:hover > span {
     }
     @keyframes section-reveal {
       from {
-        opacity: 0.4;
+        opacity: 1;
         transform: translateY(12px);
       }
       to {
