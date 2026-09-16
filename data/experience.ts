@@ -1,23 +1,45 @@
 export const experience = [
   {
-    period: "2023 — PRESENT",
-    role: "Senior Software Engineer",
-    company: "Forma",
+    period: "JAN 2023 — PRESENT",
+    role: "Senior Full Stack Engineer",
+    company: "ROLI",
     detail:
-      "Building the tools that help independent businesses thrive. Leading full-stack delivery, from early product decisions to reliable services.",
+      "Broad engineering ownership of roli.com, connecting product discovery, purchase, and onboarding on a unified multi-region platform.",
+    highlights: [
+      "Merged two storefronts into a full-stack, multi-region application using TypeScript, React, Next.js, and Node.js.",
+      "Built Node.js, Express, and MongoDB APIs for self-service order history, reducing support tickets for order lookups.",
+      "Integrated Shopify, Stripe, Klarna, and PayPal, including the data access layer and error handling for payment flows.",
+      "Led the Japanese market rollout with edge-based location detection, localised checkout, and controls for APPI and COPPA requirements.",
+      "Delivered multi-step onboarding for the CASIO partnership and improved loading performance, inventory updates, and cart state management.",
+      "Reduced Cypress end-to-end test duration by 80% through CI/CD parallelisation and resolved indexing and crawling issues from technical SEO audits.",
+      "Built agent-assisted tools for sprint tickets, account provisioning, and pull requests, and lead a collaborative AI workshop for developers.",
+    ],
   },
   {
-    period: "2020 — 2023",
-    role: "Software Engineer",
-    company: "Layers",
+    period: "MAR 2021 — DEC 2022",
+    role: "Software Engineer & Team Lead",
+    company: "OLR",
     detail:
-      "Helped a small team grow a collaborative workspace. Built core product features and simplified the systems behind them.",
+      "Built HAWK from the ground up, giving retailers a central view of point-of-sale systems. Led and mentored four engineers across frontend, backend, and deployment.",
+    highlights: [
+      "Took HAWK from an initial idea to production, working directly with senior leadership, enterprise clients, and product managers.",
+      "Built operational dashboards with React and Next.js, backed by Node.js services and InfluxDB telemetry.",
+      "Delivered REST APIs with session-token authentication, OpenAPI documentation, and tuned InfluxDB and SQL queries.",
+      "Managed four engineers, sprint planning, retrospectives, code reviews, and staging and production deployments.",
+      "Configured distributed-server alerts using Kapacitor and PowerShell to detect failures before customer outages.",
+      "Worked with principal architects on high availability and automated cloud deployment using AWS, Terraform, Jenkins, and Nginx.",
+    ],
   },
   {
-    period: "2018 — 2020",
+    period: "JAN — MAR 2019",
     role: "Software Engineer",
-    company: "Studio North",
+    company: "Pirical",
     detail:
-      "Turned ambitious briefs into accessible, fast web applications for early-stage teams.",
+      "Built APIs and a client analytics interface for a legal analytics platform, alongside a responsive company website.",
+    highlights: [
+      "Built and deployed a Node.js REST API to OpenAPI specifications.",
+      "Developed an AngularJS and Node.js analytics interface for large legal datasets.",
+      "Redesigned the company website for mobile and desktop using HTML, CSS, and JavaScript.",
+    ],
   },
 ];

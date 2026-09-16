@@ -1694,32 +1694,327 @@ a:hover > span {
 }
 
 /* Personal identity: full-name wrapping and a quiet, optional editorial portrait. */
-html { scrollbar-color: var(--muted) var(--bg); }
-body { caret-color: var(--accent); }
-h1, h2 { text-wrap: balance; }
-.hero h1 { font-size: clamp(3rem, 6.9vw, 6rem); letter-spacing: -.04em; margin-top: 0; }
-.cv-header h1 { font-size: clamp(2.25rem, 5vw, 4rem); letter-spacing: -.035em; overflow-wrap: anywhere; }
-nav { font-size: .875rem; }
-nav a { min-height: 44px; display: inline-flex; align-items: center; }
-.theme-toggle { min-height: 44px; min-width: 44px; display: grid; place-items: center; }
-.hero-bottom p, .about-copy > p, .case-body section p { font-size: 1rem; }
-.project-copy p, .experience-list p { font-size: .875rem; }
-.hero-links, .case-link, .section-intro a, .about-copy > a, .socials { font-size: .875rem; }
-.hero-baseline { font-variant-numeric: tabular-nums; }
-.portrait { margin: 32px 0 0; max-width: 320px; }
-.portrait img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
-.portrait figcaption { font-size: .75rem; color: var(--muted); margin-top: 12px; }
-@media (max-width: 700px) {
-  .site-header { height: auto; padding-top: 25px; padding-bottom: 18px; display: block; }
-  .wordmark { font-size: 1.125rem; letter-spacing: -.03em; }
-  .site-header nav { margin-top: 14px; justify-content: space-between; gap: 10px; font-size: .875rem; }
-  .theme-toggle { padding-left: 10px; }
-  .hero { padding-top: 32px; }
-  .hero h1 { font-size: clamp(2.45rem, 9.3vw, 4rem); }
-  .project-name { flex-wrap: wrap; row-gap: 8px; }
-  .case-link { margin-left: 32px; }
-  .portrait { max-width: 280px; }
-  .cv-header h1 { font-size: clamp(2.15rem, 8vw, 3rem); }
+html {
+  scrollbar-color: var(--muted) var(--bg);
 }
-@media print { .cv-header h1 { font-size: 30px; letter-spacing: -.035em; } }
-@media print { .experience-list p { font-size: 10px; } }
+body {
+  caret-color: var(--accent);
+}
+h1,
+h2 {
+  text-wrap: balance;
+}
+.hero h1 {
+  font-size: clamp(3rem, 6.9vw, 6rem);
+  letter-spacing: -0.04em;
+  margin-top: 0;
+}
+.cv-header h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+nav {
+  font-size: 0.875rem;
+}
+nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.theme-toggle {
+  min-height: 44px;
+  min-width: 44px;
+  display: grid;
+  place-items: center;
+}
+.hero-bottom p,
+.about-copy > p,
+.case-body section p {
+  font-size: 1rem;
+}
+.project-copy p,
+.experience-list p {
+  font-size: 0.875rem;
+}
+.hero-links,
+.case-link,
+.section-intro a,
+.about-copy > a,
+.socials {
+  font-size: 0.875rem;
+}
+.hero-baseline {
+  font-variant-numeric: tabular-nums;
+}
+.portrait {
+  margin: 32px 0 0;
+  max-width: 320px;
+}
+.portrait img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+}
+.portrait figcaption {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 12px;
+}
+@media (max-width: 700px) {
+  .site-header {
+    height: auto;
+    padding-top: 25px;
+    padding-bottom: 18px;
+    display: block;
+  }
+  .wordmark {
+    font-size: 1.125rem;
+    letter-spacing: -0.03em;
+  }
+  .site-header nav {
+    margin-top: 14px;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.875rem;
+  }
+  .theme-toggle {
+    padding-left: 10px;
+  }
+  .hero {
+    padding-top: 32px;
+  }
+  .hero h1 {
+    font-size: clamp(2.45rem, 9.3vw, 4rem);
+  }
+  .project-name {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .case-link {
+    margin-left: 32px;
+  }
+  .portrait {
+    max-width: 280px;
+  }
+  .cv-header h1 {
+    font-size: clamp(2.15rem, 8vw, 3rem);
+  }
+}
+@media print {
+  .cv-header h1 {
+    font-size: 30px;
+    letter-spacing: -0.035em;
+  }
+}
+@media print {
+  .experience-list p {
+    font-size: 10px;
+  }
+}
+
+/* Real work: diagrams describe supplied systems rather than invented interfaces. */
+.work-diagram {
+  min-height: 390px;
+  padding: 52px;
+  background: #e2e7ea;
+  color: #26352f;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.work-diagram.agents {
+  background: #e9e3d8;
+  color: #433d31;
+}
+.diagram-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+}
+.diagram-title strong {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+.diagram-title > span {
+  font-size: 0.875rem;
+}
+.diagram-flow {
+  display: flex;
+  align-items: center;
+  margin: 55px 0;
+}
+.diagram-flow > div {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.diagram-step {
+  border-top: 1px solid currentColor;
+  padding-top: 20px;
+  font-size: clamp(1rem, 1.7vw, 1.4rem);
+  flex: 1;
+}
+.diagram-arrow {
+  padding: 0 24px;
+  font-size: 24px;
+}
+.work-diagram > p {
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.7;
+}
+.experience-highlights {
+  padding-left: 18px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 18px;
+}
+.experience-highlights li + li {
+  margin-top: 10px;
+}
+.education + .education {
+  margin-top: 28px;
+}
+.education > div {
+  flex: 1;
+}
+.education p {
+  line-height: 1.7;
+}
+.education .mono {
+  flex: 0 0 145px;
+}
+.skills-grid p {
+  font-size: 0.8125rem;
+  line-height: 1.8;
+}
+.skills-grid h3 {
+  font-size: 0.875rem;
+}
+.hero-bottom p {
+  max-width: 450px;
+}
+.status {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+.status small {
+  font-size: 0.75rem;
+}
+.status-dot {
+  margin-top: 7px;
+}
+.project-name .mono {
+  font-size: 0.6875rem;
+}
+.project-role,
+.tech {
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+.project-name {
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+.portrait {
+  max-width: 350px;
+}
+.portrait img {
+  aspect-ratio: 700 / 933;
+}
+.contact .email {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .work-diagram {
+    min-height: 365px;
+    padding: 28px;
+  }
+  .diagram-title {
+    display: block;
+  }
+  .diagram-title > span {
+    display: block;
+    margin-top: 10px;
+  }
+  .diagram-flow {
+    display: block;
+    margin: 30px 0;
+  }
+  .diagram-flow > div {
+    display: block;
+  }
+  .diagram-step {
+    display: block;
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+  .diagram-arrow {
+    display: none;
+  }
+  .education {
+    display: block;
+  }
+  .education > .mono {
+    display: block;
+    margin-bottom: 12px;
+  }
+  .project-name .mono {
+    font-size: 0.625rem;
+  }
+  .project-role,
+  .tech {
+    font-size: 0.6875rem;
+  }
+  .portrait {
+    max-width: 100%;
+  }
+  .email {
+    font-size: clamp(0.875rem, 4.7vw, 1.25rem);
+  }
+  .status {
+    margin-top: 32px;
+  }
+  .experience-section .experience-list article {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+@media print {
+  .cv-section,
+  .experience-list article {
+    break-inside: auto;
+  }
+  .experience-list h3,
+  .cv-section > h2 {
+    break-after: avoid;
+  }
+  .experience-highlights {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .experience-highlights li {
+    break-inside: avoid;
+  }
+  .experience-highlights li + li {
+    margin-top: 5px;
+  }
+  .skills-grid p {
+    font-size: 10px;
+  }
+}
+.experience-highlights {
+  list-style: disc;
+}
+.screenshot-stage {
+  aspect-ratio: 16 / 10;
+}
+.screenshot-stage img {
+  object-fit: contain;
+}

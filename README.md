@@ -1,37 +1,27 @@
-# A considered portfolio
+# Otis Vickers-Graver — portfolio
 
-A complete Next.js App Router portfolio with TypeScript, Tailwind CSS, self-hosted Inter and IBM Plex Mono, and static export. Server Components render the content; the theme toggle and print action are the only application client components. No Framer Motion dependency is needed for the restrained CSS interactions.
+Next.js App Router, TypeScript, Tailwind CSS, self-hosted Inter and IBM Plex Mono, and a static export. Content is based on the owner's supplied CV and notes (September 2026).
 
-## Replace the sample content
+## Content
 
-**Start in `data/`.** Otis Vickers-Graver is the supplied owner name. The employers, education, career history, biography, location, and projects remain illustrative placeholders, not verified claims about the owner. The profile links currently lead to the GitHub and LinkedIn homepages; replace them with your own accounts. The contact email uses the reserved example.com domain. Project case studies label their outcomes as illustrative rather than inventing metrics.
+- `data/profile.ts`: identity, contact links, summary, biography, portrait, skills, and education. The six-year experience summary follows the owner's newer notes; the original CV says over five years.
+- `data/experience.ts`: dated roles, concise homepage descriptions, and detailed HTML CV highlights.
+- `data/projects.ts`: ROLI, HAWK, and agentic-workflow case studies. All claims are grounded in the supplied material. No invented metrics or unconfirmed personal reflections are included.
+- `public/otis-vickers-graver-cv.pdf`: byte-for-byte copy of the owner's supplied PDF, downloaded from the CV actions. The HTML CV is a concise web adaptation and includes newer notes.
+- `public/otis-headshot.webp`: optimized copy of the supplied headshot. Adjust `profile.headshot.position` for its crop.
+- GitHub is intentionally omitted until the owner supplies a profile URL. LinkedIn and email use the supplied CV.
 
-- `data/profile.ts`: name, initials, title, three-line headline, intro, location, availability, current role, email, social URLs, site URL, CV PDF path, biography, education, and grouped skills.
-- Headshot: add the supplied portrait to `public/` and set `profile.headshot.src`, `alt`, and `position`. Until a real photo is supplied, no placeholder portrait is displayed.
-- `data/experience.ts`: chronological roles and descriptions.
-- `data/projects.ts`: project metadata and all six case-study sections. Add optional `github` and `liveUrl` fields to display external links. Omit them when no real destination exists.
-- For a real screenshot, put an optimized WebP/AVIF in `public/projects/`, then set `screenshot: '/projects/your-project.webp'` and `screenshotAlt`. The supplied WebP images are captures of purpose-built HTML/CSS concept mockups. With no screenshot, the original mockup is displayed. Screenshots use Next Image with explicit dimensions; static hosting does not run a dynamic image optimizer, so compress source files before adding them.
-- Replace `public/otis-vickers-graver-cv.pdf` with your PDF, or use `/cv` → Print CV → Save as PDF after updating content. Set `profile.cvPdf` to the new path. The supplied PDF is a snapshot, not regenerated automatically when content changes.
-- Update `public/favicon.svg` and the footer mark for your own initials.
+Work visuals are labelled system/workflow diagrams where no actual screenshot was supplied. Add an optimized image to `public/projects/` and set a project's `screenshot`, `screenshotAlt`, and `imageNote` to use a real capture. The ROLI visual is a capture of https://roli.com/us from September 2026, with its dismissible promotional banner closed; the product link points to the public site. No confidential work images or source links are inferred.
 
-`app/globals.css` owns the visual system, including both themes, responsive breakpoints, reduced motion, focus states, and print styles. There are no external font requests, analytics, forms, or third-party runtime services.
-
-## Local development
+## Development
 
 ```sh
 npm ci
 npm run dev
-```
-
-## Verification and production build
-
-```sh
 npm run typecheck
 npm run build
 ```
 
-The production output is `out/`. Serve it using a static host that resolves directory `index.html` files and uses `404.html` as the not-found document. Site metadata and sitemap URLs derive from `profile.siteUrl`; update that value when assigning a custom domain.
+The production output is `out/`. Use a static host with directory index resolution and `404.html` fallback. Metadata and sitemap URLs derive from `profile.siteUrl`.
 
-Routes: `/`, `/work/orbit/`, `/work/fieldnotes/`, `/work/baseline/`, `/cv/`, `/sitemap.xml`, `/robots.txt`, and a custom 404. Project routes are generated automatically from the project data.
-
-The theme preference is device-local and persisted in localStorage, falling back to the operating-system preference. All informational content remains readable without JavaScript.
+The project-local Impeccable skill is excluded from version control. `app/globals.css` holds the visual system, responsive rules, and print styles. Server Components render the content; the theme toggle and print button are the only application client components. The theme preference is stored locally and defaults to the OS preference. Content remains readable without JavaScript.

@@ -23,18 +23,16 @@ export default function Home() {
               <a className="underlined" href="#work">
                 Explore selected work <span>↓</span>
               </a>
-              <a href={profile.github} target="_blank" rel="noreferrer">
-                GitHub <span>↗</span>
+              <a href={profile.linkedin} target="_blank" rel="noreferrer">
+                LinkedIn <span>↗</span>
               </a>
             </div>
           </div>
           <div className="status">
             <span className="status-dot" />
             <div>
-              {profile.status}
-              <small>
-                Currently {profile.currentRole} at {profile.company}
-              </small>
+              {profile.currentRole} at {profile.company}
+              <small>Based in {profile.location}</small>
             </div>
           </div>
         </div>
@@ -53,10 +51,10 @@ export default function Home() {
               ({String(projects.length).padStart(2, "0")})
             </span>
           </h2>
-          <span className="mono">2025 — 2026</span>
+          <span className="mono">2021 — PRESENT</span>
         </div>
         <p className="section-description">
-          A few things I’ve helped bring into the world.
+          E-commerce, retail systems, and practical AI.
         </p>
         {projects.map((p) => (
           <article className="project" key={p.slug}>
@@ -106,7 +104,6 @@ export default function Home() {
       </section>
       <section id="experience" className="text-section experience-section">
         <div className="section-intro">
-
           <h2>
             Good work.
             <br />
@@ -120,7 +117,6 @@ export default function Home() {
       </section>
       <section id="about" className="text-section about-section">
         <div className="section-intro">
-
           <h2>
             Engineer by trade.
             <br />
@@ -129,7 +125,14 @@ export default function Home() {
           <span className="about-location mono">{profile.location}</span>
           {profile.headshot.src && (
             <figure className="portrait">
-              <Image src={profile.headshot.src} alt={profile.headshot.alt} width={720} height={900} sizes="(max-width: 700px) 70vw, 320px" style={{objectPosition: profile.headshot.position}} />
+              <Image
+                src={profile.headshot.src}
+                alt={profile.headshot.alt}
+                width={700}
+                height={933}
+                sizes="(max-width: 700px) 70vw, 320px"
+                style={{ objectPosition: profile.headshot.position }}
+              />
               <figcaption>{profile.name}</figcaption>
             </figure>
           )}
@@ -152,7 +155,6 @@ export default function Home() {
         </div>
       </section>
       <section className="contact">
-        <span className="mono">HAVE SOMETHING INTERESTING TO BUILD?</span>
         <h2>
           Let’s make it happen<span className="accent">.</span>
         </h2>
@@ -160,9 +162,11 @@ export default function Home() {
           {profile.email} ↗
         </a>
         <div className="socials">
-          <a href={profile.github} target="_blank" rel="noreferrer">
-            GitHub ↗
-          </a>
+          {profile.github && (
+            <a href={profile.github} target="_blank" rel="noreferrer">
+              GitHub ↗
+            </a>
+          )}
           <a href={profile.linkedin} target="_blank" rel="noreferrer">
             LinkedIn ↗
           </a>

@@ -83,7 +83,12 @@ export default async function ProjectPage({
             <br />
             Engineering tradeoffs.
           </p>
-          <small>Illustrative concept project</small>
+          <small>
+            {p.imageNote ??
+              (p.type === "telemetry"
+                ? "System diagram, not a product screenshot."
+                : "Workflow diagram, not a product screenshot.")}
+          </small>
         </aside>
         <div>
           {[
@@ -93,22 +98,15 @@ export default async function ProjectPage({
             ["04", "Architecture", p.architecture],
             ["05", "Outcome", p.outcome],
             ["06", "What I’d improve", p.improve],
-          ].map(([n, title, text]) => (
-            <section key={n}>
-              <span className="mono">{n}</span>
-              <h2>{title}</h2>
-              <p>{text}</p>
-              {title === "Architecture" && (
-                <div className="architecture">
-                  <span>Interface</span>
-                  <b>→</b>
-                  <span>Service layer</span>
-                  <b>→</b>
-                  <span>Data & events</span>
-                </div>
-              )}
-            </section>
-          ))}
+          ]
+            .filter(([, , text]) => Boolean(text))
+            .map(([n, title, text]) => (
+              <section key={n}>
+                <span className="mono">{n}</span>
+                <h2>{title}</h2>
+                <p>{text}</p>
+              </section>
+            ))}
         </div>
       </div>
       <Link href={`/work/${next.slug}`} className="next-project">

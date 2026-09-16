@@ -31,11 +31,11 @@ export default function CV() {
       </header>
       <section className="cv-section">
         <h2>Summary</h2>
-        <p>{profile.about[0]}</p>
+        <p>{profile.summary}</p>
       </section>
       <section className="cv-section">
         <h2>Experience</h2>
-        <ExperienceList />
+        <ExperienceList detailed />
       </section>
       <section className="cv-section">
         <h2>Technical profile</h2>
@@ -50,18 +50,21 @@ export default function CV() {
       </section>
       <section className="cv-section">
         <h2>Education</h2>
-        <div className="education">
-          <span className="mono">{profile.education.period}</span>
-          <div>
-            <h3>{profile.education.degree}</h3>
-            <p>{profile.education.school}</p>
+        {profile.education.map((e) => (
+          <div className="education" key={e.school}>
+            <span className="mono">{e.period}</span>
+            <div>
+              <h3>{e.degree}</h3>
+              <p>{e.school}</p>
+              <p>{e.detail}</p>
+            </div>
           </div>
-        </div>
+        ))}
       </section>
       <section className="cv-section cv-contact">
         <h2>Contact</h2>
         <a href={`mailto:${profile.email}`}>{profile.email}</a>
-        <a href={profile.github}>GitHub ↗</a>
+        {profile.github && <a href={profile.github}>GitHub ↗</a>}
         <a href={profile.linkedin}>LinkedIn ↗</a>
       </section>
     </main>

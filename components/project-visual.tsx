@@ -1,18 +1,39 @@
 import Image from "next/image";
 import type { Project } from "@/data/projects";
-import { ProductPreview } from "./product-preview";
 export function ProjectVisual({ project }: { project: Project }) {
-  return project.screenshot ? (
-    <div className="screenshot-stage">
-      <Image
-        src={project.screenshot}
-        alt={project.screenshotAlt ?? `${project.name} product interface`}
-        width={2400}
-        height={950}
-        sizes="(max-width: 700px) 100vw, 1200px"
-      />
+  if (project.screenshot)
+    return (
+      <div className="screenshot-stage">
+        <Image
+          src={project.screenshot}
+          alt={project.screenshotAlt ?? `${project.name} website`}
+          width={1440}
+          height={900}
+          sizes="(max-width: 700px) 100vw, 1200px"
+        />
+      </div>
+    );
+  return (
+    <div className={`work-diagram ${project.type}`}>
+      <div className="diagram-title">
+        <strong>{project.name}</strong>
+        <span>
+          {project.type === "telemetry" ? "System overview" : "Working process"}
+        </span>
+      </div>
+      <div className="diagram-flow">
+        {project.diagram.map((step, i) => (
+          <div key={step}>
+            <span className="diagram-step">{step}</span>
+            {i < project.diagram.length - 1 && (
+              <span className="diagram-arrow" aria-hidden="true">
+                →
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      <p>{project.diagramDetail}</p>
     </div>
-  ) : (
-    <ProductPreview type={project.type} />
   );
 }

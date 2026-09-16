@@ -1,5 +1,5 @@
 import { experience } from "@/data/experience";
-export function ExperienceList() {
+export function ExperienceList({ detailed = false }: { detailed?: boolean }) {
   return (
     <div className="experience-list">
       {experience.map((e) => (
@@ -9,6 +9,13 @@ export function ExperienceList() {
             <h3>{e.role}</h3>
             <span className="company">{e.company}</span>
             <p>{e.detail}</p>
+            {detailed && (
+              <ul className="experience-highlights">
+                {e.highlights.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </article>
       ))}
