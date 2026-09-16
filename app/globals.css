@@ -48,7 +48,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 48px;
+  scroll-padding-top: 112px;
   scrollbar-color: var(--border) var(--bg);
   scrollbar-width: thin;
 }
@@ -1850,8 +1850,7 @@ button:focus-visible {
 .fact-label,
 .home-facts dt,
 .work-index-meta,
-.work-index-role,
-.work-index-title-row > span {
+.work-index-role {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
@@ -1915,7 +1914,7 @@ button:focus-visible {
   display: grid;
   grid-template-columns: minmax(200px, 0.75fr) minmax(0, 1.65fr);
   gap: 48px;
-  padding: clamp(32px, 4vw, 52px) 0;
+  padding: clamp(28px, 3vw, 40px) 0;
 }
 
 .work-index-heading h2 {
@@ -1941,77 +1940,72 @@ button:focus-visible {
 
 .work-index-item {
   display: grid;
-  grid-template-columns: minmax(180px, 0.75fr) minmax(0, 1.65fr);
-  gap: 48px;
-  padding: clamp(36px, 5vw, 64px) 0;
+  grid-template-columns: minmax(220px, 0.75fr) minmax(380px, 1.45fr);
+  grid-template-areas: "primary details";
+  gap: clamp(28px, 3.5vw, 52px);
+  align-items: start;
+  padding: clamp(28px, 3vw, 40px) 0;
   border-top: 1px solid var(--border);
 }
 
 .work-index-meta {
   display: flex;
-  gap: 14px;
+  flex-direction: column;
+  gap: 5px;
   align-items: flex-start;
+  margin-top: 18px;
   color: var(--muted);
   font-size: 10px;
   letter-spacing: 0.06em;
   line-height: 1.5;
 }
 
-.work-index-number {
-  color: var(--accent);
+.work-index-primary {
+  grid-area: primary;
 }
 
-.work-index-title-row {
-  display: flex;
-  gap: 24px;
-  align-items: baseline;
-  justify-content: space-between;
-}
-
-.work-index-title-row h3 {
+.work-index-primary h3 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(28px, 3.2vw, 42px);
+  font-size: clamp(26px, 2.6vw, 36px);
   font-weight: 550;
   letter-spacing: -0.03em;
   line-height: 1.1;
 }
 
-.work-index-title-row h3 a {
+.work-index-primary h3 a {
   transition: color 0.18s ease;
 }
 
-.work-index-title-row h3 a:hover {
+.work-index-primary h3 a:hover {
   color: var(--accent);
-}
-
-.work-index-title-row > span {
-  flex: none;
-  color: var(--muted);
-  font-size: 10px;
 }
 
 .work-index-role {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   color: var(--accent);
   font-size: 11px;
+  line-height: 1.5;
+}
+
+.work-index-details {
+  grid-area: details;
 }
 
 .work-index-description {
   max-width: 60ch;
-  margin: 24px 0 0;
+  margin: 0;
   color: var(--ink);
-  font-size: clamp(16px, 1.4vw, 19px);
+  font-size: clamp(15px, 1.2vw, 17px);
   line-height: 1.55;
 }
 
 .work-index-highlights {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px 24px;
-  margin: 28px 0 0;
-  padding: 20px 0 0;
-  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 18px 0 0;
+  padding: 0;
   list-style: none;
 }
 
@@ -2019,7 +2013,7 @@ button:focus-visible {
   position: relative;
   padding-left: 14px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -2036,10 +2030,12 @@ button:focus-visible {
 
 .work-index-footer {
   display: flex;
-  gap: 24px;
-  align-items: flex-end;
+  gap: 16px 24px;
+  align-items: center;
   justify-content: space-between;
-  margin-top: 28px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
 }
 
 .work-index-stack {
@@ -2083,13 +2079,14 @@ button:focus-visible {
     border-top: 0;
     border-left: 1px solid var(--border);
   }
-  .work-index-heading,
-  .work-index-item {
+  .work-index-heading {
     grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1.45fr);
     gap: 32px;
   }
-  .work-index-highlights {
-    grid-template-columns: 1fr;
+  .work-index-item {
+    grid-template-columns: minmax(180px, 0.65fr) minmax(0, 1.35fr);
+    grid-template-areas: "primary details";
+    gap: 32px;
   }
   .hero-bottom {
     grid-template-columns: 1fr;
@@ -2195,23 +2192,22 @@ button:focus-visible {
   .work-index-heading,
   .work-index-item {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 0;
   }
   .work-index-heading {
     padding: 32px 0 36px;
   }
   .work-index-item {
-    padding: 40px 0 44px;
+    grid-template-areas:
+      "primary"
+      "details";
+    padding: 32px 0 36px;
   }
-  .work-index-meta {
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
+  .work-index-primary {
+    margin-bottom: 24px;
   }
-  .work-index-title-row {
-    align-items: flex-start;
-  }
-  .work-index-title-row h3 {
-    font-size: 34px;
+  .work-index-primary h3 {
+    font-size: 32px;
   }
   .work-index-description {
     margin-top: 20px;
@@ -2221,8 +2217,8 @@ button:focus-visible {
     flex-direction: column;
   }
   .case-link {
-    align-self: stretch;
-    justify-content: space-between;
+    align-self: auto;
+    justify-content: flex-start;
   }
   .hero-actions {
     flex-direction: column;

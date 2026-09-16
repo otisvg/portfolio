@@ -74,20 +74,18 @@ export default function Home() {
         <div className="work-index-list">
           {projects.map((project) => (
             <article className="work-index-item" key={project.slug}>
-              <div className="work-index-meta">
-                <span className="work-index-number">{project.number}</span>
-                <span>{project.category}</span>
-              </div>
-
-              <div className="work-index-content">
-                <div className="work-index-title-row">
-                  <h3>
-                    <Link href={`/work/${project.slug}`}>{project.name}</Link>
-                  </h3>
+              <div className="work-index-primary">
+                <h3>
+                  <Link href={`/work/${project.slug}`}>{project.name}</Link>
+                </h3>
+                <p className="work-index-role">{project.role}</p>
+                <div className="work-index-meta">
+                  <span>{project.category}</span>
                   <span>{project.year}</span>
                 </div>
+              </div>
 
-                <p className="work-index-role">{project.role}</p>
+              <div className="work-index-details">
                 <p className="work-index-description">{project.description}</p>
 
                 <ul className="work-index-highlights">
