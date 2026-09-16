@@ -42,7 +42,7 @@ export function ProductPreview({ type }: { type: string }) {
               <i className="dot green" /> Mobile experience
             </p>
             <div className="sidebar-bottom">
-              AM &nbsp; Alex Morgan <span>⌄</span>
+              OVG &nbsp; Otis Vickers-Graver <span>⌄</span>
             </div>
           </aside>
           <div className="mock-main">

@@ -5,3 +5,6 @@ out
 *.tsbuildinfo
 .env*
 .DS_Store
+
+# Local design tooling; not part of the deployed site.
+.agents/

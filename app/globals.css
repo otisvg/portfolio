@@ -1692,3 +1692,34 @@ a:hover > span {
     padding-left: 9px;
   }
 }
+
+/* Personal identity: full-name wrapping and a quiet, optional editorial portrait. */
+html { scrollbar-color: var(--muted) var(--bg); }
+body { caret-color: var(--accent); }
+h1, h2 { text-wrap: balance; }
+.hero h1 { font-size: clamp(3rem, 6.9vw, 6rem); letter-spacing: -.04em; margin-top: 0; }
+.cv-header h1 { font-size: clamp(2.25rem, 5vw, 4rem); letter-spacing: -.035em; overflow-wrap: anywhere; }
+nav { font-size: .875rem; }
+nav a { min-height: 44px; display: inline-flex; align-items: center; }
+.theme-toggle { min-height: 44px; min-width: 44px; display: grid; place-items: center; }
+.hero-bottom p, .about-copy > p, .case-body section p { font-size: 1rem; }
+.project-copy p, .experience-list p { font-size: .875rem; }
+.hero-links, .case-link, .section-intro a, .about-copy > a, .socials { font-size: .875rem; }
+.hero-baseline { font-variant-numeric: tabular-nums; }
+.portrait { margin: 32px 0 0; max-width: 320px; }
+.portrait img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
+.portrait figcaption { font-size: .75rem; color: var(--muted); margin-top: 12px; }
+@media (max-width: 700px) {
+  .site-header { height: auto; padding-top: 25px; padding-bottom: 18px; display: block; }
+  .wordmark { font-size: 1.125rem; letter-spacing: -.03em; }
+  .site-header nav { margin-top: 14px; justify-content: space-between; gap: 10px; font-size: .875rem; }
+  .theme-toggle { padding-left: 10px; }
+  .hero { padding-top: 32px; }
+  .hero h1 { font-size: clamp(2.45rem, 9.3vw, 4rem); }
+  .project-name { flex-wrap: wrap; row-gap: 8px; }
+  .case-link { margin-left: 32px; }
+  .portrait { max-width: 280px; }
+  .cv-header h1 { font-size: clamp(2.15rem, 8vw, 3rem); }
+}
+@media print { .cv-header h1 { font-size: 30px; letter-spacing: -.035em; } }
+@media print { .experience-list p { font-size: 10px; } }

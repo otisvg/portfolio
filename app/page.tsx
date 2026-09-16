@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { ExperienceList } from "@/components/experience-list";
@@ -7,14 +8,6 @@ export default function Home() {
   return (
     <main id="main" className="shell">
       <section className="hero">
-        <div className="hero-eyebrow">
-          <span className="mono">
-            INDEPENDENT MIND. {profile.title.toUpperCase()}.
-          </span>
-          <span className="location mono">
-            BASED IN {profile.location.toUpperCase()}
-          </span>
-        </div>
         <h1>
           {profile.headline[0]}
           <br />
@@ -113,7 +106,7 @@ export default function Home() {
       </section>
       <section id="experience" className="text-section experience-section">
         <div className="section-intro">
-          <span className="mono">THE JOURNEY SO FAR</span>
+
           <h2>
             Good work.
             <br />
@@ -127,13 +120,19 @@ export default function Home() {
       </section>
       <section id="about" className="text-section about-section">
         <div className="section-intro">
-          <span className="mono">A BIT ABOUT ME</span>
+
           <h2>
             Engineer by trade.
             <br />
             Curious by default.
           </h2>
-          <span className="about-location mono">↗ {profile.location}</span>
+          <span className="about-location mono">{profile.location}</span>
+          {profile.headshot.src && (
+            <figure className="portrait">
+              <Image src={profile.headshot.src} alt={profile.headshot.alt} width={720} height={900} sizes="(max-width: 700px) 70vw, 320px" style={{objectPosition: profile.headshot.position}} />
+              <figcaption>{profile.name}</figcaption>
+            </figure>
+          )}
         </div>
         <div className="about-copy">
           {profile.about.map((p) => (
