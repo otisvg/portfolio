@@ -4,6 +4,7 @@ export type Project = {
   name: string;
   category: string;
   description: string;
+  homeHighlights: readonly string[];
   role: string;
   year: string;
   stack: readonly string[];
@@ -33,6 +34,11 @@ export const projects: readonly Project[] = [
     category: "E-COMMERCE / CUSTOMER EXPERIENCE",
     description:
       "Two storefronts. One multi-region platform. A connected journey from discovery to onboarding.",
+    homeHighlights: [
+      "Unified multi-region storefronts",
+      "Launched Japan and CASIO onboarding",
+      "Cut end-to-end test time by 80%",
+    ],
     role: "Senior Full Stack Engineer",
     year: "2023 — present",
     stack: ["TypeScript", "React", "Next.js", "Node.js", "Shopify", "MongoDB"],
@@ -58,7 +64,12 @@ export const projects: readonly Project[] = [
     category: "RETAIL / OBSERVABILITY",
     description:
       "A central view of retail point-of-sale systems, helping teams catch issues before customers do.",
-    role: "Software Engineer & Team Lead at OLR",
+    homeHighlights: [
+      "Built from zero to production",
+      "Led and mentored four engineers",
+      "Automated distributed retail alerts",
+    ],
+    role: "Software Engineer & Team Lead",
     year: "2021 — 2022",
     stack: ["React", "Next.js", "Node.js", "InfluxDB", "AWS", "Terraform"],
     type: "telemetry",
@@ -82,6 +93,11 @@ export const projects: readonly Project[] = [
     category: "AI / ENGINEERING WORKFLOW",
     description:
       "Practical tools and a collaborative workshop that turn agentic ideas into useful everyday workflows.",
+    homeHighlights: [
+      "Runs as a collaborative ROLI workshop",
+      "Applied across planning, code, and tests",
+      "Built around review and verification",
+    ],
     role: "Workshop lead & hands-on engineer",
     year: "Ongoing",
     stack: [

@@ -35,6 +35,7 @@ Evaluated in desktop browser tabs during recruitment reviews, founder evaluation
 - Tone: Thoughtful, grounded, articulate, and engineering-forward. Avoid hyperbolic marketing fluff, buzzwords, or unsubstantiated claims. Every claim maps to real software delivered to customers.
 
 ## Evidence on Hand
+- GitHub: `https://github.com/otisvg`
 - `public/otis-vickers-graver-cv.pdf`: Full CV document.
 - `public/otis-headshot.webp`: Photographic portrait.
 - `public/projects/roli.webp`: Real capture of ROLI storefront.
