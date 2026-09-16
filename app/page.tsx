@@ -4,45 +4,82 @@ import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { ExperienceList } from "@/components/experience-list";
 import { ProjectVisual } from "@/components/project-visual";
+
 export default function Home() {
   return (
     <main id="main" className="shell">
+      {/* Hero Section */}
       <section className="hero">
+        <div className="hero-status-beacon">
+          <span className="beacon-dot" aria-hidden="true" />
+          <span>{profile.currentRole} at {profile.company} · Based in {profile.location}</span>
+        </div>
+
         <h1>
           {profile.headline[0]}
           <br />
-          <span>{profile.headline[1]}</span>
+          <span className="hero-dimmed">{profile.headline[1]}</span>
           <br />
           {profile.headline[2]}
           <span className="accent">.</span>
         </h1>
+
         <div className="hero-bottom">
           <div>
-            <p>{profile.description}</p>
-            <div className="hero-links">
-              <a className="underlined" href="#work">
-                Explore selected work <span>↓</span>
+            <p className="hero-lead">{profile.description}</p>
+            <div className="hero-actions">
+              <a className="action-primary" href="#work">
+                <span>Explore selected work</span>
+                <span aria-hidden="true">↓</span>
               </a>
-              <a href={profile.linkedin} target="_blank" rel="noreferrer">
-                LinkedIn <span>↗</span>
+              <Link className="action-secondary" href="/cv">
+                <span>Curriculum vitae</span>
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <a
+                className="action-secondary"
+                href={profile.linkedin}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span>LinkedIn</span>
+                <span aria-hidden="true">↗</span>
               </a>
             </div>
           </div>
-          <div className="status">
-            <span className="status-dot" />
-            <div>
-              {profile.currentRole} at {profile.company}
-              <small>Based in {profile.location}</small>
+
+          <aside className="hero-summary-card" aria-label="Senior profile overview">
+            <h3>Senior Profile Glance</h3>
+            <div className="hero-stats-grid">
+              <div className="stat-item">
+                <strong>6+ Years</strong>
+                <span>Full-stack systems ownership</span>
+              </div>
+              <div className="stat-item">
+                <strong>ROLI & OLR</strong>
+                <span>Commerce & telemetry lead</span>
+              </div>
+              <div className="stat-item">
+                <strong>Agentic AI</strong>
+                <span>MCP, skills & daily workflows</span>
+              </div>
+              <div className="stat-item">
+                <strong>UK / UAE</strong>
+                <span>Distributed global engineering</span>
+              </div>
             </div>
-          </div>
+          </aside>
         </div>
+
         <div className="hero-baseline">
           <span className="mono">
             GOOD SOFTWARE IS A SERIES OF THOUGHTFUL DECISIONS.
           </span>
-          <span className="cross">+</span>
+          <span className="cross" aria-hidden="true">+</span>
         </div>
       </section>
+
+      {/* Selected Work Section */}
       <section id="work" className="work">
         <div className="section-heading">
           <h2>
@@ -54,122 +91,166 @@ export default function Home() {
           <span className="mono">2021 — PRESENT</span>
         </div>
         <p className="section-description">
-          E-commerce, retail systems, and practical AI.
+          Multi-region e-commerce platforms, distributed retail telemetry systems, and practical agentic workflows.
         </p>
+
         {projects.map((p) => (
           <article className="project" key={p.slug}>
-            <Link
-              href={`/work/${p.slug}`}
-              className="project-image-link"
-              aria-label={`Read the ${p.name} case study`}
-            >
-              <ProjectVisual project={p} />
-              <span className="image-open" aria-hidden="true">
-                ↗
-              </span>
-            </Link>
+            <div className="project-header-strip">
+              <div className="project-badge-group">
+                <span className="project-number">{p.number}</span>
+                <span className="project-category">{p.category}</span>
+              </div>
+              <div className="project-meta-right">
+                <span>{p.year}</span>
+              </div>
+            </div>
+
+            {/* Interactive Architecture & Visualizer Stage */}
+            <ProjectVisual project={p} />
+
             <div className="project-info">
-              <span className="project-number mono">{p.number} /</span>
-              <div className="project-copy">
-                <div className="project-name">
-                  <h3>
+              <div>
+                <div className="project-name-row">
+                  <h3 className="project-title">
                     <Link href={`/work/${p.slug}`}>{p.name}</Link>
                   </h3>
-                  <span className="mono">{p.category}</span>
                 </div>
-                <p>{p.description}</p>
-                <span className="project-role">
-                  {p.role} · {p.year}
-                </span>
-                <div className="project-external">
+                <p className="project-lead-desc">{p.description}</p>
+                <div className="project-tech-pills" aria-label="Technologies used">
+                  {p.stack.map((t) => (
+                    <span key={t} className="tech-pill">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="project-cta-column">
+                <div className="project-role-badge">
+                  <strong>Role:</strong> {p.role}
+                </div>
+                <div className="project-external-links">
                   {p.github && (
                     <a href={p.github} target="_blank" rel="noreferrer">
-                      Source ↗
+                      <span>Source</span>
+                      <span aria-hidden="true">↗</span>
                     </a>
                   )}
                   {p.liveUrl && (
                     <a href={p.liveUrl} target="_blank" rel="noreferrer">
-                      Live product ↗
+                      <span>Live product</span>
+                      <span aria-hidden="true">↗</span>
                     </a>
                   )}
                 </div>
-                <div className="tech mono">{p.stack.join(" / ")}</div>
+                <Link className="case-study-btn" href={`/work/${p.slug}`}>
+                  <span>Read case study</span>
+                  <span className="btn-arrow" aria-hidden="true">→</span>
+                </Link>
               </div>
-              <Link className="case-link underlined" href={`/work/${p.slug}`}>
-                View case study <span>↗</span>
-              </Link>
             </div>
           </article>
         ))}
       </section>
-      <section id="experience" className="text-section experience-section">
-        <div className="section-intro">
-          <h2>
-            Good work.
-            <br />
-            Good people.
-          </h2>
-          <a className="underlined" href="/cv">
-            View full CV <span>↗</span>
-          </a>
+
+      {/* Experience Section */}
+      <section id="experience" className="experience-section">
+        <div className="section-heading">
+          <h2>Work history & leadership</h2>
+          <Link className="action-secondary" href="/cv">
+            <span>View full CV</span>
+            <span aria-hidden="true">↗</span>
+          </Link>
         </div>
-        <ExperienceList />
+        <p className="section-description">
+          Six years of progressive engineering leadership, from greenfield product architecture to scaling global commerce.
+        </p>
+        <ExperienceList detailed={false} />
       </section>
-      <section id="about" className="text-section about-section">
-        <div className="section-intro">
-          <h2>
-            Engineer by trade.
-            <br />
-            Curious by default.
-          </h2>
-          <span className="about-location mono">{profile.location}</span>
-          {profile.headshot.src && (
-            <figure className="portrait">
-              <Image
-                src={profile.headshot.src}
-                alt={profile.headshot.alt}
-                width={700}
-                height={933}
-                sizes="(max-width: 700px) 70vw, 320px"
-                style={{ objectPosition: profile.headshot.position }}
-              />
-              <figcaption>{profile.name}</figcaption>
-            </figure>
-          )}
+
+      {/* About Section */}
+      <section id="about" className="about-section">
+        <div className="section-heading">
+          <h2>About & technical practice</h2>
+          <span className="mono">{profile.location}</span>
         </div>
-        <div className="about-copy">
-          {profile.about.map((p) => (
-            <p key={p}>{p}</p>
-          ))}
-          <div className="skills-grid">
-            {Object.entries(profile.skills).map(([k, v]) => (
-              <div key={k}>
-                <h3>{k}</h3>
-                <p>{v.join(", ")}</p>
-              </div>
-            ))}
+        <p className="section-description">
+          Engineering approach, daily agentic methodology, and core domain proficiencies.
+        </p>
+
+        <div className="about-grid">
+          <div className="portrait-wrapper">
+            {profile.headshot.src && (
+              <figure className="portrait">
+                <Image
+                  src={profile.headshot.src}
+                  alt={profile.headshot.alt}
+                  width={700}
+                  height={933}
+                  sizes="(max-width: 700px) 100vw, 360px"
+                  style={{ objectPosition: profile.headshot.position }}
+                />
+                <figcaption>{profile.name} · {profile.title}</figcaption>
+              </figure>
+            )}
           </div>
-          <a className="underlined" href={profile.cvPdf} download>
-            Download CV <span>↓</span>
-          </a>
+
+          <div className="about-narrative">
+            {profile.about.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+
+            <div className="skills-matrix">
+              <h3>Technical domains & toolchain</h3>
+              <div className="skills-cards-grid">
+                {Object.entries(profile.skills).map(([domain, items]) => (
+                  <div key={domain} className="skill-category-card">
+                    <h4>{domain}</h4>
+                    <div className="skill-pills">
+                      {items.map((item) => (
+                        <span key={item} className="skill-tag">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: "24px" }}>
+              <a className="action-secondary" href={profile.cvPdf} download>
+                <span>Download verified CV (PDF)</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
-      <section className="contact">
+
+      {/* Contact Banner */}
+      <section className="contact-banner">
         <h2>
-          Let’s make it happen<span className="accent">.</span>
+          Let’s build thoughtful software<span className="accent">.</span>
         </h2>
-        <a className="email underlined" href={`mailto:${profile.email}`}>
-          {profile.email} ↗
-        </a>
-        <div className="socials">
+        <div>
+          <a className="contact-email-link" href={`mailto:${profile.email}`}>
+            {profile.email} ↗
+          </a>
+        </div>
+        <div className="contact-actions-row">
+          <a href={profile.linkedin} target="_blank" rel="noreferrer">
+            LinkedIn ↗
+          </a>
           {profile.github && (
             <a href={profile.github} target="_blank" rel="noreferrer">
               GitHub ↗
             </a>
           )}
-          <a href={profile.linkedin} target="_blank" rel="noreferrer">
-            LinkedIn ↗
-          </a>
+          <Link href="/cv">
+            Curriculum vitae ↗
+          </Link>
         </div>
       </section>
     </main>

@@ -3,10 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
 import { ProjectVisual } from "@/components/project-visual";
+
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
+
 export const dynamicParams = false;
+
 export async function generateMetadata({
   params,
 }: {
@@ -21,6 +24,7 @@ export async function generateMetadata({
     twitter: { title: p?.name, description: p?.description },
   };
 }
+
 export default async function ProjectPage({
   params,
 }: {
@@ -29,92 +33,104 @@ export default async function ProjectPage({
   const { slug } = await params;
   const p = projects.find((p) => p.slug === slug);
   if (!p) notFound();
+
   const next =
     projects[
       (projects.findIndex((x) => x.slug === slug) + 1) % projects.length
     ];
+
+  const caseSections = [
+    { title: "Context & Domain", text: p.context },
+    { title: "Problem & Constraints", text: p.problem },
+    { title: "Engineering Approach", text: p.approach },
+    { title: "Architecture & Systems Design", text: p.architecture },
+    { title: "Outcomes & Measured Impact", text: p.outcome },
+    { title: "Reflections & Future Improvements", text: p.improve },
+  ].filter((sec) => Boolean(sec.text));
+
   return (
     <main id="main" className="shell case-study">
-      <Link className="back-link mono" href="/#work">
-        ← BACK TO SELECTED WORK
+      <Link className="back-link" href="/#work">
+        <span aria-hidden="true">←</span>
+        <span>Back to selected work</span>
       </Link>
+
       <header className="case-header">
-        <span className="mono">
-          {p.number} / {p.category}
-        </span>
+        <span className="mono">{p.category}</span>
         <h1>
           {p.name}
           <span className="accent">.</span>
         </h1>
         <p>{p.description}</p>
       </header>
+
       <dl className="case-facts">
         <div>
-          <dt>ROLE</dt>
+          <dt>Role & Responsibilities</dt>
           <dd>{p.role}</dd>
         </div>
         <div>
-          <dt>YEAR</dt>
+          <dt>Timeline</dt>
           <dd>{p.year}</dd>
         </div>
         <div>
-          <dt>STACK</dt>
+          <dt>Core Tech Stack</dt>
           <dd>{p.stack.join(", ")}</dd>
         </div>
       </dl>
-      <div className="project-external">
+
+      <div className="project-external-links" style={{ marginBottom: "28px" }}>
         {p.github && (
-          <a href={p.github} target="_blank" rel="noreferrer">
-            Source ↗
+          <a href={p.github} target="_blank" rel="noreferrer" className="action-secondary">
+            <span>View source code</span>
+            <span aria-hidden="true">↗</span>
           </a>
         )}
         {p.liveUrl && (
-          <a href={p.liveUrl} target="_blank" rel="noreferrer">
-            Live product ↗
+          <a href={p.liveUrl} target="_blank" rel="noreferrer" className="action-secondary">
+            <span>Visit live product</span>
+            <span aria-hidden="true">↗</span>
           </a>
         )}
       </div>
+
+      {/* Interactive System Architecture & Visualizer Stage */}
       <ProjectVisual project={p} />
+
       <div className="case-body">
-        <aside>
-          <span className="mono">A CLOSER LOOK</span>
-          <p>
-            Product decisions.
-            <br />
-            Engineering tradeoffs.
-          </p>
+        <aside className="case-aside">
+          <h4>Engineering Deep Dive</h4>
+          <p>Product decisions and structural tradeoffs.</p>
           <small>
             {p.imageNote ??
               (p.type === "telemetry"
-                ? "System diagram, not a product screenshot."
-                : "Workflow diagram, not a product screenshot.")}
+                ? "Interactive system flow and architecture topology."
+                : "Operational workflow and component pipeline.")}
           </small>
         </aside>
-        <div>
-          {[
-            ["01", "Context", p.context],
-            ["02", "Problem", p.problem],
-            ["03", "Approach", p.approach],
-            ["04", "Architecture", p.architecture],
-            ["05", "Outcome", p.outcome],
-            ["06", "What I’d improve", p.improve],
-          ]
-            .filter(([, , text]) => Boolean(text))
-            .map(([n, title, text]) => (
-              <section key={n}>
-                <span className="mono">{n}</span>
-                <h2>{title}</h2>
-                <p>{text}</p>
-              </section>
-            ))}
+
+        <div className="case-sections-flow">
+          {caseSections.map((sec) => (
+            <section key={sec.title} className="case-narrative-section">
+              <h2>{sec.title}</h2>
+              <p>{sec.text}</p>
+            </section>
+          ))}
         </div>
       </div>
-      <Link href={`/work/${next.slug}`} className="next-project">
-        <span className="mono">NEXT PROJECT</span>
-        <strong>
-          {next.name} <span>↗</span>
-        </strong>
-      </Link>
+
+      <div className="next-project-card">
+        <Link href={`/work/${next.slug}`} className="next-project-link">
+          <span className="next-project-label">Next Case Study</span>
+          <span className="next-project-title">
+            {next.name} <span aria-hidden="true">→</span>
+          </span>
+        </Link>
+        <Link href="/#work" className="action-secondary">
+          <span>All selected work</span>
+          <span aria-hidden="true">↑</span>
+        </Link>
+      </div>
     </main>
   );
 }
