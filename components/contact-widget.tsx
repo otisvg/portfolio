@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type FormEvent,
-} from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 
 type SubmissionStatus = "idle" | "submitting" | "success" | "error";
 
@@ -92,11 +86,14 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
       setErrorMessage(
         response.status === 429
           ? "Too many messages were sent recently. Please wait a moment and try again."
-          : providerMessage || "Your message could not be sent. Please try again.",
+          : providerMessage ||
+              "Your message could not be sent. Please try again.",
       );
       setStatus("error");
     } catch {
-      setErrorMessage("Your message could not be sent. Check your connection and try again.");
+      setErrorMessage(
+        "Your message could not be sent. Check your connection and try again.",
+      );
       setStatus("error");
     }
   };
@@ -119,7 +116,9 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
         >
           <div className="contact-widget-header">
             <div>
-              <h2 id={titleId}>Let’s chat<span className="accent">.</span></h2>
+              <h2 id={titleId}>
+                Let’s chat<span className="accent">.</span>
+              </h2>
               <p>Have a role, project, or idea in mind? Send me a note.</p>
             </div>
             <button
@@ -146,10 +145,18 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
                 Thanks — I’ll reply to <strong>{replyEmail}</strong> by email.
               </p>
               <div className="contact-widget-success-actions">
-                <button type="button" className="contact-widget-secondary" onClick={sendAnother}>
+                <button
+                  type="button"
+                  className="contact-widget-secondary"
+                  onClick={sendAnother}
+                >
                   Send another
                 </button>
-                <button type="button" className="contact-widget-primary" onClick={closePanel}>
+                <button
+                  type="button"
+                  className="contact-widget-primary"
+                  onClick={closePanel}
+                >
                   Done
                 </button>
               </div>
@@ -163,13 +170,8 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
             >
               <label className="contact-widget-field">
                 <span>
-                  Name <small>optional</small>
+                  Your email <small>for replies</small>
                 </span>
-                <input name="name" type="text" autoComplete="name" maxLength={120} />
-              </label>
-
-              <label className="contact-widget-field">
-                <span>Your email</span>
                 <input
                   ref={emailRef}
                   name="email"
@@ -188,7 +190,6 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
                   rows={5}
                   minLength={10}
                   maxLength={1600}
-                  placeholder="Tell me what you’d like to discuss…"
                   required
                 />
               </label>
@@ -220,10 +221,6 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
                   </svg>
                 )}
               </button>
-
-              <p className="contact-widget-note">
-                Submitted via Formspree. Your email is used only so I can reply.
-              </p>
             </form>
           )}
         </section>

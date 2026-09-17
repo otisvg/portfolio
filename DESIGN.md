@@ -41,7 +41,7 @@
 
 ## Typography
 
-- **Display & Body**: Inter Variable (`--font-sans`), `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`.
+- **Display & Body**: Space Grotesk Variable (`--font-sans`), a readable retro-technical grotesk, with `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` as fallback.
 - **Code, Architecture & Data**: IBM Plex Mono (`--font-mono`), `ui-monospace, monospace`.
 - **Typographic Rules**:
   - Tracking: `-0.025em` for display headlines; `-0.01em` for subheads; `0.02em` for monospace badges. Floor: never tighter than `-0.035em`.

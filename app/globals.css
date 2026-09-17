@@ -366,7 +366,7 @@ button:focus-visible {
 .hero h1 {
   font-weight: 500;
   font-size: clamp(48px, 6.2vw, 92px);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   line-height: 1.06;
   margin: 0 0 36px 0;
   text-wrap: balance;
@@ -1348,7 +1348,7 @@ button:focus-visible {
 .contact-banner h2 {
   font-size: clamp(32px, 4.5vw, 54px);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   margin: 0 0 20px 0;
   color: var(--ink);
 }
@@ -1723,7 +1723,7 @@ button:focus-visible {
 .case-header h1 {
   font-size: clamp(40px, 5.5vw, 76px);
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   line-height: 1.08;
   margin: 12px 0 20px 0;
   color: var(--ink);
@@ -1926,7 +1926,7 @@ button:focus-visible {
 .cv-masthead h1 {
   font-size: clamp(36px, 4.8vw, 64px);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   margin: 0 0 8px 0;
   color: var(--ink);
 }
@@ -2065,13 +2065,13 @@ button:focus-visible {
   margin: 0 0 20px;
   font-size: clamp(48px, 4.4vw, 56px);
   font-weight: 550;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   line-height: 1.1;
   text-wrap: balance;
 }
 
 .home-intro p {
-  max-width: 69ch;
+  max-width: 67ch;
   margin: 0;
   color: var(--muted);
   font-size: clamp(16px, 1.3vw, 18px);
@@ -2138,7 +2138,7 @@ button:focus-visible {
   color: var(--ink);
   font-size: clamp(28px, 3.2vw, 40px);
   font-weight: 550;
-  letter-spacing: -0.028em;
+  letter-spacing: -0.025em;
   line-height: 1.15;
 }
 
@@ -2171,8 +2171,8 @@ button:focus-visible {
   align-items: flex-start;
   margin-top: 18px;
   color: var(--muted);
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   line-height: 1.5;
 }
 
@@ -2185,7 +2185,7 @@ button:focus-visible {
   color: var(--ink);
   font-size: clamp(26px, 2.6vw, 36px);
   font-weight: 550;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   line-height: 1.1;
 }
 

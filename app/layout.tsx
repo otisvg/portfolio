@@ -3,17 +3,32 @@ import { profile } from "@/data/profile";
 import { Header } from "@/components/header";
 import { ContactWidget } from "@/components/contact-widget";
 import localFont from "next/font/local";
-const inter = localFont({
-  src: "../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+const sans = localFont({
+  src: "../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2",
   variable: "--font-sans",
   display: "swap",
-  weight: "100 900",
+  weight: "300 700",
 });
 const mono = localFont({
-  src: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2",
+  src: [
+    {
+      path: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2",
+      weight: "600",
+      style: "normal",
+    },
+  ],
   variable: "--font-mono",
   display: "swap",
-  weight: "400",
 });
 import "./globals.css";
 export const metadata: Metadata = {
@@ -49,7 +64,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${mono.variable}`}>
+      <body className={`${sans.variable} ${mono.variable}`}>
         <a href="#main" className="skip-link">
           Skip to content
         </a>
