@@ -24,8 +24,9 @@ export function ThemeToggle() {
     <button
       type="button"
       className="theme-toggle-btn"
+      role="switch"
       aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-      aria-pressed={dark}
+      aria-checked={dark}
       title={dark ? "Switch to light theme" : "Switch to dark theme"}
       onClick={toggleTheme}
     >
@@ -63,7 +64,6 @@ export function ThemeToggle() {
           )}
         </span>
       </span>
-      <span className="toggle-label">{mounted && dark ? "Dark" : "Light"}</span>
     </button>
   );
 }

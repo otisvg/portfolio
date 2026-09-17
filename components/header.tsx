@@ -33,12 +33,18 @@ export function Header() {
           <a href="/#work" className="nav-link">
             <span>Work</span>
           </a>
-          <Link href="/cv" className="nav-link nav-cv">
+          <a
+            href="/otis-vickers-graver-cv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link nav-cv"
+            aria-label="Open CV PDF in a new tab"
+          >
             <span>CV</span>
             <svg aria-hidden="true" className="nav-arrow" viewBox="0 0 16 16" fill="none">
               <path d="M4 12 12 4m0 0H6m6 0v6" />
             </svg>
-          </Link>
+          </a>
           <a
             href={profile.github}
             target="_blank"

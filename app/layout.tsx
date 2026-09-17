@@ -2,8 +2,18 @@ import type { Metadata } from "next";
 import { profile } from "@/data/profile";
 import { Header } from "@/components/header";
 import localFont from "next/font/local";
-const inter = localFont({src: '../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2',variable: '--font-sans',display:'swap',weight:'100 900'});
-const mono = localFont({src:'../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2',variable:'--font-mono',display:'swap',weight:'400'});
+const inter = localFont({
+  src: "../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+  variable: "--font-sans",
+  display: "swap",
+  weight: "100 900",
+});
+const mono = localFont({
+  src: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2",
+  variable: "--font-mono",
+  display: "swap",
+  weight: "400",
+});
 import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(profile.siteUrl),
@@ -45,7 +55,6 @@ export default function RootLayout({
         <Header />
         {children}
         <footer className="site-footer shell">
-          <span>Designed & built by {profile.name}</span>
           <span>
             © {new Date().getFullYear()}{" "}
             <span className="footer-mark">{profile.initials}.</span>

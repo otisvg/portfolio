@@ -25,6 +25,8 @@ export const profile = {
   siteUrl: "https://otis-considered-portfolio.otisvickersgraver.chatgpt.site",
   summary:
     "I’m Otis, a Senior Full Stack Engineer based between the UK and UAE. I build and operate the systems behind global commerce, customer onboarding, and distributed retail telemetry. At ROLI and OLR, I’ve worked from product definition and architecture through delivery, deployment, and production support—leading teams when the work demanded it.",
+  introduction:
+    "I’m a Senior Full Stack Engineer with six years of experience building customer-facing, e-commerce, and enterprise applications. At ROLI, I take broad ownership of roli.com, shaping the journey from product discovery through purchase and onboarding. Previously, I built HAWK from idea to production at OLR while leading and mentoring four engineers. I use Claude Code, Cursor, GitHub Copilot, Codex, MCP servers, and agent skills throughout my daily workflow, with code quality, security, readability, and documentation central to delivery.",
   about: [
     "I’m Otis, a Senior Full Stack Engineer based between the UK and UAE. I take broad, uncompromising ownership of complex systems, from core architecture and team leadership through deployment, telemetry, and high-stakes production operations.",
     "At ROLI, I lead engineering across the global customer journey, unifying disparate storefronts into a high-performance multi-region platform, driving international expansion into Japan, and delivering mission-critical partner integrations like the CASIO hardware onboarding flow.",
