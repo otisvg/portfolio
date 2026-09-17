@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { profile } from "@/data/profile";
 import { Header } from "@/components/header";
+import { ContactWidget } from "@/components/contact-widget";
 import localFont from "next/font/local";
 const inter = localFont({
   src: "../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
@@ -60,6 +61,7 @@ export default function RootLayout({
             <span className="footer-mark">{profile.initials}.</span>
           </span>
         </footer>
+        <ContactWidget endpoint={profile.contactFormEndpoint} />
       </body>
     </html>
   );

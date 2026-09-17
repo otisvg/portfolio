@@ -22,6 +22,7 @@ export const profile = {
   github: "https://github.com/otisvg",
   linkedin: "https://www.linkedin.com/in/otisvickersgraver",
   cvPdf: "/otis-vickers-graver-cv.pdf",
+  contactFormEndpoint: "https://formspree.io/f/xeaoqgqq",
   siteUrl: "https://otis-considered-portfolio.otisvickersgraver.chatgpt.site",
   summary:
     "I’m Otis, a Senior Full Stack Engineer based between the UK and UAE. I build and operate the systems behind global commerce, customer onboarding, and distributed retail telemetry. At ROLI and OLR, I’ve worked from product definition and architecture through delivery, deployment, and production support—leading teams when the work demanded it.",

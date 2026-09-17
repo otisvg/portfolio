@@ -39,7 +39,6 @@ export default function Home() {
                 </h3>
                 <p className="work-index-role">{project.role}</p>
                 <div className="work-index-meta">
-                  <span>{project.category}</span>
                   <span>{project.year}</span>
                 </div>
               </div>
