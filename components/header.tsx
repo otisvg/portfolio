@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { profile } from "@/data/profile";
+import { AccentPunctuation } from "./accent-punctuation";
 import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
@@ -24,7 +25,9 @@ export function Header() {
             </div>
           )}
           <div className="wordmark-text">
-            <span className="wordmark-name">{profile.name}</span>
+            <span className="wordmark-name">
+              <AccentPunctuation>{profile.name}</AccentPunctuation>
+            </span>
             <span className="wordmark-role">{profile.title}</span>
           </div>
         </Link>

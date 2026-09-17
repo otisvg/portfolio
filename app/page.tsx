@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccentPunctuation } from "@/components/accent-punctuation";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 
@@ -20,9 +21,11 @@ export default function Home() {
     <main id="main" className="shell home-page">
       <div className="home-intro">
         <h1>
-          Hey, I’m Otis<span className="accent">.</span>
+          <AccentPunctuation>Hey, I’m Otis.</AccentPunctuation>
         </h1>
-        <p>{profile.introduction}</p>
+        <p>
+          <AccentPunctuation>{profile.introduction}</AccentPunctuation>
+        </p>
       </div>
 
       <section id="work" className="work-index" aria-labelledby="work-title">
@@ -37,18 +40,24 @@ export default function Home() {
                 <h3>
                   <Link href={`/work/${project.slug}`}>{project.name}</Link>
                 </h3>
-                <p className="work-index-role">{project.role}</p>
+                <p className="work-index-role">
+                  <AccentPunctuation>{project.role}</AccentPunctuation>
+                </p>
                 <div className="work-index-meta">
                   <span>{project.year}</span>
                 </div>
               </div>
 
               <div className="work-index-details">
-                <p className="work-index-description">{project.description}</p>
+                <p className="work-index-description">
+                  <AccentPunctuation>{project.description}</AccentPunctuation>
+                </p>
 
                 <ul className="work-index-highlights">
                   {project.homeHighlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
+                    <li key={highlight}>
+                      <AccentPunctuation>{highlight}</AccentPunctuation>
+                    </li>
                   ))}
                 </ul>
 

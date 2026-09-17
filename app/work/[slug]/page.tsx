@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
+import { AccentPunctuation } from "@/components/accent-punctuation";
 import { ProjectVisual } from "@/components/project-visual";
 
 export function generateStaticParams() {
@@ -58,16 +59,21 @@ export default async function ProjectPage({
       <header className="case-header">
         <span className="mono">{p.category}</span>
         <h1>
-          {p.name}
-          <span className="accent">.</span>
+          <AccentPunctuation>{`${p.name}.`}</AccentPunctuation>
         </h1>
-        <p>{p.description}</p>
+        <p>
+          <AccentPunctuation>{p.description}</AccentPunctuation>
+        </p>
       </header>
 
       <dl className="case-facts">
         <div>
-          <dt>Role & Responsibilities</dt>
-          <dd>{p.role}</dd>
+          <dt>
+            <AccentPunctuation>Role & Responsibilities</AccentPunctuation>
+          </dt>
+          <dd>
+            <AccentPunctuation>{p.role}</AccentPunctuation>
+          </dd>
         </div>
         <div>
           <dt>Timeline</dt>
@@ -99,21 +105,33 @@ export default async function ProjectPage({
 
       <div className="case-body">
         <aside className="case-aside">
-          <h4>Engineering Deep Dive</h4>
-          <p>Product decisions and structural tradeoffs.</p>
+          <h4>
+            <AccentPunctuation>Engineering Deep Dive</AccentPunctuation>
+          </h4>
+          <p>
+            <AccentPunctuation>
+              Product decisions and structural tradeoffs.
+            </AccentPunctuation>
+          </p>
           <small>
-            {p.imageNote ??
-              (p.type === "telemetry"
-                ? "Interactive system flow and architecture topology."
-                : "Operational workflow and component pipeline.")}
+            <AccentPunctuation>
+              {p.imageNote ??
+                (p.type === "telemetry"
+                  ? "Interactive system flow and architecture topology."
+                  : "Operational workflow and component pipeline.")}
+            </AccentPunctuation>
           </small>
         </aside>
 
         <div className="case-sections-flow">
           {caseSections.map((sec) => (
             <section key={sec.title} className="case-narrative-section">
-              <h2>{sec.title}</h2>
-              <p>{sec.text}</p>
+              <h2>
+                <AccentPunctuation>{sec.title}</AccentPunctuation>
+              </h2>
+              <p>
+                <AccentPunctuation>{sec.text}</AccentPunctuation>
+              </p>
             </section>
           ))}
         </div>

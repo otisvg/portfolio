@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { profile } from "@/data/profile";
+import { AccentPunctuation } from "@/components/accent-punctuation";
 import { ExperienceList } from "@/components/experience-list";
 import { PrintButton } from "@/components/print-button";
 
@@ -42,8 +43,7 @@ export default function CV() {
 
       <header className="cv-masthead">
         <h1>
-          {profile.name}
-          <span className="accent">.</span>
+          <AccentPunctuation>{`${profile.name}.`}</AccentPunctuation>
         </h1>
         <p className="cv-role">{profile.title}</p>
         <div className="cv-contact-details">
@@ -67,7 +67,9 @@ export default function CV() {
 
       <section className="cv-section">
         <h2>Executive summary</h2>
-        <p>{profile.summary}</p>
+        <p>
+          <AccentPunctuation>{profile.summary}</AccentPunctuation>
+        </p>
       </section>
 
       <section className="cv-section">
@@ -76,7 +78,9 @@ export default function CV() {
       </section>
 
       <section className="cv-section">
-        <h2>Technical profile & toolchain</h2>
+        <h2>
+          <AccentPunctuation>Technical profile & toolchain</AccentPunctuation>
+        </h2>
         <div className="skills-cards-grid">
           {Object.entries(profile.skills).map(([domain, items]) => (
             <div key={domain} className="skill-category-card">
@@ -94,14 +98,22 @@ export default function CV() {
       </section>
 
       <section className="cv-section">
-        <h2>Education & intensive study</h2>
+        <h2>
+          <AccentPunctuation>Education & intensive study</AccentPunctuation>
+        </h2>
         {profile.education.map((e) => (
           <div className="education-item" key={e.school}>
             <span className="education-period">{e.period}</span>
             <div>
-              <h3>{e.degree}</h3>
-              <p className="education-school">{e.school}</p>
-              <p>{e.detail}</p>
+              <h3>
+                <AccentPunctuation>{e.degree}</AccentPunctuation>
+              </h3>
+              <p className="education-school">
+                <AccentPunctuation>{e.school}</AccentPunctuation>
+              </p>
+              <p>
+                <AccentPunctuation>{e.detail}</AccentPunctuation>
+              </p>
             </div>
           </div>
         ))}

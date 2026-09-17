@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { profile } from "@/data/profile";
 import { Header } from "@/components/header";
 import { ContactWidget } from "@/components/contact-widget";
+import { AccentPunctuation } from "@/components/accent-punctuation";
 import localFont from "next/font/local";
 const sans = localFont({
   src: "../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2",
@@ -72,8 +73,12 @@ export default function RootLayout({
         {children}
         <footer className="site-footer shell">
           <span>
-            © {new Date().getFullYear()}{" "}
-            <span className="footer-mark">{profile.initials}.</span>
+            <AccentPunctuation>©</AccentPunctuation>{" "}
+            {new Date().getFullYear()}{" "}
+            <span className="footer-mark">
+              {profile.initials}
+              <AccentPunctuation>.</AccentPunctuation>
+            </span>
           </span>
         </footer>
         <ContactWidget endpoint={profile.contactFormEndpoint} />

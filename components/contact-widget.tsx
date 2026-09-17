@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { AccentPunctuation } from "./accent-punctuation";
 
 type SubmissionStatus = "idle" | "submitting" | "success" | "error";
 
@@ -117,9 +118,13 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
           <div className="contact-widget-header">
             <div>
               <h2 id={titleId}>
-                Let’s chat<span className="accent">.</span>
+                <AccentPunctuation>Let’s chat.</AccentPunctuation>
               </h2>
-              <p>Have a role, project, or idea in mind? Send me a note.</p>
+              <p>
+                <AccentPunctuation>
+                  Have a role, project, or idea in mind? Send me a note.
+                </AccentPunctuation>
+              </p>
             </div>
             <button
               type="button"
@@ -142,7 +147,9 @@ export function ContactWidget({ endpoint }: ContactWidgetProps) {
               </span>
               <h3>Message sent</h3>
               <p>
-                Thanks — I’ll reply to <strong>{replyEmail}</strong> by email.
+                <AccentPunctuation>Thanks — I’ll reply to </AccentPunctuation>
+                <strong>{replyEmail}</strong>
+                <AccentPunctuation> by email.</AccentPunctuation>
               </p>
               <div className="contact-widget-success-actions">
                 <button

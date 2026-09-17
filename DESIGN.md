@@ -48,6 +48,7 @@
   - Line measure: strictly bounded between `65ch` and `75ch` for longform narrative.
   - Optical rhythm: headings balanced with `text-wrap: balance`.
   - Tabular numerals: `font-variant-numeric: tabular-nums` for dates, metrics, and data readouts.
+  - Sentence-ending full stops use `--accent`; all other punctuation, dates, URLs, code, technical identifiers, and editable values remain neutral.
   - No eyebrows or kickers above headings.
 
 ---

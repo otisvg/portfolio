@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { AccentPunctuation } from "./accent-punctuation";
 import type { Project } from "@/data/projects";
 import { architectureFlows, type ArchitectureNode } from "@/data/architecture-flows";
 
@@ -116,7 +117,9 @@ export function ProjectVisual({ project }: { project: Project }) {
           {project.imageNote && (
             <div className="screenshot-caption">
               <span className="caption-dot" aria-hidden="true" />
-              <span>{project.imageNote}</span>
+              <span>
+                <AccentPunctuation>{project.imageNote}</AccentPunctuation>
+              </span>
             </div>
           )}
         </div>
@@ -125,7 +128,9 @@ export function ProjectVisual({ project }: { project: Project }) {
           {currentFlow && (
             <div className="flow-meta">
               <span className="flow-badge">Architecture Blueprint</span>
-              <p className="flow-description">{currentFlow.description}</p>
+              <p className="flow-description">
+                <AccentPunctuation>{currentFlow.description}</AccentPunctuation>
+              </p>
             </div>
           )}
 
@@ -190,12 +195,18 @@ export function ProjectVisual({ project }: { project: Project }) {
 
               <div className="inspector-content">
                 <div className="inspector-block">
-                  <span className="block-label">Function & Responsibilities</span>
-                  <p>{selectedNode.detail}</p>
+                  <span className="block-label">
+                    <AccentPunctuation>Function & Responsibilities</AccentPunctuation>
+                  </span>
+                  <p>
+                    <AccentPunctuation>{selectedNode.detail}</AccentPunctuation>
+                  </p>
                 </div>
                 <div className="inspector-block tradeoff">
                   <span className="block-label">Architecture Tradeoff</span>
-                  <p>{selectedNode.tradeoff}</p>
+                  <p>
+                    <AccentPunctuation>{selectedNode.tradeoff}</AccentPunctuation>
+                  </p>
                 </div>
               </div>
             </div>
