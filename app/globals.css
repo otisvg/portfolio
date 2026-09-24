@@ -2163,6 +2163,20 @@ button:focus-visible {
   line-height: 1.65;
 }
 
+.work-index-group-title {
+  margin: 0;
+  padding: 22px 0 16px;
+  color: var(--muted);
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.work-index-group + .work-index-group {
+  margin-top: 28px;
+}
+
 .work-index-list {
   border-bottom: 1px solid var(--border);
 }
@@ -2193,7 +2207,7 @@ button:focus-visible {
   grid-area: primary;
 }
 
-.work-index-primary h3 {
+.work-index-primary h4 {
   margin: 0;
   color: var(--ink);
   font-size: clamp(26px, 2.6vw, 36px);
@@ -2202,11 +2216,11 @@ button:focus-visible {
   line-height: 1.1;
 }
 
-.work-index-primary h3 a {
+.work-index-primary h4 a {
   transition: color 0.18s ease;
 }
 
-.work-index-primary h3 a:hover {
+.work-index-primary h4 a:hover {
   color: var(--accent);
 }
 
@@ -2423,7 +2437,7 @@ button:focus-visible {
   .work-index-primary {
     margin-bottom: 24px;
   }
-  .work-index-primary h3 {
+  .work-index-primary h4 {
     font-size: 32px;
   }
   .work-index-description {

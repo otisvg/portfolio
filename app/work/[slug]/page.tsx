@@ -45,7 +45,7 @@ export default async function ProjectPage({
     { title: "Problem & Constraints", text: p.problem },
     { title: "Engineering Approach", text: p.approach },
     { title: "Architecture & Systems Design", text: p.architecture },
-    { title: "Outcomes & Measured Impact", text: p.outcome },
+    { title: p.group === "personal" ? "Outcome" : "Outcomes & Measured Impact", text: p.outcome },
     { title: "Reflections & Future Improvements", text: p.improve },
   ].filter((sec) => Boolean(sec.text));
 
@@ -53,7 +53,7 @@ export default async function ProjectPage({
     <main id="main" className="shell case-study">
       <Link className="back-link" href="/#work">
         <span aria-hidden="true">←</span>
-        <span>Back to selected work</span>
+        <span>Back to projects</span>
       </Link>
 
       <header className="case-header">
@@ -145,7 +145,7 @@ export default async function ProjectPage({
           </span>
         </Link>
         <Link href="/#work" className="action-secondary">
-          <span>All selected work</span>
+          <span>All projects</span>
           <span aria-hidden="true">↑</span>
         </Link>
       </div>

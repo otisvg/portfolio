@@ -1,5 +1,6 @@
 export type Project = {
   slug: string;
+  group: "work" | "personal";
   number: string;
   name: string;
   category: string;
@@ -26,6 +27,7 @@ export type Project = {
 export const projects: readonly Project[] = [
   {
     slug: "roli",
+    group: "work",
     screenshot: "/projects/roli.webp",
     screenshotAlt: "ROLI homepage showing the piano learning experience",
     imageNote: "Current public ROLI homepage, captured September 2026.",
@@ -59,6 +61,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "hawk",
+    group: "work",
     number: "02",
     name: "HAWK",
     category: "RETAIL / OBSERVABILITY",
@@ -88,6 +91,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "agentic-workflows",
+    group: "work",
     number: "03",
     name: "Agents in practice",
     category: "AI / ENGINEERING WORKFLOW",
@@ -122,5 +126,98 @@ export const projects: readonly Project[] = [
       "The work includes a command-line tool using Claude and GitHub Copilot APIs for sprint ticket creation, account provisioning, and pull requests. MCP servers, agent skills, and sub-agent workflows are part of my broader practice; I keep code review and verification central to the process.",
     outcome:
       "Workshop results include automatically generated CMS image metadata, generated test criteria for tickets, and the identification of performance and refactoring opportunities. Personal AI projects include an automated expense tracker and an educational learning tracker.",
+  },
+  {
+    slug: "pocket-circuit",
+    group: "personal",
+    number: "04",
+    name: "Pocket Circuit",
+    category: "PERSONAL / MUSIC SOFTWARE",
+    description:
+      "A 16-pad browser sampler and beat looper with a playable demo kit, waveform slicing, and local saving.",
+    homeHighlights: [
+      "Playable demo kit with no setup",
+      "Sample slicing and pad assignment",
+      "Patterns and audio saved in the browser",
+    ],
+    role: "Creator & frontend engineer",
+    year: "2026",
+    stack: ["Next.js", "React", "TypeScript", "Web Audio API", "IndexedDB"],
+    type: "sampler",
+    imageNote: "Interactive map of sound input, waveform editing, and browser playback.",
+    diagram: ["Choose sounds", "Play & record", "Save locally"],
+    diagramDetail: "Web Audio scheduling · Waveform editing · IndexedDB",
+    context:
+      "Pocket Circuit is a personal browser-based sampler and beat looper. It starts with a synthesized kit so someone can play immediately, then lets them import audio, slice a waveform, assign sounds to pads, and record patterns.",
+    problem:
+      "A sampler should feel playable on first use without requiring an account, a backend, or a folder of audio files. Imported sounds and recorded patterns also need to remain available when the browser reloads.",
+    approach:
+      "I built a 16-pad interface around a ready-to-play demo kit, keyboard and pointer input, waveform-based sample editing, and a two-bar sequencer. Local file import and a user-controlled tab-audio capture flow feed the same slicer; tab capture depends on the browser's sharing permission.",
+    architecture:
+      "A gesture-activated Web Audio engine handles synthesis, playback, and effects. The transport schedules events against AudioContext time using a short look-ahead window, while IndexedDB stores project state and imported audio. The waveform is drawn from decoded samples.",
+    outcome:
+      "The result is a responsive, browser-local instrument that supports immediate demo playback, imported samples, recorded loops, and restoration of saved projects. Audio capture and codec support remain dependent on the browser and the user's permissions.",
+  },
+  {
+    slug: "hearth",
+    group: "personal",
+    number: "05",
+    name: "Hearth",
+    category: "PERSONAL / EDUCATION",
+    description:
+      "A calm homeschool planner for one learner, bringing the week, learning resources, and progress into one place.",
+    homeHighlights: [
+      "Weekly planning and learner checklist",
+      "Knowledge bank, journal, and reports",
+      "Works offline without an account",
+    ],
+    role: "Creator & full-stack engineer",
+    year: "2026",
+    stack: ["React", "Vite", "Express", "PostgreSQL", "localStorage"],
+    type: "education",
+    imageNote: "Interactive map of weekly planning and learning records.",
+    diagram: ["Plan the week", "Complete activities", "Review progress"],
+    diagramDetail: "React planner · Local-first data · Optional account sync",
+    context:
+      "Hearth is a personal app for planning and tracking one learner's homeschool week. It gives parents a dashboard and calendar, while a focused learner view turns the day's activities into a simple checklist.",
+    problem:
+      "Weekly tasks, learning materials, and evidence of progress can become scattered. The app needed to support everyday planning and record-keeping without making an account a prerequisite.",
+    approach:
+      "I brought planning, a learner checklist, linked resources, a dated learning journal, and print-ready reports into one interface. The calendar supports moving tasks through the week and carrying unfinished work forward.",
+    architecture:
+      "The React and Vite client works offline with browser localStorage. Optional email/password accounts use an Express API and PostgreSQL for synced records; local data can move into an account when a user signs in. The subscription flow is an optional scaffold that requires Stripe configuration.",
+    outcome:
+      "Hearth provides a usable offline planning flow alongside optional account-backed storage. Parents can review subject progress, learning days, and instructional hours, and print a report for their records.",
+  },
+  {
+    slug: "ktt2-song-finder",
+    group: "personal",
+    number: "06",
+    name: "KTT2 Song Finder",
+    category: "PERSONAL / MUSIC DISCOVERY",
+    description:
+      "Finds song mentions in KTT2 Music conversations and turns reviewed Spotify matches into private playlists.",
+    homeHighlights: [
+      "Scans recent music threads",
+      "Rules first, optional AI for informal mentions",
+      "Review before Spotify playlist export",
+    ],
+    role: "Creator & full-stack engineer",
+    year: "2026",
+    stack: ["React", "TypeScript", "Express", "SQLite", "Spotify API", "OpenAI API"],
+    type: "music-discovery",
+    imageNote: "Interactive map of thread collection, song extraction, and Spotify review.",
+    diagram: ["Read KTT2", "Extract songs", "Review & export"],
+    diagramDetail: "Thread crawler · Song extraction · Spotify matching",
+    context:
+      "KTT2 Song Finder is a local web app for turning music recommendations in KTT2 threads into a private Spotify playlist. A scan reads recent conversations and presents candidate tracks for review.",
+    problem:
+      "Recommendations in discussion threads are easy to miss and hard to collect. Song names appear in different formats, and a fuzzy Spotify result should not silently become a playlist track.",
+    approach:
+      "I built a crawler for recent threads and replies, removed quoted text, extracted explicit Spotify links and artist-title patterns, and used an optional OpenAI fallback for less structured mentions. Clear matches can be accepted automatically; uncertain results remain reviewable before export.",
+    architecture:
+      "A React and TypeScript frontend talks to an Express API. SQLite stores scans, posts, mentions, and resumable jobs. The worker handles collection, extraction, and Spotify matching in stages; Spotify OAuth is used to create a private playlist after review. The app runs locally and needs user-provided Spotify credentials.",
+    outcome:
+      "The local workflow can scan conversations, preserve partial results when a stage fails, and turn selected matches into a private playlist. It identifies itself to the source site, limits request frequency, and stops on access challenges.",
   },
 ];

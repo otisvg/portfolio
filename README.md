@@ -6,7 +6,7 @@ Next.js App Router, TypeScript, Tailwind CSS, self-hosted Inter and IBM Plex Mon
 
 - `data/profile.ts`: identity, contact links, summary, biography, portrait, skills, and education. The six-year experience summary follows the owner's newer notes; the original CV says over five years.
 - `data/experience.ts`: dated roles, concise homepage descriptions, and detailed HTML CV highlights.
-- `data/projects.ts`: ROLI, HAWK, and agentic-workflow case studies. All claims are grounded in the supplied material. No invented metrics or unconfirmed personal reflections are included.
+- `data/projects.ts`: professional case studies for ROLI, HAWK, and agentic workflows, plus personal projects for Pocket Circuit, Hearth, and KTT2 Song Finder. Personal-project descriptions are grounded in their local source and README files; no public demo or source link is assumed for a private or local-only project.
 - `public/otis-vickers-graver-cv.pdf`: byte-for-byte copy of the owner's supplied PDF, downloaded from the CV actions. The HTML CV is a concise web adaptation and includes newer notes.
 - `public/otis-headshot.webp`: optimized copy of the supplied headshot. Adjust `profile.headshot.position` for its crop.
 - GitHub is intentionally omitted until the owner supplies a profile URL. LinkedIn and email use the supplied CV.
