@@ -43,3 +43,31 @@ export const experience = [
     ],
   },
 ];
+
+/** A glanceable career timeline for the homepage; the CV holds the detail. */
+export const journey = [
+  {
+    years: "2023 — now",
+    place: "ROLI",
+    role: "Senior Full Stack Engineer",
+    line: "Owning roli.com from product discovery through checkout and onboarding.",
+  },
+  {
+    years: "2021 — 2022",
+    place: "OLR",
+    role: "Software Engineer & Team Lead",
+    line: "Built HAWK from an idea to production and led a team of four.",
+  },
+  {
+    years: "2020",
+    place: "Makers Academy",
+    role: "Software development intensive",
+    line: "Sixteen weeks of test-driven, object-oriented, full-stack practice.",
+  },
+  {
+    years: "2019",
+    place: "Pirical",
+    role: "Software Engineer",
+    line: "APIs and an analytics interface for a legal analytics platform.",
+  },
+];

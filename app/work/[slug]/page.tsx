@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ViewTransition } from "react";
 import { projects } from "@/data/projects";
 import { AccentPunctuation } from "@/components/accent-punctuation";
-import { ProjectVisual } from "@/components/project-visual";
+import { ProjectArt } from "@/components/project-art";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -32,122 +33,133 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const p = projects.find((p) => p.slug === slug);
+  const index = projects.findIndex((x) => x.slug === slug);
+  const p = projects[index];
   if (!p) notFound();
 
-  const next =
-    projects[
-      (projects.findIndex((x) => x.slug === slug) + 1) % projects.length
-    ];
+  const next = projects[(index + 1) % projects.length];
+  const backHref = p.group === "work" ? "/#work" : "/#side-projects";
 
-  const caseSections = [
-    { title: "Context & Domain", text: p.context },
-    { title: "Problem & Constraints", text: p.problem },
-    { title: "Engineering Approach", text: p.approach },
-    { title: "Architecture & Systems Design", text: p.architecture },
-    { title: p.group === "personal" ? "Outcome" : "Outcomes & Measured Impact", text: p.outcome },
-    { title: "Reflections & Future Improvements", text: p.improve },
-  ].filter((sec) => Boolean(sec.text));
+  const story = [
+    { label: "The challenge", text: p.problem },
+    { label: "What I did", text: p.approach },
+    { label: "Under the hood", text: p.architecture },
+    { label: p.group === "personal" ? "Where it landed" : "The result", text: p.outcome },
+    { label: "What I’d improve", text: p.improve },
+  ].filter((section) => Boolean(section.text));
 
   return (
-    <main id="main" className="shell case-study">
-      <Link className="back-link" href="/#work">
-        <span aria-hidden="true">←</span>
-        <span>Back to projects</span>
-      </Link>
+    <main id="main" className="case">
+      <div className="shell">
+        <Link className="back-link" href={backHref}>
+          <span aria-hidden="true">←</span> All work
+        </Link>
 
-      <header className="case-header">
-        <span className="mono">{p.category}</span>
-        <h1>
-          <AccentPunctuation>{`${p.name}.`}</AccentPunctuation>
-        </h1>
-        <p>
-          <AccentPunctuation>{p.description}</AccentPunctuation>
-        </p>
-      </header>
-
-      <dl className="case-facts">
-        <div>
-          <dt>
-            <AccentPunctuation>Role & Responsibilities</AccentPunctuation>
-          </dt>
-          <dd>
-            <AccentPunctuation>{p.role}</AccentPunctuation>
-          </dd>
-        </div>
-        <div>
-          <dt>Timeline</dt>
-          <dd>{p.year}</dd>
-        </div>
-        <div>
-          <dt>Core Tech Stack</dt>
-          <dd>{p.stack.join(", ")}</dd>
-        </div>
-      </dl>
-
-      <div className="project-external-links" style={{ marginBottom: "28px" }}>
-        {p.github && (
-          <a href={p.github} target="_blank" rel="noreferrer" className="action-secondary">
-            <span>View source code</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-        )}
-        {p.liveUrl && (
-          <a href={p.liveUrl} target="_blank" rel="noreferrer" className="action-secondary">
-            <span>Visit live product</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-        )}
-      </div>
-
-      {/* Interactive System Architecture & Visualizer Stage */}
-      <ProjectVisual project={p} />
-
-      <div className="case-body">
-        <aside className="case-aside">
-          <h4>
-            <AccentPunctuation>Engineering Deep Dive</AccentPunctuation>
-          </h4>
-          <p>
-            <AccentPunctuation>
-              Product decisions and structural tradeoffs.
-            </AccentPunctuation>
+        <header className="case-hero">
+          <h1>
+            <AccentPunctuation>{`${p.name}.`}</AccentPunctuation>
+          </h1>
+          <p className="case-lede">
+            <AccentPunctuation>{p.description}</AccentPunctuation>
           </p>
-          <small>
-            <AccentPunctuation>
-              {p.imageNote ??
-                (p.type === "telemetry"
-                  ? "Interactive system flow and architecture topology."
-                  : "Operational workflow and component pipeline.")}
-            </AccentPunctuation>
-          </small>
-        </aside>
+          <dl className="case-facts">
+            <div>
+              <dt>Role</dt>
+              <dd>{p.role}</dd>
+            </div>
+            <div>
+              <dt>When</dt>
+              <dd>{p.year}</dd>
+            </div>
+            <div>
+              <dt>Built with</dt>
+              <dd>{p.stack.join(", ")}</dd>
+            </div>
+          </dl>
+          {(p.liveUrl || p.github) && (
+            <div className="case-links">
+              {p.liveUrl && (
+                <a href={p.liveUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">
+                  Visit {new URL(p.liveUrl).hostname} <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              {p.github && (
+                <a href={p.github} target="_blank" rel="noreferrer" className="btn btn--ghost">
+                  View source <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </div>
+          )}
+        </header>
 
-        <div className="case-sections-flow">
-          {caseSections.map((sec) => (
-            <section key={sec.title} className="case-narrative-section">
-              <h2>
-                <AccentPunctuation>{sec.title}</AccentPunctuation>
-              </h2>
+        <figure className="case-art">
+          <ViewTransition name={`art-${p.slug}`} share="morph" default="none">
+            <ProjectArt project={p} size="hero" />
+          </ViewTransition>
+          {p.imageNote && (
+            <figcaption>
+              <AccentPunctuation>{p.imageNote}</AccentPunctuation>
+            </figcaption>
+          )}
+        </figure>
+
+        <section className="case-intro" aria-label="Overview">
+          <p className="case-context">
+            <AccentPunctuation>{p.context}</AccentPunctuation>
+          </p>
+          <ul className="case-glance" aria-label="Highlights">
+            {p.homeHighlights.map((highlight, i) => (
+              <li key={highlight} className="reveal">
+                <span className="case-glance-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {highlight}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="case-flow" aria-labelledby="flow-title">
+          <h2 id="flow-title">
+            <AccentPunctuation>How it works.</AccentPunctuation>
+          </h2>
+          <ol>
+            {p.flow.map((step, i) => (
+              <li key={step.title} className="reveal">
+                <span className="case-flow-num" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <h3>{step.title}</h3>
+                <p>
+                  <AccentPunctuation>{step.detail}</AccentPunctuation>
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <div className="case-story">
+          {story.map((section) => (
+            <section key={section.label} className="reveal">
+              <h2>{section.label}</h2>
               <p>
-                <AccentPunctuation>{sec.text}</AccentPunctuation>
+                <AccentPunctuation>{section.text}</AccentPunctuation>
               </p>
             </section>
           ))}
         </div>
-      </div>
 
-      <div className="next-project-card">
-        <Link href={`/work/${next.slug}`} className="next-project-link">
-          <span className="next-project-label">Next Case Study</span>
-          <span className="next-project-title">
-            {next.name} <span aria-hidden="true">→</span>
-          </span>
-        </Link>
-        <Link href="/#work" className="action-secondary">
-          <span>All projects</span>
-          <span aria-hidden="true">↑</span>
-        </Link>
+        <nav className="case-next" aria-label="Next project">
+          <Link href={`/work/${next.slug}`} className={`next-card tone--${next.slug}`}>
+            <span className="next-label">Next project</span>
+            <span className="next-title">
+              {next.name} <span className="card-arrow" aria-hidden="true">→</span>
+            </span>
+            <span className="next-desc">
+              <AccentPunctuation>{next.description}</AccentPunctuation>
+            </span>
+          </Link>
+        </nav>
       </div>
     </main>
   );

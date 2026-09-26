@@ -84,7 +84,7 @@ export default function CV() {
         <div className="skills-cards-grid">
           {Object.entries(profile.skills).map(([domain, items]) => (
             <div key={domain} className="skill-category-card">
-              <h4>{domain}</h4>
+              <h3>{domain}</h3>
               <div className="skill-pills">
                 {items.map((item) => (
                   <span key={item} className="skill-tag">
