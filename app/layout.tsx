@@ -71,15 +71,45 @@ export default function RootLayout({
         </a>
         <Header />
         {children}
-        <footer className="site-footer shell">
-          <span>
-            <AccentPunctuation>©</AccentPunctuation>{" "}
-            {new Date().getFullYear()}{" "}
-            <span className="footer-mark">
-              {profile.initials}
-              <AccentPunctuation>.</AccentPunctuation>
-            </span>
-          </span>
+        <footer className="site-footer">
+          <div className="shell">
+            <section className="cta" aria-labelledby="cta-title">
+              <h2 id="cta-title">
+                <AccentPunctuation>Let’s talk.</AccentPunctuation>
+              </h2>
+              <p>
+                <AccentPunctuation>
+                  Have a role, project, or idea in mind? I’d love to hear about it.
+                </AccentPunctuation>
+              </p>
+              <div className="cta-actions">
+                <a className="btn btn--primary btn--lg" href={`mailto:${profile.email}`}>
+                  {profile.email}
+                </a>
+                <a className="btn btn--ghost" href={profile.linkedin} target="_blank" rel="noreferrer">
+                  LinkedIn <span aria-hidden="true">↗</span>
+                </a>
+                <a className="btn btn--ghost" href={profile.github} target="_blank" rel="noreferrer">
+                  GitHub <span aria-hidden="true">↗</span>
+                </a>
+                <a className="btn btn--ghost" href={profile.cvPdf} download>
+                  Download CV <span aria-hidden="true">↓</span>
+                </a>
+              </div>
+            </section>
+            <div className="footer-base">
+              <span>
+                © {new Date().getFullYear()}{" "}
+                <span className="footer-mark">
+                  {profile.initials}
+                  <AccentPunctuation>.</AccentPunctuation>
+                </span>
+              </span>
+              <a href="#main" className="text-link">
+                Back to top <span aria-hidden="true">↑</span>
+              </a>
+            </div>
+          </div>
         </footer>
         <ContactWidget endpoint={profile.contactFormEndpoint} />
       </body>

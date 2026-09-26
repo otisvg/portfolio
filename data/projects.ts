@@ -1,7 +1,8 @@
+export type FlowStep = { title: string; detail: string };
+
 export type Project = {
   slug: string;
   group: "work" | "personal";
-  number: string;
   name: string;
   category: string;
   description: string;
@@ -9,7 +10,6 @@ export type Project = {
   role: string;
   year: string;
   stack: readonly string[];
-  type: string;
   context: string;
   problem: string;
   approach: string;
@@ -19,11 +19,14 @@ export type Project = {
   screenshot?: string;
   screenshotAlt?: string;
   imageNote?: string;
+  /** Up to two short labels floated over a screenshot. */
+  artLabels?: readonly string[];
   github?: string;
   liveUrl?: string;
-  diagram: readonly string[];
-  diagramDetail: string;
+  /** Three plain-language steps that explain how the product works. */
+  flow: readonly [FlowStep, FlowStep, FlowStep];
 };
+
 export const projects: readonly Project[] = [
   {
     slug: "roli",
@@ -31,7 +34,7 @@ export const projects: readonly Project[] = [
     screenshot: "/projects/roli.webp",
     screenshotAlt: "ROLI homepage showing the piano learning experience",
     imageNote: "Current public ROLI homepage, captured September 2026.",
-    number: "01",
+    artLabels: ["Multi-region", "CASIO onboarding"],
     name: "ROLI",
     category: "E-COMMERCE / CUSTOMER EXPERIENCE",
     description:
@@ -44,10 +47,7 @@ export const projects: readonly Project[] = [
     role: "Senior Full Stack Engineer",
     year: "2023 — present",
     stack: ["TypeScript", "React", "Next.js", "Node.js", "Shopify", "MongoDB"],
-    type: "commerce",
     liveUrl: "https://roli.com",
-    diagram: ["Discover", "Purchase", "Onboard"],
-    diagramDetail: "Multi-region storefront · Payments · Customer accounts",
     context:
       "At ROLI, I’ve taken broad engineering ownership of roli.com, shaping the experience from product discovery through purchase and onboarding. The work spans day-to-day product improvements, international expansion, launches, and partnerships.",
     problem:
@@ -58,11 +58,15 @@ export const projects: readonly Project[] = [
       "The platform uses TypeScript, React, Next.js, and Node.js. Self-service order history is backed by Express and MongoDB REST APIs. Commerce integrations include Shopify, Stripe, Klarna, and PayPal, with a data access layer and error handling around payment flows. Edge-based location detection supports localised experiences.",
     outcome:
       "The work brought two storefronts into a unified multi-region application, supported expansion into Japan, and delivered onboarding for the CASIO partnership. Self-service order history reduced support tickets for order lookups. Parallelising the Cypress end-to-end suite reduced test duration by 80%.",
+    flow: [
+      { title: "Discover", detail: "Edge-based location detection serves a localised storefront built with Next.js and React." },
+      { title: "Purchase", detail: "Shopify, Stripe, Klarna, and PayPal sit behind a data access layer with careful error handling." },
+      { title: "Onboard", detail: "Multi-step onboarding for the CASIO partnership, plus self-service order history on Express and MongoDB." },
+    ],
   },
   {
     slug: "hawk",
     group: "work",
-    number: "02",
     name: "HAWK",
     category: "RETAIL / OBSERVABILITY",
     description:
@@ -75,9 +79,6 @@ export const projects: readonly Project[] = [
     role: "Software Engineer & Team Lead",
     year: "2021 — 2022",
     stack: ["React", "Next.js", "Node.js", "InfluxDB", "AWS", "Terraform"],
-    type: "telemetry",
-    diagram: ["Store systems", "Telemetry & APIs", "Dashboards & alerts"],
-    diagramDetail: "React / Next.js · Node.js · InfluxDB · Kapacitor",
     context:
       "At OLR, I built HAWK from the ground up: a monitoring platform that gives retailers a central view of their point-of-sale systems. I worked directly with senior leadership and clients to take the product from an initial idea into production.",
     problem:
@@ -88,11 +89,15 @@ export const projects: readonly Project[] = [
       "React and Next.js provide operational dashboards, with Node.js REST APIs and InfluxDB for telemetry. The API layer includes session-token authentication, OpenAPI documentation, and queries tuned for InfluxDB and SQL. Kapacitor and PowerShell support distributed alerts. Cloud deployment uses AWS, Terraform, Jenkins, and Nginx.",
     outcome:
       "HAWK reached production and gave retail support teams a shared view of point-of-sale systems, with automated alerts to detect failures before client outages. I owned delivery across the frontend, backend services, and deployment while supporting a team of four engineers.",
+    flow: [
+      { title: "Store systems", detail: "Retailers’ point-of-sale systems and servers are spread across many locations." },
+      { title: "Telemetry & APIs", detail: "Node.js REST APIs with session-token auth and OpenAPI docs, backed by tuned InfluxDB and SQL queries." },
+      { title: "Dashboards & alerts", detail: "React and Next.js dashboards for support teams, with Kapacitor alerts that flag failures before outages." },
+    ],
   },
   {
     slug: "agentic-workflows",
     group: "work",
-    number: "03",
     name: "Agents in practice",
     category: "AI / ENGINEERING WORKFLOW",
     description:
@@ -112,10 +117,6 @@ export const projects: readonly Project[] = [
       "MCP",
       "Agent skills",
     ],
-    type: "agents",
-    diagram: ["Define the task", "Build with agents", "Review & verify"],
-    diagramDetail:
-      "Planning · Research · Implementation · Tests · Documentation",
     context:
       "I use agentic tools daily for planning, research, refactoring, feature development, and tests. At ROLI, I also lead a collaborative AI workshop where developers discuss ideas and build tools to improve their workflow.",
     problem:
@@ -126,11 +127,15 @@ export const projects: readonly Project[] = [
       "The work includes a command-line tool using Claude and GitHub Copilot APIs for sprint ticket creation, account provisioning, and pull requests. MCP servers, agent skills, and sub-agent workflows are part of my broader practice; I keep code review and verification central to the process.",
     outcome:
       "Workshop results include automatically generated CMS image metadata, generated test criteria for tickets, and the identification of performance and refactoring opportunities. Personal AI projects include an automated expense tracker and an educational learning tracker.",
+    flow: [
+      { title: "Define the task", detail: "Planning and research come first, so each agent works on a well-scoped problem." },
+      { title: "Build with agents", detail: "Claude Code, Cursor, Copilot, and Codex, extended with MCP servers, agent skills, and sub-agents." },
+      { title: "Review & verify", detail: "Code review, tests, and documentation stay central, so faster work is still readable and secure." },
+    ],
   },
   {
     slug: "pocket-circuit",
     group: "personal",
-    number: "04",
     name: "Pocket Circuit",
     category: "PERSONAL / MUSIC SOFTWARE",
     description:
@@ -143,10 +148,6 @@ export const projects: readonly Project[] = [
     role: "Creator & frontend engineer",
     year: "2026",
     stack: ["Next.js", "React", "TypeScript", "Web Audio API", "IndexedDB"],
-    type: "sampler",
-    imageNote: "Interactive map of sound input, waveform editing, and browser playback.",
-    diagram: ["Choose sounds", "Play & record", "Save locally"],
-    diagramDetail: "Web Audio scheduling · Waveform editing · IndexedDB",
     context:
       "Pocket Circuit is a personal browser-based sampler and beat looper. It starts with a synthesized kit so someone can play immediately, then lets them import audio, slice a waveform, assign sounds to pads, and record patterns.",
     problem:
@@ -157,11 +158,15 @@ export const projects: readonly Project[] = [
       "A gesture-activated Web Audio engine handles synthesis, playback, and effects. The transport schedules events against AudioContext time using a short look-ahead window, while IndexedDB stores project state and imported audio. The waveform is drawn from decoded samples.",
     outcome:
       "The result is a responsive, browser-local instrument that supports immediate demo playback, imported samples, recorded loops, and restoration of saved projects. Audio capture and codec support remain dependent on the browser and the user's permissions.",
+    flow: [
+      { title: "Choose sounds", detail: "A synthesized demo kit plays instantly; local files or permitted tab audio can be imported and sliced." },
+      { title: "Play & record", detail: "Sixteen pads with keyboard and pointer input, and a two-bar sequencer timed against the audio clock." },
+      { title: "Save locally", detail: "Project state and imported audio persist in IndexedDB—no account or backend required." },
+    ],
   },
   {
     slug: "hearth",
     group: "personal",
-    number: "05",
     name: "Hearth",
     category: "PERSONAL / EDUCATION",
     description:
@@ -174,10 +179,6 @@ export const projects: readonly Project[] = [
     role: "Creator & full-stack engineer",
     year: "2026",
     stack: ["React", "Vite", "Express", "PostgreSQL", "localStorage"],
-    type: "education",
-    imageNote: "Interactive map of weekly planning and learning records.",
-    diagram: ["Plan the week", "Complete activities", "Review progress"],
-    diagramDetail: "React planner · Local-first data · Optional account sync",
     context:
       "Hearth is a personal app for planning and tracking one learner's homeschool week. It gives parents a dashboard and calendar, while a focused learner view turns the day's activities into a simple checklist.",
     problem:
@@ -188,11 +189,15 @@ export const projects: readonly Project[] = [
       "The React and Vite client works offline with browser localStorage. Optional email/password accounts use an Express API and PostgreSQL for synced records; local data can move into an account when a user signs in. The subscription flow is an optional scaffold that requires Stripe configuration.",
     outcome:
       "Hearth provides a usable offline planning flow alongside optional account-backed storage. Parents can review subject progress, learning days, and instructional hours, and print a report for their records.",
+    flow: [
+      { title: "Plan the week", detail: "A dashboard and calendar organise the week, with drag-to-move and unfinished work carried forward." },
+      { title: "Complete activities", detail: "A focused learner view turns the day into a simple checklist linked to resources." },
+      { title: "Review progress", detail: "A dated journal, subject progress, and print-ready reports. Works offline; accounts are optional." },
+    ],
   },
   {
     slug: "ktt2-song-finder",
     group: "personal",
-    number: "06",
     name: "KTT2 Song Finder",
     category: "PERSONAL / MUSIC DISCOVERY",
     description:
@@ -205,10 +210,6 @@ export const projects: readonly Project[] = [
     role: "Creator & full-stack engineer",
     year: "2026",
     stack: ["React", "TypeScript", "Express", "SQLite", "Spotify API", "OpenAI API"],
-    type: "music-discovery",
-    imageNote: "Interactive map of thread collection, song extraction, and Spotify review.",
-    diagram: ["Read KTT2", "Extract songs", "Review & export"],
-    diagramDetail: "Thread crawler · Song extraction · Spotify matching",
     context:
       "KTT2 Song Finder is a local web app for turning music recommendations in KTT2 threads into a private Spotify playlist. A scan reads recent conversations and presents candidate tracks for review.",
     problem:
@@ -219,5 +220,10 @@ export const projects: readonly Project[] = [
       "A React and TypeScript frontend talks to an Express API. SQLite stores scans, posts, mentions, and resumable jobs. The worker handles collection, extraction, and Spotify matching in stages; Spotify OAuth is used to create a private playlist after review. The app runs locally and needs user-provided Spotify credentials.",
     outcome:
       "The local workflow can scan conversations, preserve partial results when a stage fails, and turn selected matches into a private playlist. It identifies itself to the source site, limits request frequency, and stops on access challenges.",
+    flow: [
+      { title: "Read KTT2", detail: "A paced crawler reads recent KTT2 Music threads and stores resumable scans in SQLite." },
+      { title: "Extract songs", detail: "Spotify links and artist–title patterns come first, with an optional OpenAI fallback." },
+      { title: "Review & export", detail: "Uncertain Spotify matches wait for review before export to a private playlist." },
+    ],
   },
 ];

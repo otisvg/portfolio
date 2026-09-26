@@ -8,15 +8,9 @@ export const profile = {
     alt: "Otis Vickers-Graver by the coast",
     position: "50% 40%",
   },
-  headline: [
-    "Senior Systems Engineer.",
-    "From first architecture",
-    "to production scale",
-  ],
   description:
-    "Senior Full Stack Engineer with six years of deep technical ownership across distributed real-time telemetry, global multi-region commerce, and frontier agentic AI development. Based between the UK and UAE.",
+    "Senior Full Stack Engineer with six years of experience building e-commerce, customer-facing, and enterprise applications—from ROLI’s multi-region storefront to real-time retail monitoring. Based between the UK and UAE.",
   location: "UK / UAE",
-  currentRole: "Senior Full Stack Engineer",
   company: "ROLI",
   email: "otisvickersgraver@gmail.com",
   github: "https://github.com/otisvg",
@@ -26,14 +20,13 @@ export const profile = {
   siteUrl: "https://otis-considered-portfolio.otisvickersgraver.chatgpt.site",
   summary:
     "I’m Otis, a Senior Full Stack Engineer based between the UK and UAE. I build and operate the systems behind global commerce, customer onboarding, and distributed retail telemetry. At ROLI and OLR, I’ve worked from product definition and architecture through delivery, deployment, and production support—leading teams when the work demanded it.",
-  introduction:
-    "I’m a Senior Full Stack Engineer with six years of experience building customer-facing, e-commerce, and enterprise applications. At ROLI, I take broad ownership of roli.com, shaping the journey from product discovery through purchase and onboarding. Previously, I built HAWK from idea to production at OLR while leading and mentoring four engineers. I use Claude Code, Cursor, GitHub Copilot, Codex, MCP servers, and agent skills throughout my daily workflow, with code quality, security, readability, and documentation central to delivery.",
-  about: [
-    "I’m Otis, a Senior Full Stack Engineer based between the UK and UAE. I take broad, uncompromising ownership of complex systems, from core architecture and team leadership through deployment, telemetry, and high-stakes production operations.",
-    "At ROLI, I lead engineering across the global customer journey, unifying disparate storefronts into a high-performance multi-region platform, driving international expansion into Japan, and delivering mission-critical partner integrations like the CASIO hardware onboarding flow.",
-    "Previously at OLR, I architected and built HAWK from zero to production—a real-time distributed telemetry platform monitoring thousands of point-of-sale registers worldwide—while leading and mentoring an engineering team of four.",
-    "Agentic development is my daily production discipline: planning, architectural decomposition, research, implementation, and rigorous verification gates using Claude Code, Cursor, Codex, custom MCP servers, and autonomous sub-agent swarms. I treat mechanical verification, security, and long-term maintainability as non-negotiable foundations.",
-    "Outside commercial engineering, I build AI-powered personal tooling, volunteer in residential timber construction, and teach introductory programming to young people.",
+  intro:
+    "I build web products end to end—from the storefront a customer clicks through to the services and data that keep it running.",
+  stats: [
+    { value: "6", unit: "yrs", label: "building customer-facing products" },
+    { value: "80", unit: "%", label: "faster end-to-end tests at ROLI" },
+    { value: "2", label: "storefronts merged into one multi-region platform" },
+    { value: "4", label: "engineers led and mentored at OLR" },
   ],
   skills: {
     Frontend: [

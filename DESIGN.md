@@ -1,73 +1,77 @@
-# Design System: Elevated Tactile Editorial
+# Design System: Warm Editorial, Brought to Life
 
-## Direction Contract
+## Direction
 
-- **THESIS**: Tactile Swiss-editorial craft meets high-performance systems engineering. Rejecting generic template cards, empty gradient text, and sterile corporate SaaS homogeneity in favor of editorial dignity, tangible physical typography, and living architectural diagrams.
-- **OWN-WORLD**: Warm bone ground (`#f9f8f4` light / `#141613` dark) paired with deep charcoal ink (`#1c1e19` / `#f0f2eb`), precision hairline structural grids (`#e2e4dc` / `#2c3029`), and a single, disciplined ember-terracotta accent (`#c24e2b` / `#e87c56`).
-- **STORY**: Otis Vickers-Graver is a Senior Full Stack Engineer with genuine end-to-end ownership. The visitor discovers real engineering depth, production-proven business outcomes (ROLI, HAWK), and modern agentic rigor through interactive, inspectable system diagrams.
-- **FIRST VIEWPORT**: Full-width architectural masthead. Large-scale humanist display headline with balanced typographic optical kerning, live availability signal, immediate one-line value proposition, direct access to selected work, and an interactive system telemetry glance.
-- **FORM**: Elevated Editorial with Interactive Architectural Telemetry. Code-first execution.
-- **FINISH**: Unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and clean mechanical audit.
+- **THESIS**: A calm editorial base (warm bone, deep ink, one ember accent) with each project given its own colour and a small living illustration. Pages are short, scannable, and end with a clear next step.
+- **STORY**: Otis builds web products end to end. A visitor should get that in one sentence, see four proof points, then pick a project that looks and moves like the thing it is.
+- **FIRST VIEWPORT**: “Hey, I’m Otis.”, a one-line intro, the current role with a live dot, two actions (work, CV), and a tilted portrait on an ember card. Proof numbers sit directly beneath.
+- **SIMPLICITY RULES**: One idea per block. Homepage cards show a one-line description and at most three short highlights. Tech stacks live on case studies. Case studies use the same order every time: title, artwork, context + highlights, three-step “How it works”, short labelled sections, next project.
 
 ---
 
 ## Palette & Color Tokens
 
-### Light Mode (Warm Bone & Ink)
-- `--bg`: `#f9f8f4` (tactile warm bone ground)
-- `--ink`: `#1a1c17` (deep carbon charcoal, 14.8:1 contrast on `--bg`)
-- `--muted`: `#5a5e53` (warm olive-charcoal, 5.2:1 contrast on `--bg`)
-- `--border`: `#e2e4dc` (structural hairline border)
-- `--panel`: `#ffffff` (crisp elevated paper surface)
-- `--subtle`: `#f0f1eb` (subtle resting background for controls)
-- `--accent`: `#c24e2b` (ember terracotta, 4.7:1 contrast on `--bg` for large text/interactive badges)
-- `--accent-subtle`: `rgba(194, 78, 43, 0.08)`
-- `--accent-contrast`: `#ffffff`
-- `--selection`: `#e5ead3`
+### Core (light / dark)
+- `--bg`: `#f8f7f2` / `#121411`
+- `--ink`: `#191b16` / `#eef0e9`
+- `--muted`: `#5a5e53` / `#a1a698`
+- `--border`: `#dedfd7` / `#2a2d26`
+- `--panel`: `#ffffff` / `#1a1d17`
+- `--subtle`: `#f0f1ea` / `#21241e`
+- `--accent`: `#b84826` / `#ea7e58`. The light value was darkened from `#c24e2b` so small accent text passes WCAG AA on every light surface: 4.9:1 on `--bg`, 5.3:1 on `--panel`, and 4.6:1 on `--subtle`.
+- `--cta-bg`: `#1c1e19` / `#1b1e18`. The closing “Let’s talk” block stays dark in both themes.
 
-### Dark Mode (Obsidian & Ember)
-- `--bg`: `#131512` (rich obsidian)
-- `--ink`: `#eff1ea` (warm bone white, 14.2:1 contrast on `--bg`)
-- `--muted`: `#9da294` (neutral warm stone, 5.5:1 contrast on `--bg`)
-- `--border`: `#292d25` (subtle structural hairline)
-- `--panel`: `#1b1e19` (elevated dark slate plate)
-- `--subtle`: `#222620` (subtle inset control fill)
-- `--accent`: `#ea7e58` (luminous ember terracotta, 5.1:1 contrast on `--bg`)
-- `--accent-subtle`: `rgba(234, 126, 88, 0.12)`
-- `--accent-contrast`: `#131512`
-- `--selection`: `#383f2e`
+### Project tints
+Each project owns one muted tile colour (`--<project>-tile`) and a matching ink, applied through `.art--<slug>` and `.tone--<slug>`. Light values are soft pastels; dark values are deep versions of the same hue. The Agents tile is dark in both themes because it frames a terminal.
+
+| Project | Light tile | Dark tile |
+|---|---|---|
+| ROLI | mauve `#ebe1ea` | `#282030` |
+| HAWK | sage `#dde7dd` | `#17231c` |
+| Agents in practice | ink `#23261f` | `#0b0d0a` |
+| Pocket Circuit | peach `#f4dfd1` | `#33211a` |
+| Hearth | oat `#efe6cd` | `#29251a` |
+| KTT2 Song Finder | periwinkle `#dfe3f2` | `#1a1d30` |
+
+The ember accent stays the only interface accent. Tints are for artwork and the next-project tile only.
 
 ---
 
 ## Typography
 
-- **Display & Body**: Space Grotesk Variable (`--font-sans`), a readable retro-technical grotesk, with `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` as fallback.
-- **Code, Architecture & Data**: IBM Plex Mono (`--font-mono`), `ui-monospace, monospace`.
-- **Typographic Rules**:
-  - Tracking: `-0.025em` for display headlines; `-0.01em` for subheads; `0.02em` for monospace badges. Floor: never tighter than `-0.035em`.
-  - Line measure: strictly bounded between `65ch` and `75ch` for longform narrative.
-  - Optical rhythm: headings balanced with `text-wrap: balance`.
-  - Tabular numerals: `font-variant-numeric: tabular-nums` for dates, metrics, and data readouts.
-  - Sentence-ending full stops use `--accent`; all other punctuation, dates, URLs, code, technical identifiers, and editable values remain neutral.
-  - No eyebrows or kickers above headings.
+- **Display & body**: Space Grotesk Variable (`--font-sans`). Display headings are weight 600 with tracking between `-0.035em` and `-0.05em`.
+- **Metadata**: IBM Plex Mono (`--font-mono`) for dates, roles on cards, and small labels only.
+- Scale: hero and closing headings reach `136px`; section headings `64px`; card titles `40px`, or `72px` on the featured card. Body copy is 16–17px, and lead text 21–30px.
+- Sentence-ending full stops use `--accent` (`AccentPunctuation`).
+- `text-wrap: balance` on headings, `pretty` on paragraphs.
 
 ---
 
-## Layout, Elevation & Grid
+## Layout & Shape
 
-- **Container Shell**: Max width `1360px`, fluid lateral padding `clamp(24px, 5vw, 64px)`.
-- **Elevation Discipline**: Border OR shadow, never ghost cards (no 1px border under heavy blur).
-- **Corner Radii**: Clean, subtle `8px` to `12px` for panels and cards; `6px` for interactive pills/buttons. No pill shapes for large containers.
-- **Hairline Dividers**: Crisp `1px solid var(--border)`.
+- **Shell**: max width `1280px`, side padding `clamp(20px, 5vw, 64px)`.
+- **Radii**: cards `20px`, art heroes and the next-project tile `28px`, closing block `32px`, buttons and chips fully rounded.
+- **Elevation**: cards rest on a hairline border and gain `--shadow-lg` plus a 4px lift on hover. Tiles carry a faint inner ring so dark tiles never melt into a dark page.
+- **Homepage grid**: ROLI spans the full width (art | text), then HAWK and Agents side by side, then three side projects. On narrow screens everything stacks into a single column.
 
 ---
 
-## Interactive Signature Components
+## Motion
 
-1. **Interactive Architecture Node System**:
-   - Visualizes live data pipelines and architectural topologies.
-   - Stepper controls to inspect different flows (e.g. CASIO Onboarding vs. Multi-Region Checkout vs. Order History REST API).
-   - Node hover inspects services, technologies, latencies, and architectural tradeoffs.
-2. **Tactile Controls**:
-   - Custom accessible theme toggle with smooth mechanical micro-switch animation.
-   - Skip links, custom scrollbar styling, and accessible `:focus-visible` rings (`outline: 2px solid var(--accent); outline-offset: 3px;`).
+All motion is CSS-only and progressive. Nothing depends on JavaScript to become visible.
+
+1. **Hero entrance**: staggered rise of heading, lead, status and actions; the portrait straightens on hover.
+2. **Project artwork** (`components/project-art.tsx`): ambient loops such as HAWK’s heartbeat and alert ping, the agent terminal typing define → build → verify, Pocket Circuit’s pads playing a beat under a moving playhead, Hearth’s week being ticked off, and KTT2 mentions lighting up as tracks join a playlist. Each resting state is the finished frame.
+3. **Scroll reveal**: `.reveal` elements rise in using `animation-timeline: view()` inside `@supports`, so unsupported browsers show them immediately.
+4. **Shared-element morph**: `<ViewTransition name="art-<slug>" share="morph">` wraps the artwork on both the card and the case study, so it grows into place when a card is opened.
+5. `prefers-reduced-motion: reduce` switches off every animation and view transition.
+
+---
+
+## Accessibility & Honesty
+
+- One `h1` per page and a sequential heading order. Each card is a single link, named by its title; the “Read the case study” cue is `aria-hidden`.
+- Artwork is decorative (`aria-hidden`), except a screenshot on a case study, which keeps its alt text.
+- Illustrations contain no metrics or claims. Every number on the site (6 years, 80%, 2 storefronts, 4 engineers) comes from the CV.
+- Verified with axe-core (WCAG 2 A/AA + best practice) on the homepage, case studies and CV, in both themes, at 1440px and 390px.
+- There is no root `loading.tsx`. Large pages would otherwise be exported with their content hidden behind a Suspense boundary that needs JavaScript to reveal.

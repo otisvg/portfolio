@@ -15,7 +15,7 @@ export function CompanyLogo({
       <div
         className={`company-logo-badge ${className}`}
         style={{ width: size, height: size }}
-        aria-label="ROLI logo"
+        aria-hidden="true"
       >
         <svg
           width={size * 0.58}
@@ -43,7 +43,7 @@ export function CompanyLogo({
       <div
         className={`company-logo-badge ${className}`}
         style={{ width: size, height: size }}
-        aria-label="OLR / HAWK logo"
+        aria-hidden="true"
       >
         <svg
           width={size * 0.58}
@@ -71,7 +71,7 @@ export function CompanyLogo({
       <div
         className={`company-logo-badge ${className}`}
         style={{ width: size, height: size }}
-        aria-label="Agentic AI logo"
+        aria-hidden="true"
       >
         <svg
           width={size * 0.58}
@@ -103,7 +103,7 @@ export function CompanyLogo({
       <div
         className={`company-logo-badge ${className}`}
         style={{ width: size, height: size }}
-        aria-label="Pirical logo"
+        aria-hidden="true"
       >
         <svg
           width={size * 0.58}
@@ -131,7 +131,7 @@ export function CompanyLogo({
     <div
       className={`company-logo-badge ${className}`}
       style={{ width: size, height: size }}
-      aria-label={`${name} logo`}
+      aria-hidden="true"
     >
       <span
         style={{
