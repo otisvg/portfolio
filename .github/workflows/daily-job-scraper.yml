@@ -40,15 +40,16 @@ jobs:
       - name: Run job scraper
         run: |
           mkdir -p "$(dirname "$OUT_FILE")"
-          node scripts/linkedin-jobs.cjs /tmp/linkedin.json 40
+          # Third argument is the previous results, so jobs are remembered between runs.
+          node scripts/linkedin-jobs.cjs /tmp/linkedin.json 40 "$OUT_FILE"
 
-      # Don't overwrite yesterday's good data with an empty result (e.g. LinkedIn blocked the runner).
+      # Don't save a run that found nothing (e.g. LinkedIn blocked the runner) - keep the previous file.
       - name: Validate result
         run: |
-          COUNT=$(node -p "require('/tmp/linkedin.json').count")
+          SEEN=$(node -p "require('/tmp/linkedin.json').seenThisRun")
           BLOCKED=$(node -p "require('/tmp/linkedin.json').blocked")
-          echo "Jobs found: $COUNT (blocked=$BLOCKED)"
-          if [ "$COUNT" -eq 0 ]; then
+          echo "Jobs seen this run: $SEEN (blocked=$BLOCKED)"
+          if [ "$SEEN" -eq 0 ]; then
             echo "::error::No jobs scraped (blocked=$BLOCKED). Keeping the previous $OUT_FILE."
             exit 1
           fi
