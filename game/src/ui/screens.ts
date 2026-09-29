@@ -6,8 +6,10 @@ import { drawText, textWidth, wrap } from "../gfx/font";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
 import { hasSave } from "../systems/save";
+import { MOONS } from "../systems/bounties";
+import { getLevel, LEVEL_IDS, LEVEL_INFO } from "../world/levels";
 import { DiceMenu } from "./dice";
-import { InventoryMenu, type Overlay } from "./menu";
+import { HELP_TAB, InventoryMenu, type Overlay } from "./menu";
 import { hint, panel } from "./widgets";
 
 // ======================================================================= Banners
@@ -65,7 +67,9 @@ export class TitleScreen {
     drawText(ctx, "HOLLOWMERE", W / 2 + 1, ty + 2, C.scarf0, { align: "center", scale: 4, spacing: 1, shadow: null });
     drawText(ctx, "HOLLOWMERE", W / 2, ty, C.cream, { align: "center", scale: 4, spacing: 1, shadow: C.ink });
     rect(ctx, W / 2 - 90, ty + 26, 180, 1, C.gold1);
-    drawText(ctx, "LEVEL 1  -  THE BLIGHTED OUTSKIRTS", W / 2, ty + 32, C.gold2, { align: "center" });
+    drawText(ctx, "THE BLIGHTED OUTSKIRTS  &  THE DROWNED MINES", W / 2, ty + 32, C.gold2, { align: "center" });
+    const moon = MOONS[g.stats.moon];
+    drawText(ctx, `THIS WEEK: ${moon.name.toUpperCase()}`, W / 2, ty + 44, moon.color, { align: "center" });
     const opts = this.options();
     opts.forEach((o, i) => {
       const y = 118 + i * 14;
@@ -145,8 +149,8 @@ export class RestMenu implements Overlay {
   }
   private leave(g: Game) { audio.play("close"); g.closeOverlay(); g.player.state = "normal"; }
   options(g: Game) {
-    const out: { id: string; label: string }[] = [];
-    for (const sh of g.level.shrines) if (g.save.shrines.includes(sh.id)) out.push({ id: sh.id, label: sh.name.toUpperCase() });
+    const out: { id: string; label: string; tag?: string }[] = [];
+    for (const lid of LEVEL_IDS) for (const sh of getLevel(lid).shrines) if (g.save.shrines.includes(sh.id)) out.push({ id: sh.id, label: sh.name.toUpperCase(), tag: `L${LEVEL_INFO[lid].n}` });
     out.push({ id: "dice", label: "HEARTH DICE" });
     out.push({ id: "gear", label: "GEAR & SKILLS" });
     out.push({ id: "rise", label: "RISE" });
@@ -166,6 +170,7 @@ export class RestMenu implements Overlay {
       const sel = i === this.sel, here = o.id === this.here;
       if (sel) { rect(ctx, x + 6, yy - 3, 148, 11, C.panelHi); rect(ctx, x + 6, yy - 3, 1, 11, C.gold2); }
       drawText(ctx, o.label + (here ? "  (HERE)" : ""), x + 12, yy, here ? C.faint : sel ? C.cream : C.dim);
+      if (o.tag) drawText(ctx, o.tag, x + 150, yy, C.faint, { align: "right" });
     });
     hint(ctx, W / 2, y + h + 6, [["J", "SELECT"], ["ESC", "RISE"]], "center");
   }
@@ -184,7 +189,7 @@ export class PauseMenu implements Overlay {
       const o = this.opts[this.sel];
       if (o === "RESUME") { audio.play("close"); g.closeOverlay(); }
       else if (o === "INVENTORY") { g.openOverlay(new InventoryMenu(0)); }
-      else if (o === "CONTROLS") { g.openOverlay(new InventoryMenu(3)); }
+      else if (o === "CONTROLS") { g.openOverlay(new InventoryMenu(HELP_TAB)); }
       else if (o === "SOUND") { audio.toggleMute(); audio.play("select"); }
       else { g.persist(); g.toTitle(); }
     }

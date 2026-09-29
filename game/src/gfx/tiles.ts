@@ -27,6 +27,7 @@ const DEAD_STRAW = ["#3f3542", "#5a4f5e", "#7a6e7a", "#948a92"];
 export interface TileLayers { tiles: HTMLCanvasElement; fg: HTMLCanvasElement }
 
 export function renderTiles(L: Level): TileLayers {
+  if (L.theme === "mines") return renderMineTiles(L);
   const W = L.pxW, H = L.pxH;
   const buf = new PixBuf(W, H);
   const fg = new PixBuf(W, H);
@@ -175,8 +176,202 @@ export function renderTiles(L: Level): TileLayers {
   return { tiles: buf.toCanvas(), fg: fg.toCanvas() };
 }
 
-/** Animated bog surface, drawn every frame for visible bog tiles. */
+// ------------------------------------------------------------------ The Drowned Mines
+const ROCK = ["#0f0e16", "#17151f", "#211e2b", "#2c2939", "#3b374b", "#514b64"];
+const ROT_ROCK = ["#120c18", "#1c1224", "#28182f", "#35203f", "#4a2d52", "#6a4270"];
+const MOSS = ["#173034", "#1f4446", "#2d5e5a", "#4a8a78", "#7ab89a"];
+
+/**
+ * Solid rock carved into tunnels: every tile knows how far it is from open air, so rims
+ * catch the lamplight and the deep rock falls away to black. Wet moss on the floors,
+ * stalactites and drips under the ceilings, flecks of ore and drowned crystal.
+ */
+function renderMineTiles(L: Level): TileLayers {
+  const W = L.pxW, H = L.pxH;
+  const buf = new PixBuf(W, H);
+  const fg = new PixBuf(W, H);
+  const rockLike = (t: number) => t === T.DIRT || t === T.WALL;
+  const solidVis = (tx: number, ty: number) => {
+    const t = L.get(tx, ty);
+    return t === T.DIRT || t === T.STONE || t === T.WALL || t === T.BOG || (ty >= L.h);
+  };
+  // tile distance to open air (BFS)
+  const dist = new Int16Array(L.w * L.h).fill(99);
+  const q: number[] = [];
+  for (let ty = 0; ty < L.h; ty++) for (let tx = 0; tx < L.w; tx++) if (!solidVis(tx, ty)) { dist[ty * L.w + tx] = 0; q.push(ty * L.w + tx); }
+  for (let qi = 0; qi < q.length; qi++) {
+    const i = q[qi], tx = i % L.w, ty = (i / L.w) | 0, d = dist[i] + 1;
+    for (const [nx, ny] of [[tx + 1, ty], [tx - 1, ty], [tx, ty + 1], [tx, ty - 1]]) {
+      if (nx < 0 || ny < 0 || nx >= L.w || ny >= L.h) continue;
+      const j = ny * L.w + nx;
+      if (dist[j] > d) { dist[j] = d; q.push(j); }
+    }
+  }
+  const D = (tx: number, ty: number) => (tx < 0 || ty < 0 || tx >= L.w || ty >= L.h ? 99 : dist[ty * L.w + tx]);
+  const pal = (i: number, x: number, y: number, b: number) => {
+    i = clamp(Math.round(i), 0, ROCK.length - 1);
+    return b > bayer(x, y) ? ROT_ROCK[i] : ROCK[i];
+  };
+
+  for (let ty = 0; ty < L.h; ty++) {
+    for (let tx = 0; tx < L.w; tx++) {
+      const t = L.get(tx, ty);
+      const x0 = tx * TILE, y0 = ty * TILE;
+      if (rockLike(t)) {
+        const d = D(tx, ty);
+        const openT = !solidVis(tx, ty - 1), openB = !solidVis(tx, ty + 1) && ty + 1 < L.h;
+        const openL = !solidVis(tx - 1, ty), openR = !solidVis(tx + 1, ty);
+        for (let y = 0; y < TILE; y++) for (let x = 0; x < TILE; x++) {
+          const wx = x0 + x, wy = y0 + y;
+          const b = (L.blightAt(wx) - 0.25) * 0.9;
+          // pixel distance to the nearest open face
+          let e = (d - 1) * TILE + 16;
+          if (d === 1) {
+            if (openT) e = Math.min(e, y);
+            if (openB) e = Math.min(e, TILE - 1 - y);
+            if (openL) e = Math.min(e, x);
+            if (openR) e = Math.min(e, TILE - 1 - x);
+            // corners of diagonal openings
+            if (!openT && !openL && !solidVis(tx - 1, ty - 1)) e = Math.min(e, Math.max(x, y));
+            if (!openT && !openR && !solidVis(tx + 1, ty - 1)) e = Math.min(e, Math.max(TILE - 1 - x, y));
+          }
+          // strata and cracks
+          const strata = Math.sin(wy * 0.55 + Math.sin(wx * 0.05) * 3 + hash(wx >> 3, 0, 5) * 2);
+          let i = e < 2 ? 5 : e < 5 ? 4 : e < 12 ? 3 : e < 24 ? 2 : e < 40 ? 1 : 0;
+          if (e >= 5 && strata > 0.82) i = Math.max(0, i - 1);
+          if (e >= 3 && e < 30 && hash(wx >> 1, wy >> 1, 17) > 0.97) i = Math.min(5, i + 1);
+          if (e > 12 && e < 24 && (e - 12) / 12 > bayer(wx, wy)) i = Math.max(0, i - 1);
+          let c = pal(i, wx, wy, b);
+          if (e >= 3 && e < 20 && hash(wx >> 1, wy >> 1, 41) > 0.992) c = hash(wx, wy, 42) > 0.5 ? "#c9962a" : "#6ad0c0"; // ore & crystal flecks
+          // wet moss on floors
+          if (openT && y < 4) {
+            const md = y + (hash(wx, 0, 11) > 0.6 ? 1 : 0);
+            if (md < 3) c = MOSS[md === 0 ? 3 : md === 1 ? 2 : 1];
+            if (y === 0 && hash(wx, 1, 12) > 0.8) c = MOSS[4];
+            if (b > 0.45 && y < 2 && b - 0.45 > bayer(wx, wy)) c = y === 0 ? "#7a3b7a" : "#523060";
+          }
+          // the underside of ceilings is wet and dark
+          if (openB && TILE - 1 - y < 2 && !(openT && y < 4)) c = TILE - 1 - y === 0 ? "#0b0a12" : ROCK[2];
+          buf.set(wx, wy, c);
+        }
+        if (openT) {
+          // pale cave grass and mushrooms poking up; some tufts in front of characters
+          for (let x = 0; x < TILE; x++) {
+            const wx = x0 + x;
+            const hv = hash(wx, 1, 5);
+            if (hv > 0.62) { const hgt = 1 + Math.floor(hash(wx, 2, 6) * 2); for (let k = 1; k <= hgt; k++) buf.set(wx, y0 - k, MOSS[k === hgt ? 3 : 2]); }
+            if (hash(wx, 3, 9) > 0.9) { const hgt = 2 + Math.floor(hash(wx, 4, 9) * 3); for (let k = 0; k < hgt; k++) fg.set(wx, y0 + 2 - k, MOSS[k > hgt - 2 ? 3 : 2]); }
+          }
+          if (hash(tx, ty, 77) > 0.82) {
+            const mx = x0 + 3 + Math.floor(hash(tx, 1, 78) * 10);
+            const cap = L.blightAt(x0) > 0.6 ? C.blight4 : "#6ad0c0";
+            buf.set(mx, y0 - 1, C.paper); buf.set(mx, y0 - 2, C.paper);
+            for (let k = -1; k <= 1; k++) buf.set(mx + k, y0 - 3, cap);
+            buf.set(mx, y0 - 4, cap);
+          }
+        }
+        if (openB) {
+          // stalactites
+          for (let x = 1; x < TILE - 1; x += 1) {
+            const wx = x0 + x;
+            if (hash(wx >> 1, ty, 61) < 0.8) continue;
+            const len = 2 + Math.floor(hash(wx >> 1, ty, 62) * 7);
+            for (let k = 0; k < len; k++) {
+              const w = k < len * 0.4 ? 1 : 0;
+              buf.set(wx, y0 + TILE + k, k === len - 1 ? ROCK[4] : ROCK[3]);
+              if (w && (wx & 1)) buf.set(wx + 1, y0 + TILE + k, ROCK[2]);
+            }
+            if (hash(wx, ty, 63) > 0.6) buf.set(wx, y0 + TILE + len, "#6ad0c0");
+          }
+        }
+      } else if (t === T.STONE) {
+        for (let y = 0; y < TILE; y++) for (let x = 0; x < TILE; x++) {
+          const wx = x0 + x, wy = y0 + y;
+          const ry = Math.floor(wy / 5), off = (ry & 1) * 5;
+          const mortar = wy % 5 === 4 || (wx + off) % 10 === 9;
+          let c = mortar ? ROCK[0] : hash(Math.floor((wx + off) / 10), ry, 4) > 0.5 ? ROCK[2] : ROCK[3];
+          if (!mortar && wy % 5 === 0) c = ROCK[4];
+          if (hash(wx >> 1, wy >> 1, 8) > 0.93 && !mortar) c = "#1a4a52";
+          buf.set(wx, wy, c);
+        }
+      } else if (t === T.PLANK) {
+        // scaffold boards on iron brackets
+        for (let y = 0; y < 5; y++) for (let x = 0; x < TILE; x++) {
+          const wx = x0 + x, wy = y0 + y;
+          let c: string = y === 0 ? C.wood3 : y === 4 ? C.wood0 : hash(wx >> 2, wy, 14) > 0.6 ? C.wood2 : C.wood1;
+          if (wx % 8 === 0 && y > 0 && y < 4) c = C.wood0;
+          buf.set(wx, wy, c);
+        }
+        if ((tx & 1) === 0) { for (let k = 5; k < 9; k++) buf.set(x0 + 3, y0 + k, C.steel0); buf.set(x0 + 4, y0 + 8, C.steel0); }
+      } else if (t === T.THORN) {
+        // drowned crystal spikes
+        for (let k = 0; k < 5; k++) {
+          const sx = x0 + 1 + k * 3 + Math.floor(hash(tx, k, 23) * 2);
+          const hgt = 5 + Math.floor(hash(tx, k, 25) * 8);
+          for (let i = 0; i < hgt; i++) {
+            const y = y0 + 15 - i;
+            const w = i < hgt * 0.5 ? 1 : 0;
+            const tip = i >= hgt - 2;
+            buf.set(sx, y, tip ? "#e9ddf5" : i % 3 === 0 ? "#2e7a78" : "#4aa89a");
+            if (w) buf.set(sx + 1, y, "#1a4a52");
+          }
+        }
+      }
+    }
+  }
+  return { tiles: buf.toCanvas(), fg: fg.toCanvas() };
+}
+
+/** Spirit ledges, orchard roots and the Watchers' gate change at runtime, so they're drawn live. */
+export function drawDynamicTiles(ctx: Ctx, L: Level, camX: number, camY: number, time: number) {
+  const tx0 = Math.max(0, Math.floor(camX / TILE)), tx1 = Math.min(L.w - 1, Math.floor((camX + 384) / TILE));
+  for (let tx = tx0; tx <= tx1; tx++) for (let ty = 0; ty < L.h; ty++) {
+    const t = L.get(tx, ty);
+    if (t !== T.SPIRIT && t !== T.ROOT && t !== T.GATE) continue;
+    const x0 = tx * TILE - camX, y0 = ty * TILE - camY;
+    if (t === T.SPIRIT) {
+      if (L.spiritSight) {
+        for (let x = 0; x < TILE; x++) {
+          const wx = tx * TILE + x;
+          const w = Math.sin(time * 3 + wx * 0.3);
+          ctx.fillStyle = w > 0.6 ? C.white : "#e9ddf5"; ctx.fillRect(x0 + x, y0, 1, 1);
+          ctx.globalAlpha = 0.7; ctx.fillStyle = "#b9a8d0"; ctx.fillRect(x0 + x, y0 + 1, 1, 2);
+          ctx.globalAlpha = 0.35; ctx.fillStyle = "#7a6a98"; ctx.fillRect(x0 + x, y0 + 3, 1, 2 + (hash(wx, 0, 3) > 0.5 ? 2 : 0));
+          ctx.globalAlpha = 1;
+        }
+      } else {
+        // a glimmer, now and then, of something that isn't quite there
+        const k = (time * 0.7 + tx * 0.13) % 3;
+        if (k < 0.25) {
+          ctx.globalAlpha = 0.25 * (1 - k / 0.25);
+          for (let x = 0; x < TILE; x += 2) { ctx.fillStyle = "#e9ddf5"; ctx.fillRect(x0 + x, y0, 1, 1); }
+          ctx.globalAlpha = 1;
+        }
+      }
+    } else if (t === T.ROOT) {
+      for (let x = 0; x < TILE; x++) for (let y = 0; y < TILE; y++) {
+        const wx = tx * TILE + x, wy = ty * TILE + y;
+        const strand = Math.floor((x + Math.sin(wy * 0.35 + x) * 2.2 + 16) / 3.2);
+        const n = hash(strand, wy >> 2, 51);
+        let c = n > 0.66 ? "#6a3a4a" : n > 0.33 ? "#4a2a3a" : "#351c2a";
+        if ((x + Math.round(Math.sin(wy * 0.35 + x) * 2.2)) % 3 === 0) c = "#1c1018";
+        if (hash(wx, wy, 52) > 0.985) c = C.blight4;
+        ctx.fillStyle = c; ctx.fillRect(x0 + x, y0 + y, 1, 1);
+      }
+    } else {
+      ctx.fillStyle = C.ink; ctx.fillRect(x0 + 2, y0, 12, TILE);
+      for (let x = 3; x < 14; x += 3) { ctx.fillStyle = C.steel0; ctx.fillRect(x0 + x, y0, 2, TILE); ctx.fillStyle = C.steel1; ctx.fillRect(x0 + x, y0, 1, TILE); }
+      ctx.fillStyle = C.steel1; ctx.fillRect(x0 + 2, y0 + 6, 12, 2);
+      if (ty === (L.gate?.bottom ?? -1)) for (let x = 3; x < 14; x += 3) { ctx.fillStyle = C.steel2; ctx.fillRect(x0 + x, y0 + 14, 1, 2); }
+    }
+  }
+}
+
+const WATER = { deep: "#0b1a22", body: "#11303a", mid: "#1a4a52", surf: "#2e7a78", hi: "#6ad0c0", foam: "#b8f0e0" };
+
+/** Animated bog surface (or flood water, in the Mines), drawn every frame for visible tiles. */
 export function drawBog(ctx: Ctx, L: Level, camX: number, camY: number, W: number, time: number) {
+  if (L.theme === "mines") { drawWater(ctx, L, camX, camY, W, time); return; }
   const tx0 = Math.max(0, Math.floor(camX / TILE)), tx1 = Math.min(L.w - 1, Math.floor((camX + W) / TILE));
   for (let tx = tx0; tx <= tx1; tx++) {
     for (let ty = 0; ty < L.h; ty++) {
@@ -198,6 +393,33 @@ export function drawBog(ctx: Ctx, L: Level, camX: number, camY: number, W: numbe
       // slow sheen
       const sheen = ((time * 18 + tx * 37) % 40) - 12;
       if (sheen >= 0 && sheen < TILE) { ctx.fillStyle = C.blight5; ctx.fillRect(x0 + sheen, y0 + 6, 3, 1); }
+    }
+  }
+}
+
+function drawWater(ctx: Ctx, L: Level, camX: number, camY: number, W: number, time: number) {
+  const tx0 = Math.max(0, Math.floor(camX / TILE)), tx1 = Math.min(L.w - 1, Math.floor((camX + W) / TILE));
+  for (let tx = tx0; tx <= tx1; tx++) {
+    for (let ty = 0; ty < L.h; ty++) {
+      if (L.get(tx, ty) !== T.BOG) continue;
+      const surface = L.get(tx, ty - 1) !== T.BOG;
+      const x0 = tx * TILE - camX, y0 = ty * TILE - camY;
+      ctx.fillStyle = surface ? WATER.body : WATER.deep;
+      ctx.fillRect(x0, y0 + (surface ? 3 : 0), TILE, TILE - (surface ? 3 : 0));
+      if (!surface) continue;
+      for (let x = 0; x < TILE; x++) {
+        const wx = tx * TILE + x;
+        const wave = Math.round(Math.sin(time * 1.8 + wx * 0.22) * 1 + Math.sin(time * 1.1 + wx * 0.07) * 0.8);
+        const sy = y0 + 3 + wave;
+        ctx.fillStyle = WATER.hi; ctx.fillRect(x0 + x, sy, 1, 1);
+        ctx.fillStyle = WATER.surf; ctx.fillRect(x0 + x, sy + 1, 1, 1);
+        ctx.fillStyle = WATER.mid; ctx.fillRect(x0 + x, sy + 2, 1, 4);
+        if (hash(wx, Math.floor(time * 3), 40) > 0.97) { ctx.fillStyle = WATER.foam; ctx.fillRect(x0 + x, sy, 1, 1); }
+        // drowned things glint below
+        if (hash(wx, ty, 41) > 0.985 && Math.sin(time * 2 + wx) > 0) { ctx.fillStyle = "#c9962a"; ctx.fillRect(x0 + x, y0 + 11, 1, 1); }
+      }
+      const sheen = ((time * 14 + tx * 37) % 44) - 14;
+      if (sheen >= 0 && sheen < TILE) { ctx.fillStyle = WATER.foam; ctx.fillRect(x0 + sheen, y0 + 7, 3, 1); }
     }
   }
 }

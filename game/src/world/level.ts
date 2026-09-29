@@ -3,17 +3,38 @@ import { clamp, smoothstep } from "../core/math";
 
 export const T = {
   EMPTY: 0, DIRT: 1, STONE: 2, PLANK: 3, BOG: 4, THORN: 5, HAY: 6, FOG: 7, BRANCH: 8, WALL: 9,
+  /** Ghostly ledge: only solid while you carry Wick's Lantern. */
+  SPIRIT: 10,
+  /** Orchard roots grown down into the Mines: cut them with a scythe. They regrow when you rest. */
+  ROOT: 11,
+  /** Portcullis that the Watchers slam shut. */
+  GATE: 12,
 } as const;
 
-export type SpawnKind = "blightling" | "crow" | "husk" | "pot";
+export type LevelId = "outskirts" | "mines";
+export type Theme = "outskirts" | "mines";
+export type BossKind = "wick" | "grimwater";
+
+export type SpawnKind = "blightling" | "crow" | "husk" | "pot" | "sludgeling" | "bat" | "miner";
 export interface Spawn { kind: SpawnKind; x: number; y: number }
 export interface PropDef { kind: string; x: number; y: number; v: number }
 export interface SignDef { x: number; y: number; text: string }
 export interface ShrineDef { id: string; name: string; x: number; y: number }
-export interface NpcDef { id: "brom" | "maud" | "pip"; x: number; y: number }
+export interface NpcDef { id: "brom" | "maud" | "pip" | "tam"; x: number; y: number }
 export interface Region { id: string; name: string; sub: string; x0: number; x1: number; music: string }
+/** A way to another level. `needs: "beacon"` stays sealed until the beacon is lit. */
+export interface ExitDef { x: number; y: number; to: string; label: string; needs?: "beacon" }
+/** A secret cache, refilled every time you rest. `key` is the unique item that reaches it. */
+export interface CacheDef { id: string; name: string; x: number; y: number; key: "lantern" | "scythe" | "hood" }
+/** Where a treasure map's X is buried. */
+export interface DigSpot { id: string; x: number; y: number; clue: string }
+/** A ceiling eye whose cone of light sweeps the floor below. */
+export interface WatcherDef { x: number; y: number; floor: number; phase: number }
 
 export class Level {
+  readonly id: LevelId;
+  readonly theme: Theme;
+  readonly bossKind: BossKind;
   readonly w: number;
   readonly h: number;
   tiles: Uint8Array;
@@ -25,11 +46,25 @@ export class Level {
   regions: Region[] = [];
   lamps: { x: number; y: number }[] = [];
   /** The bounty notice board in Hollowmere. */
-  board = { x: 0, y: 0 };
+  board = { x: -1000, y: 0 };
   /** Boss arena bounds in px, fog gate column, boss home. */
   arena = { x0: 0, x1: 0, fogCol: 0, fogTop: 0, fogBottom: 0, bossX: 0, bossY: 0 };
+  exits: ExitDef[] = [];
+  caches: CacheDef[] = [];
+  digSpots: DigSpot[] = [];
+  watchers: WatcherDef[] = [];
+  /** The Watchers' portcullis (tile column and rows). */
+  gate: { col: number; top: number; bottom: number } | null = null;
+  /** The beacon that opens the way down (Embers). */
+  beacon: { x: number; y: number } | null = null;
+  /** Boss sigil stone beside the fog gate. */
+  sigilStone = { x: 0, y: 0 };
+  /** Spirit ledges are solid while Wick's Lantern is carried. */
+  spiritSight = false;
+  private rootTiles: number[] = [];
 
-  constructor(w: number, h: number) {
+  constructor(id: LevelId, theme: Theme, bossKind: BossKind, w: number, h: number) {
+    this.id = id; this.theme = theme; this.bossKind = bossKind;
     this.w = w; this.h = h;
     this.tiles = new Uint8Array(w * h);
   }
@@ -46,8 +81,8 @@ export class Level {
     if (tx < 0 || tx >= this.w || ty < 0 || ty >= this.h) return;
     this.tiles[ty * this.w + tx] = t;
   }
-  isSolid(t: number) { return t === T.DIRT || t === T.STONE || t === T.HAY || t === T.FOG || t === T.WALL; }
-  isOneWay(t: number) { return t === T.PLANK || t === T.BRANCH; }
+  isSolid(t: number) { return t === T.DIRT || t === T.STONE || t === T.HAY || t === T.FOG || t === T.WALL || t === T.ROOT || t === T.GATE; }
+  isOneWay(t: number) { return t === T.PLANK || t === T.BRANCH || (t === T.SPIRIT && this.spiritSight); }
   solidAt(tx: number, ty: number) { return this.isSolid(this.get(tx, ty)); }
 
   /** Pixel y of the first standable surface at or below row `fromRow` in a column. */
@@ -60,7 +95,10 @@ export class Level {
   }
 
   /** 0 in the village, rising to 1 at the mill — drives colour grading and tile blight. */
-  blightAt(px: number) { return smoothstep(clamp((px / TILE - 50 - this.recede) / 140, 0, 1)); }
+  blightAt(px: number) {
+    if (this.theme === "mines") return 0.25 + 0.6 * smoothstep(clamp((px / TILE - 20) / 180, 0, 1));
+    return smoothstep(clamp((px / TILE - 50 - this.recede) / 140, 0, 1));
+  }
 
   /** Tiles the Rot has been pushed back by Hollowmere's Hope. */
   recede = 0;
@@ -70,7 +108,24 @@ export class Level {
   /** Lamps relit by the first Hope milestone. */
   relitLamps: { prop: PropDef; lamp: { x: number; y: number } }[] = [];
 
-  snapshot() { this.baseProps = [...this.props]; this.baseLamps = [...this.lamps]; }
+  snapshot() {
+    this.baseProps = [...this.props]; this.baseLamps = [...this.lamps];
+    this.rootTiles = [];
+    for (let i = 0; i < this.tiles.length; i++) if (this.tiles[i] === T.ROOT) this.rootTiles.push(i);
+  }
+
+  /** Cut roots grow back and the Watchers' gate reopens (on rest and on death). */
+  regrow() {
+    for (const i of this.rootTiles) this.tiles[i] = T.ROOT;
+    this.setGate(true);
+  }
+
+  setGate(open: boolean) {
+    const gt = this.gate;
+    if (!gt) return;
+    for (let y = gt.top; y <= gt.bottom; y++) this.set(gt.col, y, open ? T.EMPTY : T.GATE);
+  }
+  get gateOpen() { return !this.gate || this.get(this.gate.col, this.gate.bottom) !== T.GATE; }
 
   /** Apply a number of Hope milestones. Returns true if the art needs re-rendering. */
   setRestoration(m: number, recede: number) {
@@ -97,7 +152,7 @@ export class Level {
 // Level 1 — The Blighted Outskirts
 // ------------------------------------------------------------------------------------
 export function buildLevel1(): Level {
-  const L = new Level(224, 18);
+  const L = new Level("outskirts", "outskirts", "wick", 224, 18);
   const G = 14;
 
   const fill = (x0: number, x1: number, y0: number, y1: number, t: number) => {
@@ -194,6 +249,17 @@ export function buildLevel1(): Level {
   // lamps that come back when Hollowmere's Hope rises
   for (const tx of [58, 80, 100, 128]) L.relitLamps.push({ prop: { kind: "lamp", x: tx * TILE, y: gy(tx), v: 0 }, lamp: { x: at(tx), y: gy(tx) - 30 } });
   L.board = { x: at(44), y: gy(44) };
+  L.sigilStone = { x: at(186), y: gy(186) };
+  // the mill cellar leads down into the Drowned Mines, once the beacon burns again
+  L.beacon = { x: 215 * TILE + 4, y: gy(215) };
+  L.exits.push({ x: 217 * TILE + 40, y: gy(219), to: "mines_mouth", label: "DESCEND", needs: "beacon" });
+  L.digSpots.push(
+    { id: "well", x: at(21), y: gy(21), clue: "Where Hollowmere draws its water, dig at the well's shadow." },
+    { id: "haystack", x: at(67), y: gy(67), clue: "Atop the tallest haystack in the Wheatfields." },
+    { id: "scarecrow", x: at(80), y: gy(80), clue: "At the heel of the first scarecrow, the one that never moved." },
+    { id: "graves", x: at(132), y: gy(132), clue: "Between two graves in the Rotting Orchard." },
+    { id: "highrot", x: at(168), y: gy(168), clue: "On the high ground, beneath the swollen rot-tree." },
+  );
 
   L.regions = [
     { id: "village", name: "HOLLOWMERE", sub: "The last warm hearth", x0: 0, x1: 47, music: "village" },

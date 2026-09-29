@@ -5,30 +5,41 @@ import { approach, clamp, hash, mix, overlap, type Rect } from "./core/math";
 import { rng } from "./core/rng";
 import { Background } from "./gfx/background";
 import type { Ctx } from "./gfx/canvas";
+import { CaveBackground } from "./gfx/cave";
 import { Lighting, makeVignette } from "./gfx/lighting";
 import { C, RARITY } from "./gfx/palette";
 import { Particles } from "./gfx/particles";
-import { drawBog, drawFog, renderTiles, type TileLayers } from "./gfx/tiles";
+import { drawBog, drawDynamicTiles, drawFog, renderTiles, type TileLayers } from "./gfx/tiles";
 import { Puddle, Wick, type Projectile } from "./entities/boss";
-import { Blightling, Crow, Enemy, Husk, Pot } from "./entities/enemies";
+import { Boss } from "./entities/bossBase";
+import { Bat, Blightling, Crow, Enemy, Husk, Miner, Pot, Sludgeling } from "./entities/enemies";
+import { Bubble, Grimwater } from "./entities/grimwater";
 import { drawBoard, NPC, Pet, Pickup, Purse, Shrine, Sign } from "./entities/objects";
 import { Player } from "./entities/player";
+import { drawBeacon, drawDigSite, drawSigilStone, LootChest, Watcher, type ChestKind } from "./entities/world";
 import { Chat } from "./systems/chat";
 import { baseOf, displayName, makeUnique, type Item, type Slot } from "./systems/items";
-import { describe, milestonesFor, MILESTONES, recedeFor, refreshBounties, rewardText, WICK_FAST_SECONDS, HOPE_MAX, type Bounty, type BountyKind, type BountyTarget } from "./systems/bounties";
+import { dailyBounty, dayKey, describe, milestonesFor, MILESTONES, recedeFor, refreshBounties, rewardText, WICK_FAST_SECONDS, HOPE_MAX, type Bounty, type BountyKind, type BountyTarget } from "./systems/bounties";
+import { BEACON_EMBERS } from "./systems/crafting";
 import { DICE_CHARGE, FACES, rollFinisher, RUNE_WEIGHTS, type FinFace } from "./systems/dice";
-import { rollDrops, ROTBORN_RATE } from "./systems/loot";
-import { loadSave, newSave, wipeSave, writeSave, type SaveData } from "./systems/save";
+import { DIARY, DIARY_AREAS, tierClaimed, tierComplete, tierKey } from "./systems/diary";
+import { rollDrops, ROTBORN_RATE, ROTBORN_RATE_BLOOD, type Drop } from "./systems/loot";
+import { petStage, PETS } from "./systems/pets";
+import { loadSave, newSave, wipeSave, writeSave, type PetId, type SaveData } from "./systems/save";
+import { SIGIL_IDS, sigilMods } from "./systems/sigils";
 import { levelForXp, SKILL_INFO, type Skill } from "./systems/skills";
 import { computeStats, type Stats } from "./systems/stats";
 import { BountyBoard } from "./ui/bounty";
+import { ChestReveal } from "./ui/chest";
 import { DiceMenu, drawFinFx, type FinFx } from "./ui/dice";
 import { Dialog } from "./ui/dialog";
 import { drawFloaters, drawHud, type Floater, type XpDrop } from "./ui/hud";
 import { InventoryMenu, type Overlay } from "./ui/menu";
 import { drawBanner, drawDeath, IntroScreen, PauseMenu, RestMenu, TitleScreen, type Banner } from "./ui/screens";
 import { ShopMenu } from "./ui/shop";
-import { buildLevel1, T, type Level } from "./world/level";
+import { SigilMenu } from "./ui/sigils";
+import { T, type Level, type LevelId } from "./world/level";
+import { getLevel, LEVEL_INFO, levelOfShrine } from "./world/levels";
 import { drawMillBlades, renderProps, type PropLayer } from "./world/props";
 
 type Mode = "title" | "intro" | "play" | "dead";
@@ -38,13 +49,18 @@ const MAX_ATTACKERS = 2;
 const PERFECT_WINDOW = 0.24;
 const ATTACK_GAP = 0.35;
 
+interface Scenery { draw(ctx: Ctx, camX: number, camY: number, time: number): void }
+interface LevelArt { bg: Scenery; tiles: TileLayers; props: PropLayer }
+
 export class Game {
   readonly ctx: Ctx;
   readonly input: Input;
-  readonly level: Level;
-  private bg: Background;
-  private tiles: TileLayers;
-  private props: PropLayer;
+  level: Level;
+  private bg!: Scenery;
+  private tiles!: TileLayers;
+  private props!: PropLayer;
+  /** Rendered art per level (rebuilt only when Hope restores the Outskirts). */
+  private art = new Map<LevelId, LevelArt>();
   readonly lighting = new Lighting();
   private vignette: HTMLCanvasElement;
   readonly particles = new Particles();
@@ -55,14 +71,16 @@ export class Game {
   player: Player;
   enemies: Enemy[] = [];
   pots: Pot[] = [];
-  boss: Wick | null = null;
+  boss: Boss | null = null;
   bossActive = false;
   bossTrail = 0;
   projectiles: Projectile[] = [];
   pickups: Pickup[] = [];
-  npcs: NPC[];
-  shrines: Shrine[];
-  signs: Sign[];
+  chests: LootChest[] = [];
+  watchers: Watcher[] = [];
+  npcs: NPC[] = [];
+  shrines: Shrine[] = [];
+  signs: Sign[] = [];
   purse: Purse | null = null;
   pet: Pet | null = null;
   floaters: Floater[] = [];
@@ -89,6 +107,9 @@ export class Game {
   private riposteFor = -1;
   private fightStart = 0;
   private fightTonics = 0;
+  private fightHits = 0;
+  /** Sigils that were actually in force for the current boss. */
+  private fightSigils = 0;
   /** Real-time seconds of slow motion left (perfect dodge). */
   private slowT = 0;
   /** Stamina bar flash when an attack is refused. */
@@ -108,46 +129,97 @@ export class Game {
   private lastToastT = 0;
   private ambientT = 0;
   private bogCd = 0;
+  private floodTick = 0;
+  private rootSwing = -1;
+  private dailyCheckT = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext("2d")!;
     this.ctx.imageSmoothingEnabled = false;
     this.input = new Input(window);
     this.input.onFirstGesture = () => audio.unlock();
-    this.level = buildLevel1();
     this.save = loadSave() ?? newSave();
-    const m = milestonesFor(this.save.hope);
-    this.level.setRestoration(m, recedeFor(m));
-    this.bg = new Background(this.level);
-    this.tiles = renderTiles(this.level);
-    this.props = renderProps(this.level);
-    this.vignette = makeVignette(C.black);
     this.stats = computeStats(this.save);
+    this.level = getLevel(levelOfShrine(this.save.lastShrine));
+    this.vignette = makeVignette(C.black);
     this.player = new Player(0, 0);
-    this.npcs = this.level.npcs.map((d) => new NPC(d));
-    this.shrines = this.level.shrines.map((d) => new Shrine(d));
-    this.signs = this.level.signs.map((d) => new Sign(d));
-    this.placeAtShrine("village");
+    this.loadLevel(this.level.id);
+    this.placeAtShrine(this.save.lastShrine);
     this.resetWorld();
     this.cam.x = 60; this.cam.y = this.level.pxH - H;
     audio.music("title");
   }
+
+  // ===================================================================== levels
+  /** Switch the active level: data, art (cached), NPCs, shrines, signs, Watchers. */
+  private loadLevel(id: LevelId) {
+    const L = getLevel(id);
+    this.level = L;
+    if (L.theme === "outskirts") {
+      const m = milestonesFor(this.save.hope);
+      if (L.setRestoration(m, recedeFor(m))) this.art.delete(id);
+    }
+    let art = this.art.get(id);
+    if (!art) {
+      art = { bg: L.theme === "mines" ? new CaveBackground(L) : new Background(L), tiles: renderTiles(L), props: renderProps(L) };
+      this.art.set(id, art);
+    }
+    this.bg = art.bg; this.tiles = art.tiles; this.props = art.props;
+    this.npcs = L.npcs.map((d) => new NPC(d));
+    this.shrines = L.shrines.map((d) => new Shrine(d));
+    this.signs = L.signs.map((d) => new Sign(d));
+    this.watchers = L.watchers.map((d) => new Watcher(d));
+    this.updateSight();
+  }
+
+  /** Walk into another level at one of its Hearthstones (which is kindled on arrival). */
+  private enterLevel(shrineId: string) {
+    const id = levelOfShrine(shrineId);
+    this.gatherChests();
+    this.overlays = [];
+    this.bossActive = false;
+    this.loadLevel(id);
+    const s = this.save;
+    if (!s.shrines.includes(shrineId)) s.shrines.push(shrineId);
+    s.lastShrine = shrineId;
+    this.resetWorld();
+    this.placeAtShrine(shrineId);
+    this.player.state = "normal"; this.player.vx = 0;
+    this.snapCamera();
+    this.fade = 1.4;
+    this.region = "";
+    this.seenRegions.clear();
+    this.showBanner(`LEVEL ${LEVEL_INFO[id].n}`, LEVEL_INFO[id].name, C.cream, true, 3.4);
+    this.checkDiary();
+    this.persist();
+  }
+
+  /** Spirit ledges show while Wick's Lantern is carried. */
+  private updateSight() {
+    this.level.spiritSight = this.save.eq.trinket?.base === "wick_lantern";
+  }
+  hooded() { return this.save.eq.helm?.base === "straw_hood"; }
 
   // ===================================================================== flow
   startGame(fresh: boolean) {
     if (fresh) { wipeSave(); this.save = newSave(); }
     else this.save = loadSave() ?? newSave();
     if (!this.save.bounties?.length) this.save.bounties = refreshBounties([]);
-    this.applyRestoration();
     this.stats = computeStats(this.save);
-    this.pickups = []; this.floaters = []; this.xpDrops = []; this.chat.lines = [];
+    this.pickups = []; this.floaters = []; this.xpDrops = []; this.chat.lines = []; this.chests = [];
     this.seenRegions.clear(); this.region = "";
-    this.purse = this.save.purse ? new Purse(this.save.purse.x, this.save.purse.y, this.save.purse.amount) : null;
-    this.pet = this.save.pet ? new Pet(0, 0) : null;
+    this.loadLevel(levelOfShrine(this.save.lastShrine));
+    const pu = this.save.purse;
+    this.purse = pu && (pu.level ?? "outskirts") === this.level.id ? new Purse(pu.x, pu.y, pu.amount) : null;
+    this.spawnPet();
     this.respawnPlayer(this.save.lastShrine);
     this.resetWorld();
+    this.refreshDaily();
     if (fresh) { this.mode = "intro"; this.intro = new IntroScreen(); audio.music("title"); }
-    else { this.mode = "play"; this.fade = 1; this.chat.push("Welcome back to Hollowmere.", C.dim); }
+    else {
+      this.mode = "play"; this.fade = 1; this.chat.push("Welcome back to Hollowmere.", C.dim);
+      this.checkDiary();
+    }
   }
 
   finishIntro() {
@@ -167,6 +239,22 @@ export class Game {
     audio.music("title");
   }
 
+  private spawnPet() {
+    const id = this.save.activePet;
+    this.pet = id ? new Pet(this.player.cx, this.player.bottom, id, petStage(this.save.petKc[id] ?? 0)) : null;
+  }
+
+  cyclePet() {
+    const s = this.save;
+    if (s.pets.length < 2) { audio.play("deny"); return; }
+    const i = s.activePet ? s.pets.indexOf(s.activePet) : -1;
+    s.activePet = s.pets[(i + 1) % s.pets.length];
+    this.spawnPet();
+    this.onGearChanged();
+    audio.play("select");
+    this.persist();
+  }
+
   private respawnPlayer(shrineId: string) {
     const s = this.stats;
     this.placeAtShrine(shrineId);
@@ -183,23 +271,46 @@ export class Game {
     if (this.pet) { this.pet.x = sh.x; this.pet.y = sh.y; }
   }
 
-  /** Respawn every foe and pot, and revive Wick. Called on rest and on death. */
+  /** Respawn every foe and pot, revive the boss, refill the caches. Called on rest and on death. */
   resetWorld() {
     const L = this.level;
+    this.gatherChests();
     this.enemies = [];
     this.pots = [];
     for (const s of L.spawns) {
       if (s.kind === "blightling") this.enemies.push(new Blightling(s.x, s.y));
       else if (s.kind === "crow") this.enemies.push(new Crow(s.x, s.y));
       else if (s.kind === "husk") this.enemies.push(new Husk(s.x, s.y));
+      else if (s.kind === "sludgeling") this.enemies.push(new Sludgeling(s.x, s.y));
+      else if (s.kind === "bat") this.enemies.push(new Bat(s.x, s.y));
+      else if (s.kind === "miner") this.enemies.push(new Miner(s.x, s.y));
       else this.pots.push(new Pot(s.x, s.y, hash(s.x, 0, 1) > 0.6 ? 1 : 0));
     }
-    for (const e of this.enemies) if (rng.oneIn(ROTBORN_RATE)) e.makeRotborn();
-    this.boss = new Wick(L.arena.bossX, L.arena.bossY);
+    const rate = this.stats.moon === "blood" ? ROTBORN_RATE_BLOOD : ROTBORN_RATE;
+    for (const e of this.enemies) if (rng.oneIn(rate)) e.makeRotborn();
+    this.boss = L.bossKind === "grimwater" ? new Grimwater(L.arena.bossX, L.arena.bossY) : new Wick(L.arena.bossX, L.arena.bossY);
+    // sigils only bind a boss you've already beaten
+    const mods = sigilMods(this.save.sigils);
+    this.fightSigils = 0;
+    if ((this.save.kills[this.boss.table] ?? 0) > 0 && mods.count > 0) { this.boss.applySigils(mods); this.fightSigils = mods.count; }
     this.bossActive = false;
     L.setFog(true);
+    L.regrow();
+    for (const w of this.watchers) { w.alert = 0; w.glanced = false; }
+    this.chests = L.caches.map((c) => new LootChest(c.x, c.y, "cache", "cache", null, c.id));
     this.projectiles = [];
     this.dodged.clear();
+  }
+
+  /** Unopened spoils are never lost: they're gathered for you when the world resets. */
+  private gatherChests() {
+    for (const ch of this.chests) {
+      if (ch.opened || ch.kind === "cache" || !ch.drops) continue;
+      ch.opened = true;
+      this.claimDrops(ch.drops, ch.x, ch.y);
+      this.chat.push("You gather up the unopened spoils.", C.dim);
+    }
+    this.chests = [];
   }
 
   openOverlay(o: Overlay) {
@@ -280,6 +391,8 @@ export class Game {
     this.floaters.push({ text, x, y, vy: -38, t: 0, color, big });
   }
 
+  private count(key: string, n = 1) { this.save.c[key] = (this.save.c[key] ?? 0) + n; }
+
   // ===================================================================== economy & gear
   canAfford(n: number) { return this.save.bank + this.save.gold >= n; }
   spend(n: number) {
@@ -321,6 +434,9 @@ export class Game {
     p.hp = Math.min(p.hp, this.stats.maxHp);
     p.hpTrail = Math.min(p.hpTrail, this.stats.maxHp);
     p.stam = Math.min(p.stam, this.stats.maxStam);
+    const had = this.level.spiritSight;
+    this.updateSight();
+    if (this.level.spiritSight && !had && this.level.theme === "mines") this.toast("The Lantern's light shows ledges that weren't there before.", C.fire2);
   }
 
   gainXp(skill: Skill, amount: number) {
@@ -355,15 +471,17 @@ export class Game {
   // ===================================================================== combat
   playerStrike(box: Rect, mult: number, id: number, heavy: boolean) {
     const p = this.player, s = this.stats;
+    this.strikeRoots(box, id);
     const targets: (Enemy | Pot)[] = [...this.enemies.filter((e) => !e.dead), ...this.pots.filter((q) => !q.broken)];
     if (this.boss && !this.boss.dead) targets.push(this.boss);
+    for (const pr of this.projectiles) if (pr instanceof Bubble && !pr.dead && overlap(box, pr.box())) pr.pop(this);
     for (const t of targets) {
       if (t.lastHitId === id || !overlap(box, t.hurtbox())) continue;
       t.lastHitId = id;
       if (t instanceof Pot) { t.break(this); this.bountyEvent("pots"); continue; }
-      if (t instanceof Wick && t.invulnerable) { t.takeHit(this, 0, false, p.facing); this.particles.hit(t.cx - p.facing * 8, p.y + 6, -p.facing, C.steel2, 4); continue; }
+      if (t instanceof Boss && t.invulnerable) { t.takeHit(this, 0, false, p.facing); this.particles.hit(t.cx - p.facing * 8, p.y + 6, -p.facing, C.steel2, 4); continue; }
       // a riposte (after a perfect dodge) turns the whole next swing into a guard-breaking crit
-      if (p.riposteT > 0 && this.riposteFor !== id) { this.riposteFor = id; p.riposteT = 0; this.bountyEvent("riposte"); }
+      if (p.riposteT > 0 && this.riposteFor !== id) { this.riposteFor = id; p.riposteT = 0; this.bountyEvent("riposte"); this.count("riposte"); }
       const riposte = this.riposteFor === id;
       const crit = riposte || rng.chance(s.crit);
       let fin: FinFace | null = null;
@@ -382,7 +500,7 @@ export class Game {
       const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * finMult * vuln * (riposte ? 2 : crit ? 1.75 : 1)));
       t.takeHit(this, dmg, crit, p.facing, false, heavy || riposte);
       if (fin) this.applyFinisher(fin, t, dmg, id);
-      if (t instanceof Wick) t.addPosture((riposte ? 22 : 0) + (heavy ? (fin && fin !== "blank" ? 16 : 7) : 0), this);
+      if (t instanceof Boss) t.addPosture((riposte ? 22 : 0) + (heavy ? (fin && fin !== "blank" ? 16 : 7) : 0), this);
       const hx = clamp(p.cx + p.facing * 14, t.x, t.x + t.w), hy = clamp(p.y + 8, t.y, t.y + t.h);
       this.particles.hit(hx, hy, p.facing, crit ? C.gold2 : C.fire3, crit ? 12 : 7);
       this.particles.splat(hx, hy, t instanceof Crow ? [C.inkSoft, C.blight2] : [C.blight3, C.blight4], crit ? 6 : 3);
@@ -395,6 +513,31 @@ export class Game {
       this.gainXp("strength", dmg * 1.6);
       this.gainXp("hitpoints", dmg * 1.33);
       this.xpDrop(dmg * 4.53, "sword", C.cream);
+    }
+  }
+
+  /** Orchard roots in the Mines: a curved blade (any scythe) cuts them; anything else bounces off. */
+  private strikeRoots(box: Rect, id: number) {
+    const L = this.level;
+    if (L.theme !== "mines" || this.rootSwing === id) return;
+    const c0 = Math.floor(box.x / TILE), c1 = Math.floor((box.x + box.w) / TILE);
+    const r0 = Math.floor(box.y / TILE), r1 = Math.floor((box.y + box.h) / TILE);
+    for (let c = c0; c <= c1; c++) for (let r = r0; r <= r1; r++) {
+      if (L.get(c, r) !== T.ROOT) continue;
+      this.rootSwing = id;
+      if (this.stats.kind === "scythe") {
+        for (let y = 0; y < L.h; y++) if (L.get(c, y) === T.ROOT) {
+          L.set(c, y, T.EMPTY);
+          this.particles.burst(c * TILE + 8, y * TILE + 8, 10, { speed: 90, colors: ["#4a2a3a", "#6a3a4a", C.blight4], g: 300, max: 0.8, size: 2 });
+        }
+        audio.play("cut"); this.shake(2, 0.15);
+        if (!this.save.flags.rootsCut) { this.save.flags.rootsCut = true; this.chat.push("The roots part before the curved blade.", C.good); }
+      } else {
+        audio.play("clink", 3);
+        this.particles.hit(c * TILE + 8, box.y + box.h / 2, -this.player.facing, "#6a3a4a", 5);
+        this.toast("The roots are too thick to hack through. A curved blade might part them.");
+      }
+      return;
     }
   }
 
@@ -436,6 +579,7 @@ export class Game {
     const taken = Math.min(dmg, Math.max(0, p.hp));
     p.hp -= dmg;
     p.invuln = 1.0; p.hurtFlash = 0.2;
+    if (this.bossActive) this.fightHits++;
     if (p.state === "drink" && !p.drinkDone) this.toast("The tonic spills from your hands!", C.bad);
     if (!perks.includes("bulwark")) {
       p.state = "hurt"; p.st = 0;
@@ -474,6 +618,7 @@ export class Game {
           p.vy = this.input.isHeld("jump") ? -330 : -240; p.canDouble = true; p.jumpHeld = this.input.isHeld("jump");
           audio.play("stomp");
           this.bountyEvent("stomp");
+          this.count("stomp");
           if (e instanceof Blightling) e.stomped(this);
           const dmg = Math.round(12 * this.stats.dmgMult);
           e.takeHit(this, dmg, false, 0);
@@ -484,9 +629,13 @@ export class Game {
         } else if (e.contactActive()) this.tryHit(e.contactDmg * e.dmgMult, e.cx, e.contactId, e);
       }
     }
+    const pm = this.boss && this.bossActive ? this.boss.dmgMult : 1;
     for (const pr of this.projectiles) {
       const box = pr.box();
-      if (box && overlap(box, hb)) this.tryHit(box.dmg, box.x + box.w / 2, box.id, null, !(pr instanceof Puddle));
+      if (box && overlap(box, hb)) {
+        this.tryHit(box.dmg * pm, box.x + box.w / 2, box.id, null, !(pr instanceof Puddle));
+        if (pr instanceof Bubble && !p.iframes) pr.pop(this);
+      }
     }
   }
 
@@ -496,7 +645,8 @@ export class Game {
     if (this.dodged.has(id)) return;
     if (p.iframes) {
       this.dodged.add(id);
-      if (perfectable && p.st <= PERFECT_WINDOW && !p.perfectUsed) this.perfectDodge(source);
+      const window = PERFECT_WINDOW + (this.stats.moon === "pale" ? 0.06 : 0);
+      if (perfectable && p.st <= window && !p.perfectUsed) this.perfectDodge(source);
       else {
         this.gainXp("defence", 8);
         this.xpDrop(8, "shield", C.xp);
@@ -525,13 +675,37 @@ export class Game {
       const a = (i / 16) * Math.PI * 2;
       this.particles.spawn(p.cx, p.y + 10, { vx: Math.cos(a) * 70, vy: Math.sin(a) * 70, max: 0.4, color: C.gold3, color2: C.gold1, drag: 4, light: 4, lightColor: C.gold2 });
     }
-    if (source instanceof Wick) source.addPosture(34, this);
+    if (source instanceof Boss) source.addPosture(34, this);
     else if (!source && this.bossActive && this.boss) this.boss.addPosture(20, this);
   }
 
   stamDenied() {
     if (this.stamFlash <= 0) audio.play("deny");
     this.stamFlash = 0.35;
+  }
+
+  /** Flood water: you wade at half speed. */
+  wading() {
+    const wy = this.bossActive ? this.boss?.waterY() ?? null : null;
+    return wy !== null && this.player.bottom > wy + 6 ? 0.55 : 1;
+  }
+
+  /** Rot-water burns while you stand in it (no stagger, just a steady drain). */
+  private floodDamage(dt: number) {
+    const p = this.player;
+    if (!p.alive || this.wading() >= 1 || p.state === "roll") { this.floodTick = 0; return; }
+    this.floodTick += dt;
+    if (this.floodTick < 0.6) return;
+    this.floodTick = 0;
+    const dmg = Math.max(1, Math.round(5 * this.stats.foeDmgMult * (this.boss?.dmgMult ?? 1)));
+    p.hp -= dmg;
+    p.hpTrail = Math.max(p.hpTrail, p.hp + dmg); p.trailDelay = 0.4;
+    p.hurtFlash = 0.08;
+    this.fightHits++;
+    this.addFloat(`${dmg}`, p.cx, p.y - 4, "#6ad0c0");
+    audio.play("splash");
+    if (!this.save.flags.floodWarned) { this.save.flags.floodWarned = true; this.chat.push("The rot-water burns. Get up on the scaffolds!", "#6ad0c0"); }
+    if (p.hp <= 0) this.playerDied();
   }
 
   private playerDied() {
@@ -548,7 +722,7 @@ export class Game {
     this.deathLostPurse = this.save.gold > 0;
     if (this.save.gold > 0) {
       const x = p.lastSafe.x + p.w / 2, y = p.lastSafe.y + p.h;
-      this.save.purse = { x, y, amount: this.save.gold };
+      this.save.purse = { x, y, amount: this.save.gold, level: this.level.id };
       this.purse = new Purse(x, y, this.save.gold);
       this.save.gold = 0;
     }
@@ -562,6 +736,14 @@ export class Game {
 
   private respawn() {
     this.mode = "play";
+    const home = levelOfShrine(this.save.lastShrine);
+    if (home !== this.level.id) {
+      this.gatherChests();
+      this.loadLevel(home);
+      const pu = this.save.purse;
+      this.purse = pu && (pu.level ?? "outskirts") === home ? new Purse(pu.x, pu.y, pu.amount) : null;
+      this.seenRegions.clear();
+    }
     this.applyRestoration();
     this.resetWorld();
     this.respawnPlayer(this.save.lastShrine);
@@ -575,13 +757,15 @@ export class Game {
     const p = this.player;
     if (this.bogCd > 0) return;
     this.bogCd = 0.5;
-    audio.play("bog");
-    this.particles.splat(p.cx, p.bottom - 4, [C.blight3, C.blight4, C.blight5, C.sick1], 20);
+    const mines = this.level.theme === "mines";
+    audio.play(mines ? "splash" : "bog");
+    this.particles.splat(p.cx, p.bottom - 4, mines ? ["#1a4a52", "#2e7a78", "#6ad0c0", "#b8f0e0"] : [C.blight3, C.blight4, C.blight5, C.sick1], 20);
     const dmg = Math.round(this.stats.maxHp * 0.2);
     p.hp -= dmg;
     this.addFloat(`${dmg}`, p.cx, p.y, C.bad);
-    this.flash(C.blight3, 0.3);
-    if (!this.save.flags.bogWarned) { this.save.flags.bogWarned = true; this.chat.push("The purple is not for drinking.", C.blight5); }
+    this.flash(mines ? "#1a4a52" : C.blight3, 0.3);
+    if (mines && !this.save.flags.waterWarned) { this.save.flags.waterWarned = true; this.chat.push("The flood water drags at you, cold as iron.", "#6ad0c0"); }
+    if (!mines && !this.save.flags.bogWarned) { this.save.flags.bogWarned = true; this.chat.push("The purple is not for drinking.", C.blight5); }
     if (p.hp <= 0) {
       p.x = p.lastSafe.x; p.y = p.lastSafe.y;
       this.playerDied();
@@ -597,6 +781,7 @@ export class Game {
     if (e.isBoss) return;
     this.save.kills[e.table] = (this.save.kills[e.table] ?? 0) + 1;
     this.bountyEvent("kill", e.table as BountyTarget);
+    if (this.level.theme === "mines") this.count("minesKills");
     if (e.rotborn) {
       this.save.kills.rotborn = (this.save.kills.rotborn ?? 0) + 1;
       this.spawnDrops("rotborn", e.cx, e.y + e.h / 2);
@@ -609,13 +794,15 @@ export class Game {
       this.addFloat("+4", this.player.cx, this.player.y - 8, C.good);
     }
     this.spawnDrops(e.table, e.cx, e.y + e.h / 2);
+    this.checkDiary();
   }
 
   onTonicDrunk() { this.fightTonics++; }
 
-  /** Advance every open contract that matches an event. */
+  /** Advance every open contract (and today's daily) that matches an event. */
   bountyEvent(kind: BountyKind, target?: BountyTarget) {
-    for (const b of this.save.bounties) {
+    const all = this.save.daily ? [...this.save.bounties, this.save.daily] : this.save.bounties;
+    for (const b of all) {
       if (b.done || b.kind !== kind || (b.target && b.target !== target)) continue;
       b.have = Math.min(b.need, b.have + 1);
       if (b.have >= b.need) this.completeBounty(b);
@@ -630,11 +817,17 @@ export class Game {
     if (r.type === "rune") s.runes[r.face] = (s.runes[r.face] ?? 0) + 1;
     else if (r.type === "shards") s.shards += r.amount;
     else if (r.type === "gold") s.bank += r.amount;
-    else s.diceCharge = DICE_CHARGE;
+    else if (r.type === "charge") s.diceCharge = DICE_CHARGE;
+    else {
+      s.dailiesDone++;
+      const p = this.player;
+      this.dropChest(p.cx + p.facing * 22, p.bottom, "daily", "daily", rollDrops("daily", rng, this.dropMods()));
+    }
     audio.play("purse"); audio.loot(3);
-    this.showBanner("BOUNTY COMPLETE", describe(b), C.gold2, false, 3);
+    this.showBanner(b.daily ? "DAILY BOUNTY COMPLETE" : "BOUNTY COMPLETE", describe(b), C.gold2, false, 3);
     this.chat.push(`Bounty complete: ${describe(b)}. Reward: ${rewardText(r, (f) => FACES[f].name)}${r.type === "gold" ? " (banked)" : ""}.`, C.gold2);
     this.addHope(b.hope, "bounty");
+    this.checkDiary();
     this.persist();
   }
 
@@ -660,18 +853,18 @@ export class Game {
       audio.play("kindle");
       this.onGearChanged();
       // re-rendering the world takes a moment, so the village changes while you rest
-      if (this.level.restored !== after) this.chat.push("Rest at a Hearthstone to see Hollowmere change.", C.dim);
+      if (getLevel("outskirts").restored !== after) this.chat.push("Rest at a Hearthstone to see Hollowmere change.", C.dim);
     }
     this.persist();
   }
 
-  /** Re-render the world art if the number of Hope milestones changed. */
+  /** Re-render the Outskirts art if the number of Hope milestones changed. */
   applyRestoration() {
+    const L1 = getLevel("outskirts");
     const m = milestonesFor(this.save.hope);
-    if (this.level.setRestoration(m, recedeFor(m))) {
-      this.bg = new Background(this.level);
-      this.tiles = renderTiles(this.level);
-      this.props = renderProps(this.level);
+    if (L1.setRestoration(m, recedeFor(m))) {
+      this.art.delete("outskirts");
+      if (this.level === L1) this.loadLevel("outskirts");
     }
   }
 
@@ -685,8 +878,13 @@ export class Game {
     }
   }
 
+  private dropMods(extra: Partial<Parameters<typeof rollDrops>[2]> = {}) {
+    const st = this.stats;
+    return { goldFind: st.goldFind, gearMult: st.gearMult, alwaysGold: st.perks.includes("windfall"), mapMult: st.mapMult, ...extra };
+  }
+
   spawnDrops(table: string, x: number, y: number) {
-    for (const d of rollDrops(table, this.stats.goldFind, rng, this.stats.gearMult, this.stats.perks.includes("windfall"))) {
+    for (const d of rollDrops(table, rng, this.dropMods())) {
       if (d.type === "gold") {
         const n = Math.min(10, Math.ceil(d.amount / 4));
         let left = d.amount;
@@ -704,16 +902,99 @@ export class Game {
       } else if (d.type === "shard") this.pickups.push(new Pickup("shard", x, y, d.amount));
       else if (d.type === "rune") { const pk = new Pickup("rune", x, y); pk.face = d.face; this.pickups.push(pk); }
       else if (d.type === "orb") this.pickups.push(new Pickup("orb", x, y));
-      else if (d.type === "pet") {
-        if (!this.save.pet) {
-          this.save.pet = true;
-          this.pet = new Pet(x, y);
-          audio.loot(5);
-          this.chat.push("You have a funny feeling like you're being followed.", C.gold2);
-          this.showBanner("LIL' WICK", "A new friend follows you", RARITY[5].color, false, 4);
-        } else this.chat.push("You have a funny feeling like you would have been followed...", C.dim);
+      else this.claimDrops([d], x, y);
+    }
+  }
+
+  /** Hand a set of drops straight to the player (chest contents, maps, parts, pets). */
+  private claimDrops(drops: Drop[], x: number, y: number) {
+    const s = this.save, p = this.player;
+    for (const d of drops) {
+      switch (d.type) {
+        case "gold": s.gold += d.amount; break;
+        case "shard": s.shards += d.amount; break;
+        case "orb": p.hp = Math.min(this.stats.maxHp, p.hp + Math.round(this.stats.maxHp * 0.12)); break;
+        case "rune": s.runes[d.face] = (s.runes[d.face] ?? 0) + 1; break;
+        case "mat": s.mats[d.id] = (s.mats[d.id] ?? 0) + d.amount; break;
+        case "map": this.addMap(); break;
+        case "pet": this.gainPet(d.pet, x, y); break;
+        case "item": {
+          const it = d.item;
+          if (it.rarity > s.bestRarity && it.rarity <= 4) s.bestRarity = it.rarity;
+          if (it.rarity === 5) {
+            const first = !(s.log[it.base] > 0);
+            s.log[it.base] = (s.log[it.base] ?? 0) + 1;
+            if (first) this.chat.push(`New item added to your collection log: ${baseOf(it).name}`, RARITY[5].color);
+            s.bestRarity = Math.max(s.bestRarity, 4);
+          }
+          if (!this.giveItem(it)) {
+            this.pickups.push(new Pickup("item", x, y - 8, 1, it));
+            this.toast("Your pack is full. The rest spills onto the ground.", C.bad);
+          }
+          break;
+        }
       }
     }
+    this.persist();
+  }
+
+  private gainPet(id: PetId, x: number, y: number) {
+    const s = this.save;
+    if (s.pets.includes(id)) { this.chat.push("You have a funny feeling like you would have been followed...", C.dim); return; }
+    s.pets.push(id);
+    if (id === "wick") s.pet = true;
+    s.activePet = id;
+    this.pet = new Pet(x, y, id, 0);
+    audio.loot(5);
+    this.chat.push("You have a funny feeling like you're being followed.", C.gold2);
+    this.showBanner(PETS[id].stages[0].toUpperCase(), "A new friend follows you", RARITY[5].color, false, 4);
+    this.onGearChanged();
+  }
+
+  /** A treasure map for a random dig site in any level you can reach. One map at a time. */
+  private addMap() {
+    const s = this.save;
+    if (s.maps.length) {
+      s.gold += 25;
+      this.chat.push("You already carry a map. You sell the spare for 25 gold.", C.dim);
+      return;
+    }
+    const lvls: LevelId[] = s.flags.minesOpen ? ["outskirts", "mines"] : ["outskirts"];
+    const lid = rng.pick(lvls);
+    const spot = rng.pick(getLevel(lid).digSpots);
+    s.maps = [`${lid}:${spot.id}`];
+    audio.loot(3);
+    this.chat.push(`You find a treasure map! (${LEVEL_INFO[lid].name})`, C.paper);
+    if (!s.flags.mapHint) { s.flags.mapHint = true; this.chat.push("Read it in your Journal [I]. Find the X and dig.", C.dim); }
+  }
+
+  private dropChest(x: number, y: number, kind: ChestKind, table: string, drops: Drop[]) {
+    const ch = new LootChest(x, y, kind, table, drops);
+    this.chests.push(ch);
+    this.particles.burst(x, y - 10, 16, { speed: 70, colors: [C.gold2, C.gold3, C.white], max: 0.6, g: 120, light: 5, lightColor: C.gold2 });
+    return ch;
+  }
+
+  private openChest(ch: LootChest) {
+    if (ch.opened) return;
+    const s = this.save;
+    if (!ch.drops) ch.drops = rollDrops(ch.table, rng, this.dropMods());
+    if (ch.kind === "cache") {
+      const first = !s.flags["cache_" + ch.cacheId];
+      s.flags["cache_" + ch.cacheId] = true;
+      this.bountyEvent("cache");
+      if (first) {
+        const def = this.level.caches.find((c) => c.id === ch.cacheId);
+        this.showBanner("SECRET FOUND", def?.name ?? "A hidden cache", RARITY[5].color, false, 3.5);
+      }
+    }
+    ch.opened = true;
+    const drops = ch.drops;
+    const title = ch.kind === "boss" ? `${this.boss?.title ?? "BOSS"} SPOILS` : ch.kind === "treasure" ? "BURIED TREASURE" : ch.kind === "daily" ? "THE DAILY CHEST" : "SECRET CACHE";
+    this.openOverlay(new ChestReveal(title, drops, () => {
+      this.claimDrops(drops, ch.x, ch.y);
+      this.checkDiary();
+    }));
   }
 
   collect(pk: Pickup) {
@@ -760,36 +1041,108 @@ export class Game {
     pk.dead = true;
   }
 
+  // ===================================================================== diary, daily, sigils
+  /** Grant any diary tier that has just been completed. */
+  checkDiary() {
+    const s = this.save;
+    for (const area of DIARY_AREAS) DIARY[area].tiers.forEach((tier, ti) => {
+      if (tierClaimed(s, area, ti) || !tierComplete(s, area, ti)) return;
+      s.diaryClaimed.push(tierKey(area, ti));
+      if (ti === 0) {
+        const gold = area === "mines" ? 200 : 150;
+        s.bank += gold;
+        const face = rng.weighted(RUNE_WEIGHTS);
+        s.runes[face] = (s.runes[face] ?? 0) + 1;
+      }
+      audio.play("levelup");
+      this.showBanner(`${DIARY[area].name} ${tier.name} DIARY`, "Complete!", C.gold2, false, 4);
+      this.chat.push(`Well done! You have completed the ${tier.name.toLowerCase()} tasks in the ${DIARY[area].name.toLowerCase()} diary.`, C.gold2);
+      this.chat.push(`Reward: ${tier.reward}.`, C.gold2);
+      this.onGearChanged();
+    });
+  }
+
+  /** Today's daily contract (the same for everyone), refreshed at local midnight. */
+  private refreshDaily() {
+    const s = this.save, day = dayKey();
+    if (s.dailyDay === day) return;
+    s.dailyDay = day;
+    s.daily = dailyBounty(day, !!s.flags.minesOpen);
+    if (this.mode === "play") this.chat.push("A new daily notice is pinned to the board.", C.gold2);
+  }
+
+  onSigilsChanged() {
+    this.stats = computeStats(this.save);
+    if (this.boss && this.boss.mode === "dormant") {
+      // re-seat the dormant boss under the new sigils
+      const L = this.level;
+      this.boss = L.bossKind === "grimwater" ? new Grimwater(L.arena.bossX, L.arena.bossY) : new Wick(L.arena.bossX, L.arena.bossY);
+      const mods = sigilMods(this.save.sigils);
+      this.fightSigils = 0;
+      if ((this.save.kills[this.boss.table] ?? 0) > 0 && mods.count > 0) { this.boss.applySigils(mods); this.fightSigils = mods.count; }
+    }
+    this.persist();
+  }
+
+  /** A Watcher saw you: the gallery gate slams and the bats come. */
+  watcherSaw(w: Watcher) {
+    const L = this.level;
+    if (!L.gateOpen) return;
+    L.setGate(false);
+    audio.play("watcher"); audio.play("gate");
+    this.shake(3, 0.4);
+    this.chat.push("A Watcher sees you! The gate grinds shut. (It opens again when you rest.)", "#e0405a");
+    for (const side of [-1, 1]) this.enemies.push(new Bat(w.x + side * 40, w.def.y + 10));
+    if (!this.save.flags.watcherHint) { this.save.flags.watcherHint = true; this.chat.push("Time your way past the light, or find a way to look like you belong here.", C.dim); }
+  }
+
   // ===================================================================== interactions
   private interact() {
-    const p = this.player;
+    const p = this.player, s = this.save, L = this.level;
     this.prompt = null;
     if (p.state !== "normal" || !p.onGround) return;
     type Cand = { d: number; x: number; y: number; text: string; act: () => void };
     const cands: Cand[] = [];
+    const near = (x: number, y: number, r: number) => Math.abs(p.cx - x) < r && Math.abs(p.bottom - y) < 20;
     for (const sh of this.shrines) {
-      const d = Math.abs(p.cx - sh.x);
-      if (d < 18 && Math.abs(p.bottom - sh.y) < 20) {
-        const lit = this.save.shrines.includes(sh.def.id);
-        cands.push({ d, x: sh.x, y: sh.y - 36, text: lit ? "REST" : "KINDLE", act: () => this.rest(sh) });
+      if (near(sh.x, sh.y, 18)) {
+        const lit = s.shrines.includes(sh.def.id);
+        cands.push({ d: Math.abs(p.cx - sh.x), x: sh.x, y: sh.y - 36, text: lit ? "REST" : "KINDLE", act: () => this.rest(sh) });
       }
     }
-    for (const n of this.npcs) {
-      const d = Math.abs(p.cx - n.x);
-      if (d < 24 && Math.abs(p.bottom - n.y) < 20) cands.push({ d, x: n.x, y: n.y - 30, text: "TALK", act: () => this.talk(n) });
-    }
-    for (const sg of this.signs) {
-      const d = Math.abs(p.cx - sg.x);
-      if (d < 12 && Math.abs(p.bottom - sg.y) < 20) cands.push({ d, x: sg.x, y: sg.y - 22, text: "READ", act: () => this.openOverlay(new Dialog("Signpost", sg.def.text.split("\n\n"), null)) });
-    }
-    const bd = this.level.board;
-    if (Math.abs(p.cx - bd.x) < 14 && Math.abs(p.bottom - bd.y) < 20) {
-      const open = this.save.bounties.filter((b) => !b.done).length;
+    for (const n of this.npcs) if (near(n.x, n.y, 24)) cands.push({ d: Math.abs(p.cx - n.x), x: n.x, y: n.y - 30, text: "TALK", act: () => this.talk(n) });
+    for (const sg of this.signs) if (near(sg.x, sg.y, 12)) cands.push({ d: Math.abs(p.cx - sg.x), x: sg.x, y: sg.y - 22, text: "READ", act: () => this.openOverlay(new Dialog("Signpost", sg.def.text.split("\n\n"), null)) });
+    const bd = L.board;
+    if (near(bd.x, bd.y, 14)) {
+      const open = s.bounties.filter((b) => !b.done).length + (s.daily && !s.daily.done ? 1 : 0);
       cands.push({ d: Math.abs(p.cx - bd.x), x: bd.x, y: bd.y - 30, text: open ? `BOUNTIES (${open})` : "BOUNTIES", act: () => this.openOverlay(new BountyBoard()) });
     }
-    const A = this.level.arena;
+    if (!this.bossActive) {
+      const ss = L.sigilStone;
+      if (near(ss.x, ss.y, 12)) {
+        const bossTable = L.bossKind;
+        const on = SIGIL_IDS.filter((k) => s.sigils[k]).length;
+        cands.push({ d: Math.abs(p.cx - ss.x), x: ss.x, y: ss.y - 26, text: on ? `SIGILS (${on})` : "SIGILS", act: () => this.openOverlay(new SigilMenu(bossTable === "wick" ? "Wick, the Harvest Warden" : "Grimwater, the Drowned Foreman", (s.kills[bossTable] ?? 0) > 0)) });
+      }
+      const bc = L.beacon;
+      if (bc && near(bc.x, bc.y, 16)) {
+        if (!s.flags.minesOpen) {
+          const have = s.mats.ember ?? 0;
+          cands.push({ d: Math.abs(p.cx - bc.x), x: bc.x, y: bc.y - 36, text: `BEACON (${Math.min(have, BEACON_EMBERS)}/${BEACON_EMBERS} EMBERS)`, act: () => this.lightBeacon() });
+        }
+      }
+      for (const ex of L.exits) {
+        if (!near(ex.x, ex.y, 16)) continue;
+        if (ex.needs === "beacon" && !s.flags.minesOpen) continue;
+        cands.push({ d: Math.abs(p.cx - ex.x), x: ex.x, y: ex.y - 34, text: ex.label, act: () => { audio.play("fog"); this.enterLevel(ex.to); } });
+      }
+    }
+    for (const ch of this.chests) if (!ch.opened && near(ch.x, ch.y, 16)) cands.push({ d: Math.abs(p.cx - ch.x), x: ch.x, y: ch.y - 24, text: ch.label, act: () => this.openChest(ch) });
+    const spot = this.mapSpot();
+    if (spot && near(spot.x, spot.y, 14)) cands.push({ d: Math.abs(p.cx - spot.x), x: spot.x, y: spot.y - 20, text: "DIG", act: () => this.dig(spot.x, spot.y) });
+    const A = L.arena;
     const fogX = A.fogCol * TILE;
-    if (this.level.get(A.fogCol, A.fogBottom) === T.FOG && !this.bossActive && p.cx < fogX && fogX - p.cx < 32) {
+    if (L.get(A.fogCol, A.fogBottom) === T.FOG && !this.bossActive && p.cx < fogX && fogX - p.cx < 32) {
       cands.push({ d: fogX - p.cx, x: fogX + 8, y: p.y - 6, text: "ENTER THE FOG", act: () => this.enterFog() });
     }
     if (!cands.length) return;
@@ -799,9 +1152,56 @@ export class Game {
     if (this.input.pressed("interact")) { this.input.consume("interact"); this.prompt = null; c.act(); }
   }
 
+  /** The dig site of the carried map, if it's in this level. */
+  private mapSpot() {
+    const mp = this.save.maps[0];
+    if (!mp) return null;
+    const [lid, id] = mp.split(":");
+    if (lid !== this.level.id) return null;
+    return this.level.digSpots.find((d) => d.id === id) ?? null;
+  }
+
+  private dig(x: number, y: number) {
+    const s = this.save;
+    s.maps = [];
+    audio.play("dig");
+    this.shake(2, 0.2);
+    this.particles.burst(x, y - 2, 18, { speed: 90, colors: [C.dirt2, C.dirt3, C.stone2], g: 400, max: 0.7, size: 2 });
+    s.flags["dug_" + this.level.id] = true;
+    this.count("dug");
+    this.bountyEvent("dig");
+    this.chat.push("X marks the spot. You dig up a buried chest!", C.gold2);
+    this.dropChest(x, y, "treasure", "treasure", rollDrops("treasure", rng, this.dropMods()));
+    this.checkDiary();
+    this.persist();
+  }
+
+  private lightBeacon() {
+    const s = this.save;
+    const have = s.mats.ember ?? 0;
+    if (have < BEACON_EMBERS) {
+      audio.play("deny");
+      this.toast(`The beacon needs ${BEACON_EMBERS} Warden's Embers. Wick carries them.`);
+      return;
+    }
+    s.mats.ember = have - BEACON_EMBERS;
+    s.flags.minesOpen = true;
+    audio.play("kindle");
+    this.flash(C.fire2, 0.5);
+    const bc = this.level.beacon!;
+    this.particles.burst(bc.x, bc.y - 30, 40, { speed: 90, colors: [C.fire1, C.fire2, C.fire3], max: 1.2, g: -40, drag: 2, light: 8, lightColor: C.fire1 });
+    this.showBanner("THE BEACON BURNS", "The mill cellar opens onto the Drowned Mines", C.fire2, true, 4.5);
+    this.chat.push("Far below, something answers the light: a bell, tolling under water.", "#6ad0c0");
+    // the board learns about the Mines too
+    s.bounties = refreshBounties(s.bounties.filter((b) => !b.done), rng, true);
+    this.checkDiary();
+    this.persist();
+  }
+
   private talk(n: NPC) {
     const lines = n.lines(this);
     this.openOverlay(new Dialog(n.name, lines, (c, x, y) => n.portrait(c, x, y), n.id === "brom" ? (g) => g.openOverlay(new ShopMenu()) : undefined));
+    this.checkDiary();
   }
 
   private rest(sh: Shrine) {
@@ -825,14 +1225,17 @@ export class Game {
     this.openOverlay(new RestMenu(id));
     if (s.diceCharge >= DICE_CHARGE) this.openOverlay(new DiceMenu(this, true));
     const before = s.bounties.filter((b) => b.done).length;
-    s.bounties = refreshBounties(s.bounties);
+    s.bounties = refreshBounties(s.bounties, rng, !!s.flags.minesOpen);
     if (before) this.chat.push(`${before === 1 ? "A new notice is" : "New notices are"} pinned to the board in Hollowmere.`, C.dim);
     if (milestonesFor(s.hope) >= 2) s.runeStock = rng.weighted(RUNE_WEIGHTS);
+    this.refreshDaily();
+    this.checkDiary();
     this.persist();
   }
 
   travelTo(id: string) {
     this.overlays = [];
+    if (levelOfShrine(id) !== this.level.id) { this.enterLevel(id); return; }
     this.save.lastShrine = id;
     this.placeAtShrine(id);
     this.player.state = "normal";
@@ -850,43 +1253,75 @@ export class Game {
   }
 
   private startBoss() {
-    if (!this.boss) return;
+    const b = this.boss;
+    if (!b) return;
     this.bossActive = true;
-    this.bossTrail = this.boss.maxHp;
-    this.boss.wake();
-    this.fightStart = this.time; this.fightTonics = 0;
-    audio.music("boss");
-    this.showBanner("WICK", "THE HARVEST WARDEN", C.cream, true, 3.6);
+    this.bossTrail = b.maxHp;
+    b.wake();
+    this.fightStart = this.time; this.fightTonics = 0; this.fightHits = 0;
+    audio.music(b.music[0]);
+    this.showBanner(b.title, b.subtitle, C.cream, true, 3.6);
+    if (this.fightSigils) this.chat.push(`${this.fightSigils} sigil${this.fightSigils > 1 ? "s" : ""} bind${this.fightSigils > 1 ? "" : "s"} the ${b.table === "wick" ? "Warden" : "Foreman"}.`, C.blight5);
   }
 
   onBossPhase2() {
-    audio.music("boss2");
+    const b = this.boss;
+    audio.music(b?.music[1] ?? "boss2");
     this.flash(C.sick1, 0.4);
-    this.chat.push("The Warden's head catches a sickly flame...", C.sick1);
+    if (b) this.chat.push(b.phase2Text, C.sick1);
   }
 
-  onBossDefeated(b: Wick) {
+  onBossDefeated(b: Boss) {
     const s = this.save;
-    s.kills.wick = (s.kills.wick ?? 0) + 1;
+    const k = b.table;
+    s.kills[k] = (s.kills[k] ?? 0) + 1;
+    const kc = s.kills[k];
+    this.count("bossKills");
     this.chargeDice(DICE_CHARGE);
-    this.bountyEvent("wick");
-    if (this.fightTonics === 0) this.bountyEvent("wickNoTonic");
-    if (this.time - this.fightStart < WICK_FAST_SECONDS) this.bountyEvent("wickFast");
-    this.addHope(s.kills.wick === 1 ? 10 : 5, "Wick felled");
+    const wick = k === "wick";
+    this.bountyEvent(wick ? "wick" : "grim");
+    if (this.fightTonics === 0) { this.bountyEvent(wick ? "wickNoTonic" : "grimNoTonic"); s.flags["notonic_" + k] = true; }
+    if (wick && this.time - this.fightStart < WICK_FAST_SECONDS) this.bountyEvent("wickFast");
+    if (this.fightHits === 0) s.flags["flawless_" + k] = true;
+    if (this.fightSigils >= 3) s.flags["sigils3_" + k] = true;
+    this.addHope(wick ? (kc === 1 ? 10 : 5) : (kc === 1 ? 12 : 6), "boss felled");
     this.bossActive = false;
     this.level.setFog(false);
-    this.chat.push(`Your Wick kill count is: ${s.kills.wick}.`, "#e0605a");
+    this.chat.push(`Your ${wick ? "Wick" : "Grimwater"} kill count is: ${kc}.`, "#e0605a");
     audio.play("victory");
     this.flash(C.white, 0.5);
-    this.showBanner("HARVEST ENDED", "", C.gold2, true, 4.5);
-    this.spawnDrops("wick", b.cx, b.y + 20);
-    if (!s.flags.wickSlain) {
+    this.showBanner(b.deathTitle, "", C.gold2, true, 4.5);
+    // pets grow with every boss you fell together
+    const pid = s.activePet;
+    if (pid) {
+      const before = petStage(s.petKc[pid] ?? 0);
+      s.petKc[pid] = (s.petKc[pid] ?? 0) + 1;
+      const after = petStage(s.petKc[pid]!);
+      if (after > before) {
+        this.showBanner(PETS[pid].stages[after].toUpperCase(), "Your pet has grown!", RARITY[5].color, false, 4);
+        this.chat.push(`Your pet grows into ${PETS[pid].stages[after]}!`, RARITY[5].color);
+        this.spawnPet();
+        this.onGearChanged();
+      }
+    }
+    const extraGear = this.fightSigils + (this.stats.moon === "harvest" ? 1 : 0);
+    const drops = rollDrops(k, rng, this.dropMods({ extraGear, extraShards: this.fightSigils, uniqueRolls: this.fightSigils >= 3 ? 2 : 1 }));
+    const gy = this.level.surfaceY(Math.floor(b.cx / TILE), Math.floor(b.y / TILE));
+    this.dropChest(clamp(b.cx, this.level.arena.x0 + 24, this.level.arena.x1 - 24), gy, "boss", k, drops);
+    if (wick && !s.flags.wickSlain) {
       s.flags.wickSlain = true;
       this.chat.push("Rest at a Hearthstone to face the Warden again.", C.dim);
+      this.chat.push("Among his straw: a Warden's Ember, still warm.", C.fire2);
+      this.chat.push("The beacon by the mill cellar needs three of them.", C.fire2);
+    }
+    if (!wick && !s.flags.grimSlain) {
+      s.flags.grimSlain = true;
+      this.chat.push("The shaft drains. The bell falls silent. For now.", "#6ad0c0");
     }
     this.boss = null;
-    for (const e of this.enemies) if (e instanceof Crow && !e.dead) { e.hp = 0; e.dead = true; e.remove = true; this.particles.burst(e.cx, e.y, 8, { speed: 40, colors: [C.inkSoft, C.blight2], max: 0.5 }); }
-    setTimeout(() => { if (this.mode === "play" && !this.bossActive) audio.music("outskirts"); }, 5000);
+    for (const e of this.enemies) if ((e instanceof Crow || e instanceof Sludgeling) && !e.dead && !e.rotborn) { e.hp = 0; e.dead = true; e.remove = true; this.particles.burst(e.cx, e.y, 8, { speed: 40, colors: [C.inkSoft, C.blight2], max: 0.5 }); }
+    setTimeout(() => { if (this.mode === "play" && !this.bossActive) audio.music(this.level.regionAt(this.player.cx).music); }, 5000);
+    this.checkDiary();
     this.persist();
   }
 
@@ -912,6 +1347,8 @@ export class Game {
     if (this.mode === "intro") { this.intro?.update(this, dt); return; }
 
     this.save.playTime += dt;
+    this.dailyCheckT += dt;
+    if (this.dailyCheckT > 10) { this.dailyCheckT = 0; this.refreshDaily(); }
     if (this.banner) {
       this.banner.t += dt;
       if (this.banner.t > this.banner.dur) this.banner = this.bannerQueue.shift() ?? null;
@@ -954,10 +1391,22 @@ export class Game {
     for (const pk of this.pickups) pk.update(this, dt);
     this.pickups = this.pickups.filter((pk) => !pk.dead);
     for (const n of this.npcs) n.update(this, dt);
+    for (const w of this.watchers) w.update(this, dt);
+    for (const ch of this.chests) ch.update(dt);
     this.pet?.update(this, dt);
     this.combat();
+    if (this.bossActive) this.floodDamage(dt);
     this.enemies = this.enemies.filter((e) => !e.remove);
     this.separateEnemies();
+
+    // a grown pet gathers gold and shards from further away
+    if (this.pet && this.pet.stage >= 2) {
+      for (const pk of this.pickups) {
+        if (pk.kind === "item" || pk.t < 0.45) continue;
+        const dx = p.cx - pk.cx, dy = p.y + 10 - pk.y;
+        if (Math.hypot(dx, dy) < 70) { pk.x += Math.sign(dx) * 120 * dt; pk.y += Math.sign(dy) * 120 * dt; }
+      }
+    }
 
     // reclaim a lost purse
     if (this.purse && p.alive && overlap(p.hurtbox(), this.purse.hitbox())) {
@@ -1025,6 +1474,8 @@ export class Game {
   private ambient(dt: number) {
     this.ambientT += dt;
     const cx = this.cam.x, cy = this.cam.y;
+    const L = this.level;
+    const mines = L.theme === "mines";
     const onScreen = (x: number, y: number, m = 40) => x > cx - m && x < cx + W + m && y > cy - m && y < cy + H + m;
     for (const e of this.props.emitters) {
       if (!onScreen(e.x, e.y, 60)) continue;
@@ -1032,20 +1483,34 @@ export class Game {
       if (e.kind === "ember" && rng.chance(dt * 4)) this.particles.spawn(e.x + rng.range(-5, 5), e.y, { vy: -rng.range(20, 50), vx: rng.range(-8, 8), max: rng.range(0.6, 1.4), color: C.fire2, color2: C.fire0, light: 4, lightColor: C.fire1, wobble: 10 });
       if (e.kind === "drip" && rng.chance(dt * 0.7)) this.particles.spawn(e.x, e.y, { vy: 10, g: 200, max: 1.2, color: C.blight4, light: 4, lightColor: C.blight4 });
     }
-    const b = this.level.blightAt(cx + W / 2);
-    // fireflies in healthy fields, rot spores deeper in
-    if (rng.chance(dt * 3)) {
-      const x = cx + rng.range(0, W), y = cy + rng.range(H * 0.3, H * 0.85);
-      if (rng.next() > b) this.particles.spawn(x, y, { vx: rng.range(-6, 6), vy: rng.range(-4, 4), max: rng.range(3, 6), color: "#d8f07a", wobble: 14, light: 7, lightColor: "#c9e06a" });
-      else this.particles.spawn(x, y, { vx: rng.range(-4, 4), vy: -rng.range(3, 9), max: rng.range(3, 6), color: C.blight5, color2: C.blight3, wobble: 8, light: 5, lightColor: C.blight4 });
+    const b = L.blightAt(cx + W / 2);
+    if (mines) {
+      // water dripping from the ceiling, and drifting motes of drowned light
+      if (rng.chance(dt * 4)) {
+        const tx = Math.floor((cx + rng.range(0, W)) / TILE);
+        for (let ty = Math.floor(cy / TILE); ty < L.h; ty++) {
+          if (!L.isSolid(L.get(tx, ty)) && L.isSolid(L.get(tx, ty - 1))) {
+            this.particles.spawn(tx * TILE + rng.range(2, 14), ty * TILE + 1, { vy: 5, g: 420, max: 1.1, color: "#6ad0c0", color2: "#2e7a78" });
+            if (rng.chance(0.2)) audio.play("drip", 0.5);
+            break;
+          }
+        }
+      }
+      if (rng.chance(dt * 2)) this.particles.spawn(cx + rng.range(0, W), cy + rng.range(H * 0.2, H * 0.9), { vx: rng.range(-4, 4), vy: -rng.range(2, 6), max: rng.range(3, 6), color: b > 0.6 ? C.blight5 : "#6ad0c0", wobble: 10, light: 5, lightColor: b > 0.6 ? C.blight4 : "#2e7a78" });
+    } else {
+      // fireflies in healthy fields, rot spores deeper in
+      if (rng.chance(dt * 3)) {
+        const x = cx + rng.range(0, W), y = cy + rng.range(H * 0.3, H * 0.85);
+        if (rng.next() > b) this.particles.spawn(x, y, { vx: rng.range(-6, 6), vy: rng.range(-4, 4), max: rng.range(3, 6), color: "#d8f07a", wobble: 14, light: 7, lightColor: "#c9e06a" });
+        else this.particles.spawn(x, y, { vx: rng.range(-4, 4), vy: -rng.range(3, 9), max: rng.range(3, 6), color: C.blight5, color2: C.blight3, wobble: 8, light: 5, lightColor: C.blight4 });
+      }
+      if (rng.chance(dt * 1.2 * (1 - b))) this.particles.spawn(cx + rng.range(0, W + 60), cy - 4, { vx: -rng.range(8, 20), vy: rng.range(10, 20), max: 8, color: rng.chance(0.5) ? C.straw1 : "#6a4a3a", wobble: 18 });
     }
-    if (rng.chance(dt * 1.2 * (1 - b))) this.particles.spawn(cx + rng.range(0, W + 60), cy - 4, { vx: -rng.range(8, 20), vy: rng.range(10, 20), max: 8, color: rng.chance(0.5) ? C.straw1 : "#6a4a3a", wobble: 18 });
     // bog bubbles
-    const L = this.level;
     if (rng.chance(dt * 6)) {
       const tx = Math.floor((cx + rng.range(0, W)) / TILE);
       for (let ty = 0; ty < L.h; ty++) if (L.get(tx, ty) === T.BOG) {
-        this.particles.spawn(tx * TILE + rng.range(2, 14), ty * TILE + 3, { vy: -rng.range(6, 14), max: 0.5, color: C.blight5, light: 3, lightColor: C.blight4 });
+        this.particles.spawn(tx * TILE + rng.range(2, 14), ty * TILE + 3, { vy: -rng.range(6, 14), max: 0.5, color: mines ? "#b8f0e0" : C.blight5, light: 3, lightColor: mines ? "#2e7a78" : C.blight4 });
         break;
       }
     }
@@ -1065,17 +1530,26 @@ export class Game {
     const camY = Math.round(this.cam.y + (sh ? rng.range(-sh, sh) : 0));
     const t = this.time;
     const L = this.level;
+    const s = this.save;
     const playing = this.mode !== "title";
+    const mines = L.theme === "mines";
 
     this.bg.draw(ctx, camX, camY, t);
     blit(ctx, this.props.canvas, camX, camY);
-    if (this.props.millHub) drawMillBlades(ctx, this.props.millHub, camX, camY, t, milestonesFor(this.save.hope) >= 5 ? 0.7 : 0.12);
-    drawBoard(ctx, this.level.board.x, this.level.board.y, camX, camY, this.save.bounties.some((b) => !b.done));
-    for (const sh2 of this.shrines) sh2.draw(ctx, camX, camY, this.save.shrines.includes(sh2.def.id), t);
-    for (const s of this.signs) s.draw(ctx, camX, camY);
+    if (this.props.millHub) drawMillBlades(ctx, this.props.millHub, camX, camY, t, milestonesFor(s.hope) >= 5 ? 0.7 : 0.12);
+    if (L.board.x > 0) drawBoard(ctx, L.board.x, L.board.y, camX, camY, s.bounties.some((b) => !b.done) || !!(s.daily && !s.daily.done));
+    if (L.beacon) drawBeacon(ctx, L.beacon.x, L.beacon.y, camX, camY, !!s.flags.minesOpen, t);
+    drawSigilStone(ctx, L.sigilStone.x, L.sigilStone.y, camX, camY, SIGIL_IDS.map((k) => !!s.sigils[k]), (s.kills[L.bossKind] ?? 0) > 0, t);
+    for (const sh2 of this.shrines) sh2.draw(ctx, camX, camY, s.shrines.includes(sh2.def.id), t);
+    for (const sg of this.signs) sg.draw(ctx, camX, camY);
     blit(ctx, this.tiles.tiles, camX, camY);
+    drawDynamicTiles(ctx, L, camX, camY, t);
     drawBog(ctx, L, camX, camY, W, t);
+    for (const w of this.watchers) w.draw(ctx, camX, camY, t);
+    const spot = playing ? this.mapSpot() : null;
+    if (spot) drawDigSite(ctx, spot.x, spot.y, camX, camY, t);
     for (const pt of this.pots) pt.draw(ctx, camX, camY);
+    for (const ch of this.chests) ch.draw(ctx, camX, camY, t);
     for (const n of this.npcs) n.draw(ctx, camX, camY);
     if (this.boss) this.boss.draw(this, ctx, camX, camY);
     for (const e of this.enemies) e.draw(this, ctx, camX, camY);
@@ -1086,6 +1560,7 @@ export class Game {
       this.player.draw(this, ctx, camX, camY);
     }
     for (const pr of this.projectiles) pr.draw(ctx, camX, camY, t);
+    this.boss?.drawFront(this, ctx, camX, camY);
     this.particles.draw(ctx, camX, camY, "back");
     blit(ctx, this.tiles.fg, camX, camY);
     drawFog(ctx, L, camX, camY, t);
@@ -1095,13 +1570,13 @@ export class Game {
     const b = L.blightAt(camX + W / 2);
     if (b > 0.02) {
       ctx.globalCompositeOperation = "multiply";
-      ctx.fillStyle = mix("#ffffff", "#c4acd6", b);
+      ctx.fillStyle = mines ? mix("#ffffff", "#a8b8d0", b) : mix("#ffffff", "#c4acd6", b);
       ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = "source-over";
     }
-    let dark = 0.34 + b * 0.18;
+    let dark = mines ? 0.5 + b * 0.14 : 0.34 + b * 0.18;
     if (this.bossActive && this.boss?.phase === 2) dark += 0.08;
-    this.lighting.render(ctx, dark, "#07050f", 0.3);
+    this.lighting.render(ctx, dark, mines ? "#04060c" : "#07050f", 0.3);
     this.particles.draw(ctx, camX, camY, "glow");
     for (const f of this.finFx) drawFinFx(ctx, f, camX, camY);
     ctx.drawImage(this.vignette, 0, 0);
@@ -1129,36 +1604,47 @@ export class Game {
   }
 
   private gatherLights(camX: number, camY: number) {
-    const lg = this.lighting, t = this.time;
+    const lg = this.lighting, t = this.time, L = this.level, s = this.save;
+    const mines = L.theme === "mines";
     for (const l of this.props.lights) {
       const f = 1 - l.flicker * (0.5 + 0.5 * Math.sin(t * 9 + l.x * 0.7) * Math.sin(t * 5.3 + l.y));
       lg.add(l.x - camX, l.y - camY, l.r * (0.95 + 0.05 * f), l.color, (l.strength ?? 0.9) * f);
     }
-    for (const lp of this.level.lamps) lg.add(lp.x - camX, lp.y - camY, 40 + Math.sin(t * 7 + lp.x) * 2, C.fire1, 0.95);
+    for (const lp of L.lamps) lg.add(lp.x - camX, lp.y - camY, (mines ? 46 : 40) + Math.sin(t * 7 + lp.x) * 2, C.fire1, 0.95);
     for (const sh of this.shrines) {
-      const lit = this.save.shrines.includes(sh.def.id);
+      const lit = s.shrines.includes(sh.def.id);
       lg.add(sh.x - camX, sh.y - 30 - camY, lit ? 64 + Math.sin(t * 6) * 3 : 18, lit ? C.fire1 : "#6a5a8a", lit ? 1 : 0.5);
     }
-    lg.add(292 - camX * 0.01, 26 + (camY / Math.max(1, this.level.pxH - H)) * 6, 40, "#c8b8d8", 0.85);
+    if (L.beacon && s.flags.minesOpen) lg.add(L.beacon.x - camX, L.beacon.y - 32 - camY, 56 + Math.sin(t * 8) * 3, C.fire1, 1);
+    if (!mines) lg.add(292 - camX * 0.01, 26 + (camY / Math.max(1, L.pxH - H)) * 6, 40, "#c8b8d8", 0.85);
     const p = this.player;
-    if (this.mode !== "title") lg.add(p.cx - camX, p.y + 8 - camY, 34 + this.stats.light * 30, this.stats.light ? C.fire2 : "#c8b8a0", this.stats.light ? 0.9 : 0.55);
+    const light = this.stats.light;
+    if (this.mode !== "title") lg.add(p.cx - camX, p.y + 8 - camY, (mines ? 42 : 34) + light * 30, light ? C.fire2 : "#c8b8a0", light ? 0.9 : mines ? 0.7 : 0.55);
+    if (this.pet && this.pet.stage >= 1) lg.add(this.pet.x - camX, this.pet.y - 12 - camY, 26, this.pet.id === "grim" ? "#6ad0c0" : C.fire1, 0.8);
     for (const e of this.enemies) e.lights(this, camX, camY);
     this.boss?.lights(this, camX, camY);
     for (const pr of this.projectiles) pr.lights?.(this, camX, camY);
+    for (const w of this.watchers) w.lights(this, camX, camY);
+    for (const ch of this.chests) ch.lights(this, camX, camY);
     for (const pk of this.pickups) {
       if (pk.kind === "item" && pk.item) lg.add(pk.cx - camX, pk.y - camY, pk.item.rarity >= 3 ? 30 : 16, RARITY[pk.item.rarity].color, 0.7);
       else if (pk.kind === "gold") lg.add(pk.cx - camX, pk.y + 4 - camY, 8, C.gold2, 0.5);
       else if (pk.kind === "shard") lg.add(pk.cx - camX, pk.y + 2 - camY, 12, C.blight4, 0.7);
     }
     if (this.purse) lg.add(this.purse.x - camX, this.purse.y - 8 - camY, 22, C.gold2, 0.8);
-    const A = this.level.arena;
-    if (this.level.get(A.fogCol, A.fogBottom) === T.FOG) for (let y = 3; y < 14; y += 4) lg.add(A.fogCol * TILE + 8 - camX, y * TILE - camY, 30, "#b9a8d0", 0.6);
-    // bog glow
-    const L = this.level;
+    const spot = this.mapSpot();
+    if (spot) lg.add(spot.x - camX, spot.y - 4 - camY, 14, C.gold2, 0.6);
+    const A = L.arena;
+    if (L.get(A.fogCol, A.fogBottom) === T.FOG) for (let y = A.fogTop + 3; y < A.fogBottom; y += 4) lg.add(A.fogCol * TILE + 8 - camX, y * TILE - camY, 30, "#b9a8d0", 0.6);
+    // bog / water glow
     for (let tx = Math.floor(camX / TILE); tx <= Math.floor((camX + W) / TILE); tx++) {
-      for (let ty = 0; ty < L.h; ty++) if (L.get(tx, ty) === T.BOG && L.get(tx, ty - 1) !== T.BOG) { lg.add(tx * TILE + 8 - camX, ty * TILE + 4 - camY, 22, C.blight4, 0.55); break; }
+      for (let ty = 0; ty < L.h; ty++) if (L.get(tx, ty) === T.BOG && L.get(tx, ty - 1) !== T.BOG) { lg.add(tx * TILE + 8 - camX, ty * TILE + 4 - camY, 22, mines ? "#2e7a78" : C.blight4, 0.55); break; }
     }
-    for (const n of this.npcs) if (n.id === "brom") lg.add(n.x - 14 - camX, n.y - 12 - camY, 12, C.fire1, n.hammerT > 0.5 && n.hammerT < 0.6 ? 1 : 0);
+    if (L.spiritSight) for (let tx = Math.floor(camX / TILE); tx <= Math.floor((camX + W) / TILE); tx += 2) for (let ty = 0; ty < L.h; ty++) if (L.get(tx, ty) === T.SPIRIT) lg.add(tx * TILE + 8 - camX, ty * TILE - camY, 20, "#b9a8d0", 0.6);
+    for (const n of this.npcs) {
+      if (n.id === "brom") lg.add(n.x - 14 - camX, n.y - 12 - camY, 12, C.fire1, n.hammerT > 0.5 && n.hammerT < 0.6 ? 1 : 0);
+      if (n.id === "tam") lg.add(n.x + 9 * n.facing - camX, n.y - 12 - camY, 36, C.fire1, 0.9);
+    }
     this.particles.lights(lg, camX, camY);
   }
 }
@@ -1169,4 +1655,3 @@ function blit(ctx: Ctx, src: HTMLCanvasElement, sx: number, sy: number) {
   if (x1 <= x0 || y1 <= y0) return;
   ctx.drawImage(src, x0, y0, x1 - x0, y1 - y0, x0 - sx, y0 - sy, x1 - x0, y1 - y0);
 }
-

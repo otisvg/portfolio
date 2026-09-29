@@ -116,9 +116,14 @@ export abstract class Enemy implements Body {
 // ======================================================================= Blightling
 const blobBuf = new SpriteBuf(40, 32);
 
+/** Body colours: dark, mid, light, shine, spots, brow. */
+type BlobPal = [string, string, string, string, string, string];
+const BLIGHT_PAL: BlobPal = [C.blight2, C.blight3, C.blight4, C.blight5, C.sick1, C.blight1];
+
 export class Blightling extends Enemy {
-  readonly table = "blightling";
-  readonly label = "Blightling";
+  readonly table: string = "blightling";
+  readonly label: string = "Blightling";
+  protected pal: BlobPal = BLIGHT_PAL;
   hopT = rng.range(0.4, 1.4);
   squashT = 0;
   constructor(cx: number, gy: number) {
@@ -186,13 +191,13 @@ export class Blightling extends Enemy {
   protected onHurt(_g: Game, _d: number, dir: number) { this.vx = dir * 110; this.vy = -90; this.mode = "recover"; this.st = 0; this.token = false; }
   protected onDeath(g: Game) {
     audio.play("splat");
-    g.particles.splat(this.cx, this.y + 5, [C.blight3, C.blight4, C.sick1, C.blight2], 16);
+    g.particles.splat(this.cx, this.y + 5, [this.pal[1], this.pal[2], this.pal[4], this.pal[0]], 16);
     this.remove = true;
   }
   stomped(g: Game) {
     this.squashT = 0.25;
     this.mode = "recover"; this.st = 0; this.token = false;
-    g.particles.splat(this.cx, this.y, [C.blight4, C.sick1], 6);
+    g.particles.splat(this.cx, this.y, [this.pal[2], this.pal[4]], 6);
   }
   draw(g: Game, ctx: Ctx, camX: number, camY: number) {
     const sx = this.cx - camX, sy = this.bottom - camY;
@@ -203,31 +208,32 @@ export class Blightling extends Enemy {
     if (this.mode === "tell") { const k = Math.min(1, this.st / 0.3); rx = 7 + 2.5 * k; ry = 5 - 2 * k; }
     else if (this.squashT > 0) { rx = 9; ry = 3; } else if (air) { rx = 5.5; ry = 6.5; } else { const w = Math.sin(this.t * 5) * 0.5; rx += w; ry -= w; }
     const cy = -ry;
-    disc(c, 0, cy, rx, ry, C.blight2);
-    disc(c, -0.5, cy - 0.5, rx - 1.2, ry - 1.2, C.blight3);
-    disc(c, -2, cy - ry * 0.45, Math.max(1, rx * 0.35), Math.max(1, ry * 0.3), C.blight4);
-    c.fillStyle = C.blight5; c.fillRect(-3, Math.round(cy - ry * 0.6), 1, 1);
+    const P = this.pal;
+    disc(c, 0, cy, rx, ry, P[0]);
+    disc(c, -0.5, cy - 0.5, rx - 1.2, ry - 1.2, P[1]);
+    disc(c, -2, cy - ry * 0.45, Math.max(1, rx * 0.35), Math.max(1, ry * 0.3), P[2]);
+    c.fillStyle = P[3]; c.fillRect(-3, Math.round(cy - ry * 0.6), 1, 1);
     // sickly spots & drip
-    c.fillStyle = C.sick1; c.fillRect(Math.round(rx * 0.4), Math.round(cy + 1), 1, 1); c.fillRect(-Math.round(rx * 0.6), Math.round(cy + 2), 1, 1);
-    if (!air) { c.fillStyle = C.blight3; c.fillRect(Math.round(-rx + 2), 0, 1, 1 + (Math.floor(this.t * 2) % 2)); }
+    c.fillStyle = P[4]; c.fillRect(Math.round(rx * 0.4), Math.round(cy + 1), 1, 1); c.fillRect(-Math.round(rx * 0.6), Math.round(cy + 2), 1, 1);
+    if (!air) { c.fillStyle = P[1]; c.fillRect(Math.round(-rx + 2), 0, 1, 1 + (Math.floor(this.t * 2) % 2)); }
     // eye tracks the player
     const look = clamp((g.player.cx - this.cx) / 30, -1, 1);
     const ex = Math.round(1 + look), ey = Math.round(cy - 1);
     rect(c, ex - 1, ey - 1, 4, 3, C.cream);
     rect(c, ex + (look > 0 ? 1 : 0), ey, 2, 2, C.ink);
-    rect(c, ex - 1, ey - 2, 4, 1, C.blight1);
+    rect(c, ex - 1, ey - 2, 4, 1, P[5]);
     const tell = this.mode === "tell" && Math.floor(this.st * 12) % 2 === 0 ? 0.55 : 0;
     blobBuf.end(ctx, sx, sy, { flip: false, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + tell });
   }
-  lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 4 - camY, 14, C.blight4, 0.5); }
+  lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 4 - camY, 14, this.pal[2], 0.5); }
 }
 
 // ======================================================================= Rotcrow
 const crowBuf = new SpriteBuf(40, 30, 10);
 
 export class Crow extends Enemy {
-  readonly table = "crow";
-  readonly label = "Rotcrow";
+  readonly table: string = "crow";
+  readonly label: string = "Rotcrow";
   home: { x: number; y: number };
   mode: "hover" | "tell" | "dive" | "rise" | "stun" = "hover";
   target = { x: 0, y: 0 };
@@ -315,8 +321,10 @@ const huskBuf = new SpriteBuf(90, 48, 6);
 const HUSK_WINDUP = 0.6, HUSK_GLINT = 0.38, HUSK_STUCK = 0.9;
 
 export class Husk extends Enemy {
-  readonly table = "husk";
-  readonly label = "Husk";
+  readonly table: string = "husk";
+  readonly label: string = "Husk";
+  /** Drowned Miners share the Husk's moveset with a pick instead of a fork. */
+  protected miner = false;
   mode: "idle" | "walk" | "windup" | "thrust" | "stuck" | "recover" | "stagger" = "idle";
   poise = 26; poiseDmg = 0; poiseT = 0;
   thrustId = 0; walkPhase = 0; glinted = false;
@@ -386,7 +394,7 @@ export class Husk extends Enemy {
   attackBoxes(): AttackBox[] {
     if (this.mode !== "thrust" || this.st > 0.16) return [];
     const x0 = this.facing > 0 ? this.cx + 4 : this.cx - 4 - 28;
-    return [{ x: x0, y: this.y + 5, w: 28, h: 10, dmg: 22, id: this.thrustId }];
+    return [{ x: x0, y: this.y + 5, w: 28, h: 10, dmg: this.miner ? 26 : 22, id: this.thrustId }];
   }
   protected onHurt(g: Game, dmg: number, dir: number, heavy = false) {
     if (this.mode === "windup" || this.mode === "thrust") {
@@ -435,7 +443,8 @@ export class Husk extends Enemy {
     if (m === "stagger") { lean = -2; forkAng = -1.2; handX = 0; handY = -17; }
     let dying = 0;
     if (this.dead) { dying = clamp(this.deathT / 0.6, 0, 1); bob = Math.round(dying * 10); lean = 3 + Math.round(dying * 3); }
-    const skin = "#7a8a6a", skinD = "#5a6a52", shirt = "#4a3f55", shirtD = "#342c40";
+    const mn = this.miner;
+    const skin = mn ? "#6a8a8e" : "#7a8a6a", skinD = mn ? "#4a6a70" : "#5a6a52", shirt = mn ? "#3a4a5a" : "#4a3f55", shirtD = mn ? "#283444" : "#342c40";
     // legs
     line(c, -1, -9 + bob, bF[0] - 1, bF[1] - 1, "#2a2433", 2);
     line(c, 1, -9 + bob, fF[0] + 1, fF[1] - 1, "#3a3040", 2);
@@ -449,17 +458,33 @@ export class Husk extends Enemy {
     // head
     const hx = -2 + lean + 1, hy = -23 + bob;
     rect(c, hx, hy, 5, 5, skin); rect(c, hx, hy + 3, 5, 2, skinD);
-    const eyeC = m === "stuck" || m === "recover" ? "#4a3a5a" : m === "windup" && this.glinted ? C.white : "#d070ff";
+    const eyeC = m === "stuck" || m === "recover" ? "#4a3a5a" : m === "windup" && this.glinted ? C.white : mn ? "#6ad0c0" : "#d070ff";
     rect(c, hx + 3, hy + 1, 1, 1, eyeC); rect(c, hx + 1, hy + 1, 1, 1, eyeC);
     rect(c, hx + 2, hy + 3, 2, 1, C.ink);
-    // tattered straw hat
-    rect(c, hx - 3, hy - 1, 11, 1, C.straw1); rect(c, hx - 1, hy - 3, 7, 2, C.straw1); rect(c, hx, hy - 3, 5, 1, C.straw2);
-    c.fillStyle = C.straw0; c.fillRect(hx - 3, hy, 1, 1); c.fillRect(hx + 7, hy, 1, 1);
-    // pitchfork
     const ca = Math.cos(forkAng), sa = Math.sin(forkAng);
-    for (let i = -10; i <= 18; i++) { c.fillStyle = i % 5 === 0 ? C.wood1 : C.wood2; c.fillRect(Math.round(handX + ca * i), Math.round(handY + sa * i), 1, 1); }
-    for (let j = -2; j <= 2; j++) { c.fillStyle = C.steel1; c.fillRect(Math.round(handX + ca * 18 - sa * j), Math.round(handY + sa * 18 + ca * j), 1, 1); }
-    for (const j of [-2, 0, 2]) for (let i = 19; i <= 23; i++) { c.fillStyle = i === 23 ? C.steel3 : C.steel2; c.fillRect(Math.round(handX + ca * i - sa * j), Math.round(handY + sa * i + ca * j), 1, 1); }
+    if (mn) {
+      // dented brass helmet with a lamp that still burns
+      rect(c, hx - 2, hy - 1, 10, 1, "#6a5a2a"); rect(c, hx - 1, hy - 3, 7, 2, "#8a7a3a"); rect(c, hx, hy - 4, 5, 1, "#a8964a");
+      rect(c, hx + 5, hy - 3, 2, 2, this.dead ? "#4a3a2a" : C.fire2);
+      c.fillStyle = "#2e7a78"; c.fillRect(hx - 1, hy + 4, 1, 2); c.fillRect(hx + 4, hy + 5, 1, 1); // barnacles
+      // pickaxe
+      for (let i = -8; i <= 18; i++) { c.fillStyle = i % 5 === 0 ? C.wood1 : C.wood2; c.fillRect(Math.round(handX + ca * i), Math.round(handY + sa * i), 1, 1); }
+      for (let j = -6; j <= 6; j++) {
+        const back = Math.abs(j) * Math.abs(j) * 0.12;
+        const px = handX + ca * (19 - back) - sa * j, py = handY + sa * (19 - back) + ca * j;
+        c.fillStyle = Math.abs(j) > 4 ? C.steel3 : Math.abs(j) < 2 ? C.steel0 : C.steel1;
+        c.fillRect(Math.round(px), Math.round(py), 1, 1);
+        c.fillStyle = C.steel0; c.fillRect(Math.round(px - ca), Math.round(py - sa), 1, 1);
+      }
+    } else {
+      // tattered straw hat
+      rect(c, hx - 3, hy - 1, 11, 1, C.straw1); rect(c, hx - 1, hy - 3, 7, 2, C.straw1); rect(c, hx, hy - 3, 5, 1, C.straw2);
+      c.fillStyle = C.straw0; c.fillRect(hx - 3, hy, 1, 1); c.fillRect(hx + 7, hy, 1, 1);
+      // pitchfork
+      for (let i = -10; i <= 18; i++) { c.fillStyle = i % 5 === 0 ? C.wood1 : C.wood2; c.fillRect(Math.round(handX + ca * i), Math.round(handY + sa * i), 1, 1); }
+      for (let j = -2; j <= 2; j++) { c.fillStyle = C.steel1; c.fillRect(Math.round(handX + ca * 18 - sa * j), Math.round(handY + sa * 18 + ca * j), 1, 1); }
+      for (const j of [-2, 0, 2]) for (let i = 19; i <= 23; i++) { c.fillStyle = i === 23 ? C.steel3 : C.steel2; c.fillRect(Math.round(handX + ca * i - sa * j), Math.round(handY + sa * i + ca * j), 1, 1); }
+    }
     rect(c, handX - 1, handY - 1, 2, 2, skin);
     line(c, lean, -16 + bob, handX, handY, shirt);
     const alpha = this.dead ? 1 - dying : 1;
@@ -471,8 +496,72 @@ export class Husk extends Enemy {
     }
   }
   lights(g: Game, camX: number, camY: number) {
-    if (this.dead || this.mode === "stuck" || this.mode === "recover") return;
-    g.lighting.add(this.cx + this.facing * 3 - camX, this.y + 3 - camY, 10, "#d070ff", this.mode === "windup" && this.glinted ? 1 : 0.45);
+    if (this.dead) return;
+    if (this.miner) g.lighting.add(this.cx + this.facing * 5 - camX, this.y - 1 - camY, 26, C.fire1, 0.75);
+    if (this.mode === "stuck" || this.mode === "recover") return;
+    g.lighting.add(this.cx + this.facing * 3 - camX, this.y + 3 - camY, 10, this.miner ? "#6ad0c0" : "#d070ff", this.mode === "windup" && this.glinted ? 1 : 0.45);
+  }
+}
+
+// ======================================================================= Mines variants
+const SLUDGE_PAL: BlobPal = ["#1a4a52", "#2e7a78", "#4aa89a", "#9ae0d0", "#c9e06a", "#11303a"];
+
+/** Flood-water goo from the Mines. Tougher and hits harder than its orchard cousin. */
+export class Sludgeling extends Blightling {
+  readonly table = "sludgeling";
+  readonly label = "Sludgeling";
+  constructor(cx: number, gy: number) {
+    super(cx, gy);
+    this.pal = SLUDGE_PAL;
+    this.hp = this.maxHp = 32;
+    this.contactDmg = 13;
+  }
+}
+
+const batBuf = new SpriteBuf(40, 30, 10);
+
+export class Bat extends Crow {
+  readonly table = "bat";
+  readonly label = "Cave Bat";
+  constructor(cx: number, y: number) {
+    super(cx, y);
+    this.hp = this.maxHp = 16;
+    this.contactDmg = 13;
+  }
+  protected onDeath(g: Game) {
+    audio.play("caw", 0);
+    g.particles.burst(this.cx, this.y + 4, 10, { speed: 60, colors: ["#2a2438", "#4a3a4a", "#6ad0c0"], max: 0.9, g: 120, drag: 2, wobble: 30 });
+  }
+  draw(_g: Game, ctx: Ctx, camX: number, camY: number) {
+    const sx = this.cx - camX, sy = this.bottom - camY;
+    const c = batBuf.begin();
+    const flap = this.mode === "dive" ? 2 : Math.floor(this.t * (this.mode === "tell" ? 20 : 12)) % 3;
+    const body = "#2a2032", hi = "#4a3a50", membrane = "#3a2a42";
+    rect(c, -2, -7, 5, 5, body); rect(c, -1, -8, 3, 1, hi);
+    rect(c, -2, -9, 1, 2, body); rect(c, 2, -9, 1, 2, body); // ears
+    const eye = this.mode === "tell" ? C.white : "#6ad0c0";
+    c.fillStyle = eye; c.fillRect(-1, -6, 1, 1); c.fillRect(1, -6, 1, 1);
+    c.fillStyle = C.cream; c.fillRect(0, -4, 1, 1); // fang
+    const wing = (dir: number) => {
+      if (flap === 0) { line(c, dir * 2, -6, dir * 9, -11, membrane, 2); line(c, dir * 9, -11, dir * 11, -6, hi); }
+      else if (flap === 1) { rect(c, dir > 0 ? 3 : -10, -7, 8, 2, membrane); c.fillStyle = hi; c.fillRect(dir * 10, -6, 1, 1); }
+      else { line(c, dir * 2, -4, dir * 7, 0, membrane, 2); line(c, dir * 7, 0, dir * 9, -3, hi); }
+    };
+    wing(-1); wing(1);
+    if (this.dead) { c.fillStyle = C.ink; c.fillRect(-1, -6, 3, 1); }
+    batBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
+  }
+  lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 2 - camY, 9, "#6ad0c0", 0.5); }
+}
+
+export class Miner extends Husk {
+  readonly table = "miner";
+  readonly label = "Drowned Miner";
+  constructor(cx: number, gy: number) {
+    super(cx, gy);
+    this.miner = true;
+    this.hp = this.maxHp = 76;
+    this.poise = 30;
   }
 }
 

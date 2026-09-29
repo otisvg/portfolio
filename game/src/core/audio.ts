@@ -7,7 +7,8 @@ export type Sfx =
   | "jump" | "djump" | "land" | "swing" | "swingHeavy" | "hit" | "crit" | "hurt" | "roll" | "coin"
   | "levelup" | "death" | "roar" | "slam" | "shrine" | "move" | "select" | "deny" | "forge"
   | "stomp" | "pot" | "heal" | "fog" | "tell" | "caw" | "splat" | "drink" | "purse" | "clink"
-  | "throw" | "bog" | "open" | "close" | "victory" | "step" | "hop" | "kindle" | "dice" | "diceLand" | "perfect";
+  | "throw" | "bog" | "open" | "close" | "victory" | "step" | "hop" | "kindle" | "dice" | "diceLand" | "perfect"
+  | "bell" | "splash" | "chest" | "reveal" | "dig" | "sigil" | "watcher" | "gate" | "cut" | "chain" | "drip";
 
 type Wave = OscillatorType;
 
@@ -29,6 +30,7 @@ interface Song {
 
 const Dm = [50, 53, 57], Bb = [50, 53, 58], Gm = [50, 55, 58], A = [49, 52, 57], C = [52, 55, 60];
 const Am = [57, 60, 64], F = [53, 57, 60], Cg = [55, 60, 64], G = [55, 59, 62], Em = [52, 55, 59];
+const Cm = [48, 51, 55], Ab = [48, 51, 56], Fm = [48, 53, 56], Gs = [47, 50, 55], Eb = [51, 55, 58];
 
 const SONGS: Record<string, Song> = {
   title: {
@@ -62,6 +64,28 @@ const SONGS: Record<string, Song> = {
     leadVol: 0.022,
   },
 };
+
+Object.assign(SONGS, {
+  mines: {
+    bpm: 58, chords: [Cm, Ab, Fm, Gs], arp: [0, -1, -1, 2, -1, -1, 1, -1, -1, -1, 4, -1, -1, 2, -1, -1],
+    arpWave: "triangle", arpVol: 0.03, arpLen: 0.6, bass: "x.......x.......", bassWave: "triangle", bassVol: 0.06, pad: 0.016,
+    drums: "......h.........",
+  },
+  grim: {
+    bpm: 118, chords: [Cm, Cm, Ab, Gs, Cm, Eb, Fm, Gs], arp: [0, 2, 1, 2, 0, 2, 1, 4, 0, 2, 1, 2, 3, 2, 1, 2],
+    arpWave: "square", arpVol: 0.02, arpLen: 0.14, bass: "x..x..x.x..x..x.", bassWave: "sawtooth", bassVol: 0.05, pad: 0.014,
+    drums: "k..hs..hk.k.s..h",
+    lead: [72, null, null, 75, null, 74, 72, null, 71, null, null, 67, null, 68, 71, null],
+    leadVol: 0.02,
+  },
+  grim2: {
+    bpm: 140, chords: [Cm, Ab, Fm, Gs, Cm, Ab, Eb, Gs], arp: [0, 1, 2, 4, 2, 1, 5, 4, 0, 1, 2, 4, 5, 4, 2, 1],
+    arpWave: "square", arpVol: 0.024, arpLen: 0.1, bass: "xx.xx.xxx.x.xx.x", bassWave: "sawtooth", bassVol: 0.05, pad: 0.012,
+    drums: "k.hsk.hsk.hsk.ss",
+    lead: [79, null, 77, 75, null, 74, 75, null, 72, null, null, 71, 72, null, 67, null],
+    leadVol: 0.022,
+  },
+} satisfies Record<string, Song>);
 
 const mtof = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
 
@@ -249,6 +273,27 @@ class AudioEngine {
         this.noise(0.6, { freq: 800, to: 3000, vol: 0.08, attack: 0.05 });
         [0, 7, 12, 16, 19].forEach((n, i) => this.tone(mtof(60 + n), 1.6, { type: "triangle", vol: 0.05, delay: 0.15 + i * 0.1, attack: 0.02 }));
         break;
+      case "bell":
+        [0, 0.02].forEach((d, i) => this.tone(mtof(i ? 67 : 55), 2.2, { type: "sine", vol: 0.09, delay: d, attack: 0.005 }));
+        this.tone(mtof(70), 1.6, { type: "triangle", vol: 0.03, delay: 0.01 });
+        this.noise(0.08, { freq: 3000, vol: 0.05 });
+        break;
+      case "splash": this.noise(0.45, { freq: 1200, to: 300, vol: 0.12, q: 1.5 }); this.tone(220, 0.2, { type: "sine", to: 90, vol: 0.05 }); break;
+      case "chest":
+        this.noise(0.25, { freq: 500, to: 250, vol: 0.12, type: "lowpass" });
+        this.tone(160, 0.3, { type: "square", to: 110, vol: 0.05, delay: 0.05 });
+        break;
+      case "reveal": this.tone(mtof(60 + param * 3) * r, 0.25, { type: "triangle", vol: 0.06 }); this.noise(0.1, { freq: 4000 + param * 800, vol: 0.03 }); break;
+      case "dig": this.noise(0.12, { freq: 400 * r, vol: 0.14, type: "lowpass" }); this.noise(0.05, { freq: 2600, vol: 0.04, delay: 0.03 }); break;
+      case "sigil":
+        this.tone(110, 1.0, { type: "sawtooth", to: 55, vol: 0.06, attack: 0.05 });
+        [0, 6, 12].forEach((n, i) => this.tone(mtof(57 + n), 0.9, { type: "sine", vol: 0.04, delay: i * 0.08 }));
+        break;
+      case "watcher": this.tone(1100, 0.5, { type: "sine", to: 700, vol: 0.05, attack: 0.05 }); this.tone(1650, 0.5, { type: "sine", to: 1050, vol: 0.03, attack: 0.05 }); break;
+      case "gate": this.noise(0.7, { freq: 220, vol: 0.2, type: "lowpass" }); this.tone(70, 0.6, { type: "square", to: 40, vol: 0.06 }); break;
+      case "cut": this.noise(0.18, { freq: 2400, to: 500, vol: 0.12, q: 2 }); this.noise(0.25, { freq: 300, vol: 0.1, type: "lowpass", delay: 0.05 }); break;
+      case "chain": for (let i = 0; i < 5; i++) this.noise(0.04, { freq: 3500 + i * 300, vol: 0.05, q: 8, delay: i * 0.035 }); break;
+      case "drip": this.tone(1400 * r, 0.12, { type: "sine", to: 700, vol: 0.02 * Math.max(0.2, param) }); break;
       case "victory":
         this.arp([62, 65, 69, 74], 0.14, { vol: 0.06, type: "triangle", len: 0.6 });
         this.tone(mtof(74), 1.6, { type: "triangle", vol: 0.06, delay: 0.56 });

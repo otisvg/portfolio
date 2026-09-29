@@ -176,7 +176,7 @@ export class Player implements Body {
 
   private normal(g: Game, dt: number, move: number) {
     const s = g.stats, inp = g.input;
-    const speed = RUN * s.moveMult;
+    const speed = RUN * s.moveMult * g.wading();
     const accel = this.onGround ? (move ? ACC : DEC) : AIR_ACC;
     this.vx = approach(this.vx, move * speed, accel * dt);
     if (move) this.facing = move;
@@ -437,6 +437,14 @@ export class Player implements Body {
       rect(c, hx - 2, hy, 10, 1, C.straw3); rect(c, hx - 1, hy - 2, 8, 2, C.straw2);
       for (const k of [0, 2, 4, 6]) { c.fillStyle = k % 4 === 0 ? C.gold2 : C.straw3; c.fillRect(hx - 1 + k, hy - 4, 1, 2); }
       c.fillStyle = C.scarf2; c.fillRect(hx + 2, hy - 2, 1, 1);
+    } else if (hl === "lamp") {
+      rect(c, hx - 1, hy - 3, 8, 4, "#8a7a3a"); rect(c, hx, hy - 4, 6, 1, "#a8964a"); rect(c, hx - 2, hy + 1, 10, 1, "#5a4a22");
+      rect(c, hx + 5, hy - 2, 2, 2, C.fire2); c.fillStyle = C.fire3; c.fillRect(hx + 6, hy - 2, 1, 1);
+    } else if (hl === "diver") {
+      rect(c, hx - 2, hy - 3, 10, 9, "#8a7a3a"); rect(c, hx - 1, hy - 4, 8, 1, "#8a7a3a"); rect(c, hx - 1, hy - 3, 3, 3, "#a8964a");
+      rect(c, hx + 3, hy, 4, 4, "#5a4a22"); rect(c, hx + 4, hy + 1, 2, 2, "#0f2226");
+      c.fillStyle = "#6ad0c0"; c.fillRect(hx + 5, hy + 1, 1, 1);
+      rect(c, hx - 2, hy + 5, 10, 2, "#5a4a22");
     } else if (hl === "hood") {
       rect(c, hx - 1, hy - 2, 7, 8, "#9a8055"); rect(c, hx + 2, hy + 1, 4, 4, "#b89a66");
       c.fillStyle = C.fire2; c.fillRect(hx + 4, hy + 2, 1, 1); c.fillRect(hx + 2, hy + 2, 1, 1);

@@ -44,6 +44,15 @@ export function renderProps(L: Level): PropLayer {
       case "grave": grave(d); break;
       case "mill": mill(d); break;
       case "post": post(d); break;
+      case "lift": lift(d); break;
+      case "beam": beam(d); break;
+      case "bones": bones(d); break;
+      case "cart": cart(d); break;
+      case "crystal": crystal(d, g); break;
+      case "lamphang": lampHang(d); break;
+      case "rails": rails(d); break;
+      case "roots": roots(d, g); break;
+      case "bell": bell(d); break;
     }
   }
   return { canvas, lights, emitters, millHub };
@@ -345,6 +354,127 @@ export function renderProps(L: Level): PropLayer {
     lights.push({ x: x + 40, y: y - 124, r: 26, color: C.blight4, flicker: 0.4, strength: 1 });
     r(x + 34, y - h - 4, 12, 10, C.wood1);
     millHub = { x: x + 40, y: y - h + 1 };
+  }
+
+  // ------------------------------------------------------------------ the Drowned Mines
+  /** Pixel y of the ceiling above a point (the underside of the first solid tile going up). */
+  function ceilingAbove(x: number, y: number) {
+    const tx = Math.floor(x / 16);
+    for (let ty = Math.floor(y / 16) - 1; ty >= 0; ty--) if (L.isSolid(L.get(tx, ty))) return (ty + 1) * 16;
+    return 0;
+  }
+
+  function lift(d: PropDef) {
+    const x = d.x + 4, y = d.y, w = 36, h = 34;
+    // ropes up the shaft
+    for (const rx of [x + 6, x + w - 6]) for (let yy = 0; yy < y - h; yy++) p(rx, yy, yy % 4 === 0 ? C.wood1 : C.wood2);
+    // the cage
+    r(x - 1, y - h - 1, w + 2, 3, C.ink); r(x, y - h, w, 2, C.steel1);
+    r(x, y - 3, w, 3, C.steel0); r(x, y - 3, w, 1, C.steel1);
+    for (let bx = 0; bx < w; bx += 5) { r(x + bx, y - h, 1, h, C.steel0); }
+    r(x, y - h + 12, w, 1, C.steel0);
+    r(x + w / 2 - 4, y - h - 6, 8, 5, C.wood1);
+    lights.push({ x: x + w / 2, y: y - h - 10, r: 30, color: C.fire1, flicker: 0.2, strength: 0.8 });
+  }
+
+  function beam(d: PropDef) {
+    const x = d.x, y = d.y;
+    const top = ceilingAbove(x + 8, y);
+    const w = 34;
+    for (const px of [x, x + w]) {
+      r(px, top, 4, y - top, C.wood1); r(px + 1, top, 1, y - top, C.wood2); r(px + 3, top, 1, y - top, C.wood0);
+    }
+    r(x - 2, top, w + 8, 5, C.wood1); r(x - 2, top + 4, w + 8, 1, C.wood0); r(x - 2, top, w + 8, 1, C.wood2);
+    // diagonal braces
+    line(ctx, x + 4, top + 12, x + 12, top + 5, C.wood1, 2);
+    line(ctx, x + w, top + 12, x + w - 8, top + 5, C.wood1, 2);
+    if (d.v === 0 && hash(x, 1, 7) > 0.4) { r(x + w + 1, top + 20, 2, 5, C.steel0); } // a nail with nothing on it
+  }
+
+  function bones(d: PropDef) {
+    const x = d.x + 4, y = d.y;
+    r(x, y - 5, 5, 4, C.paper); r(x + 1, y - 4, 1, 1, C.ink); r(x + 3, y - 4, 1, 1, C.ink); r(x + 1, y - 2, 3, 1, "#a8987a");
+    for (let k = 0; k < 4; k++) r(x + 7 + k * 2, y - 3 - (k % 2), 1, 3, C.paper);
+    r(x + 7, y - 1, 9, 1, "#a8987a");
+    r(x + 18, y - 2, 6, 1, C.paper); r(x + 17, y - 3, 1, 3, C.paper); r(x + 24, y - 3, 1, 3, C.paper);
+  }
+
+  function cart(d: PropDef) {
+    const x = d.x + 2, y = d.y;
+    const tip = d.v === 1;
+    if (tip) {
+      // on its side, ore spilled
+      r(x, y - 12, 20, 10, C.steel0); r(x + 1, y - 11, 18, 8, "#3a3749"); r(x, y - 12, 20, 1, C.steel1);
+      for (let k = 0; k < 9; k++) r(x + 20 + k * 2, y - 2 - (k % 3), 2, 2, k % 3 === 0 ? "#c9962a" : C.stone2);
+      r(x + 4, y - 3, 3, 3, C.ink); r(x + 13, y - 3, 3, 3, C.ink);
+      return;
+    }
+    r(x - 1, y - 15, 24, 11, C.ink);
+    r(x, y - 14, 22, 9, "#3a3749"); r(x, y - 14, 22, 1, C.steel1); r(x, y - 6, 22, 1, C.steel0);
+    for (const bx of [x + 5, x + 16]) r(bx, y - 14, 1, 9, C.steel0);
+    for (let k = 0; k < 7; k++) r(x + 2 + k * 3, y - 16 - (k % 2), 3, 2, k % 3 === 0 ? "#c9962a" : C.stone2); // ore heap
+    for (const wx of [x + 3, x + 15]) { r(wx, y - 5, 5, 5, C.ink); r(wx + 1, y - 4, 3, 3, C.steel0); r(wx + 2, y - 3, 1, 1, C.steel1); }
+  }
+
+  function crystal(d: PropDef, g: RNG) {
+    const x = d.x + 8, y = d.y;
+    for (let k = 0; k < 5; k++) {
+      const ox = g.int(-7, 7), h = g.int(5, 14), lean = g.range(-0.4, 0.4);
+      for (let i = 0; i < h; i++) {
+        const X = Math.round(x + ox + lean * i), Y = y - 1 - i;
+        p(X, Y, i > h - 3 ? "#e9ddf5" : i % 3 === 0 ? "#2e7a78" : "#6ad0c0");
+        if (i < h * 0.6) p(X + 1, Y, "#1a4a52");
+      }
+    }
+    lights.push({ x, y: y - 8, r: 30, color: "#6ad0c0", flicker: 0.05, strength: 0.75 });
+  }
+
+  function lampHang(d: PropDef) {
+    const x = d.x + 8, y = d.y, len = d.v;
+    for (let yy = 0; yy < len; yy++) p(x, y + yy, yy % 3 === 0 ? C.steel1 : C.steel0);
+    const ly = y + len;
+    r(x - 3, ly, 7, 2, C.steel0);
+    r(x - 3, ly + 2, 7, 7, C.steel0);
+    r(x - 2, ly + 3, 5, 5, C.fire2); r(x - 1, ly + 4, 3, 3, C.fire3);
+    r(x - 3, ly + 9, 7, 1, C.steel0);
+  }
+
+  function rails(d: PropDef) {
+    const x = d.x, y = d.y, w = d.v * 16;
+    for (let k = 0; k < w; k += 6) r(x + k, y - 2, 4, 2, C.wood1);
+    r(x, y - 3, w, 1, C.steel1);
+  }
+
+  function roots(d: PropDef, g: RNG) {
+    const x = d.x + 8, y = d.y;
+    for (let k = 0; k < 6; k++) {
+      let rx = x + g.int(-10, 10);
+      const len = g.int(10, 34 + d.v * 10);
+      for (let i = 0; i < len; i++) {
+        p(rx, y + i, i % 5 === 0 ? "#351c2a" : "#4a2a3a");
+        if (i < len / 2) p(rx + 1, y + i, "#351c2a");
+        if (g.chance(0.15)) rx += g.sign();
+      }
+      if (g.chance(0.4)) p(rx, y + len, C.blight4);
+    }
+  }
+
+  function bell(d: PropDef) {
+    const x = d.x + 8, y = d.y;
+    for (let yy = 0; yy < 36; yy++) p(x, y + yy, yy % 3 === 0 ? C.steel1 : C.steel0);
+    const by = y + 36;
+    for (let yy = 0; yy < 30; yy++) {
+      const hw = Math.round(6 + yy * 0.55 + (yy > 24 ? (yy - 24) * 1.2 : 0));
+      for (let xx = -hw; xx <= hw; xx++) {
+        let c = xx < -hw + 2 ? C.gold0 : xx > hw - 4 ? "#5a4020" : (xx + yy) % 7 === 0 ? C.gold1 : "#a07a28";
+        if (yy === 0 || yy === 29) c = C.gold0;
+        if (hash(xx + 50, yy, 70) > 0.93) c = "#2e7a78"; // verdigris
+        p(x + xx, by + yy, c);
+      }
+    }
+    // the crack
+    for (let k = 0; k < 14; k++) p(x + 3 + (k % 3 === 0 ? 1 : 0) + Math.floor(k / 4), by + 10 + k, C.ink);
+    r(x - 2, by + 30, 5, 4, C.gold0);
   }
 
   function post(d: PropDef) {

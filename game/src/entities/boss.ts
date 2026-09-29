@@ -6,7 +6,8 @@ import { C } from "../gfx/palette";
 import { shadow, SpriteBuf } from "../gfx/sprite";
 import type { Game } from "../game";
 import { moveBody } from "../world/physics";
-import { Crow, Enemy, type AttackBox } from "./enemies";
+import { Boss, KNEEL_T, POSTURE_MAX } from "./bossBase";
+import { Crow, type AttackBox } from "./enemies";
 
 type Mode =
   | "dormant" | "wake" | "roar" | "idle" | "walk"
@@ -15,44 +16,31 @@ type Mode =
   | "throwWind" | "throwRec" | "call" | "kneel" | "dying";
 
 const buf = new SpriteBuf(180, 130, 24);
-export const POSTURE_MAX = 100;
-const KNEEL_T = 2.2;
+export { POSTURE_MAX };
 export const WICK_NAME = "Wick, the Harvest Warden";
 
-export class Wick extends Enemy {
+export class Wick extends Boss {
   readonly table = "wick";
   readonly label = WICK_NAME;
+  readonly title = "WICK";
+  readonly subtitle = "THE HARVEST WARDEN";
+  readonly deathTitle = "HARVEST ENDED";
+  readonly phase2Text = "The Warden's head catches a sickly flame...";
+  readonly music: [string, string] = ["boss", "boss2"];
   mode: Mode = "dormant";
-  phase = 1;
   atkId = 0;
   combo = 0;
   callCd = 6;
-  homeX: number; homeY: number;
   walkPhase = 0;
   shakeT = 0;
-  /** Sekiro-style posture: perfect dodges and finishers fill it; full = he kneels, open to a big punish. */
-  posture = 0;
-  postureT = 0;
 
   constructor(cx: number, gy: number) {
     super(cx, gy, 24, 46, 420);
-    this.isBoss = true;
-    this.homeX = cx; this.homeY = gy;
-    this.facing = -1;
   }
 
-  get awake() { return this.mode !== "dormant"; }
   get invulnerable() { return this.mode === "dormant" || this.mode === "wake" || this.mode === "roar" || this.mode === "dying"; }
 
   wake() { if (this.mode === "dormant") { this.mode = "wake"; this.st = 0; } }
-
-  addPosture(n: number, g: Game) {
-    if (!this.awake || this.invulnerable || this.mode === "kneel") return;
-    this.posture = Math.min(POSTURE_MAX, this.posture + n);
-    this.postureT = 0;
-    void g;
-  }
-  vulnMult() { return this.mode === "kneel" ? 2 : 1; }
 
   takeHit(g: Game, dmg: number, crit: boolean, dir: number, quiet = false, heavy = false) {
     if (this.invulnerable || this.dead) { if (!quiet) audio.play("clink", 3); return; }

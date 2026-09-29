@@ -4,13 +4,14 @@ import { drawText, textWidth, wrap } from "../gfx/font";
 import { drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import type { Game } from "../game";
-import { baseOf, BASES, displayName, FORGE_MAX, forgeCost, itemStats, rollItem, sellValue, SLOTS, type Item } from "../systems/items";
+import { baseOf, BASES, displayName, FORGE_MAX, forgeCost, itemStats, makeCrafted, rollItem, sellValue, SLOTS, type Item } from "../systems/items";
+import { canCraft, MATS, RECIPES, type MatId, type Recipe } from "../systems/crafting";
 import { FACES } from "../systems/dice";
 import { INV_SIZE } from "../systems/save";
 import { gridNav, type Overlay } from "./menu";
 import { ellipsize, hint, itemLines, panel, slotBox } from "./widgets";
 
-const TABS = ["BUY", "SELL", "FORGE"];
+const TABS = ["BUY", "SELL", "FORGE", "CRAFT"];
 
 interface Ware { name: string; icon: string; price: number | null; desc: string; buy: (g: Game) => boolean }
 
@@ -40,6 +41,7 @@ function wares(g: Game): Ware[] {
   ];
 }
 const BASE_NAME = (id: string) => BASES[id].name;
+const onceFlag = (r: Recipe) => (r.id === "ember_flask" ? "emberFlask" : r.id === "bell_charm" ? "bellCharm" : "made_" + r.id);
 const ICON = (id: string) => BASES[id].icon;
 
 export class ShopMenu implements Overlay {
@@ -52,8 +54,8 @@ export class ShopMenu implements Overlay {
     const inp = g.input;
     this.msgT = Math.max(0, this.msgT - dt);
     if (inp.pressed("cancel") || inp.pressed("menu") || inp.pressed("pause")) { audio.play("close"); g.closeOverlay(); g.persist(); return; }
-    if (inp.pressed("tabL")) { this.tab = (this.tab + 2) % 3; this.sel = 0; this.arm = -1; audio.play("move"); }
-    if (inp.pressed("tabR")) { this.tab = (this.tab + 1) % 3; this.sel = 0; this.arm = -1; audio.play("move"); }
+    if (inp.pressed("tabL")) { this.tab = (this.tab + TABS.length - 1) % TABS.length; this.sel = 0; this.arm = -1; audio.play("move"); }
+    if (inp.pressed("tabR")) { this.tab = (this.tab + 1) % TABS.length; this.sel = 0; this.arm = -1; audio.play("move"); }
 
     if (this.tab === 0) {
       const list = wares(g);
@@ -78,6 +80,25 @@ export class ShopMenu implements Overlay {
           g.persist();
         }
       }
+    } else if (this.tab === 3) {
+      this.vnav(g, RECIPES.length);
+      if (inp.pressed("confirm")) {
+        const rc = RECIPES[this.sel];
+        const s = g.save;
+        if (rc.once && s.flags[onceFlag(rc)]) { audio.play("deny"); this.say("Already done. Brom won't do it twice."); }
+        else if (!canCraft(s.mats, rc)) { audio.play("deny"); this.say("You're missing parts. Bosses drop them."); }
+        else if (!g.canAfford(rc.gold)) { audio.play("deny"); this.say("Not enough gold."); }
+        else if (rc.item && !g.giveItem(makeCrafted(rc.item))) { audio.play("deny"); this.say("Your pack is full."); }
+        else {
+          for (const [m, n] of Object.entries(rc.cost) as [MatId, number][]) s.mats[m] = (s.mats[m] ?? 0) - n;
+          g.spend(rc.gold);
+          if (rc.once) s.flags[onceFlag(rc)] = true;
+          s.flags.crafted = true;
+          audio.play("forge");
+          this.say(rc.item ? `${rc.name}! Brom hands it over, still warm.` : `${rc.name}. Brom nods: done.`);
+          g.onGearChanged(); g.persist(); g.checkDiary();
+        }
+      }
     } else {
       const list = this.forgeList(g);
       this.vnav(g, list.length);
@@ -89,6 +110,7 @@ export class ShopMenu implements Overlay {
         else if (!g.canAfford(cost.gold)) { audio.play("deny"); this.say("Not enough gold."); }
         else {
           g.spend(cost.gold); g.save.shards -= cost.shards; it.plus++;
+          g.save.flags.tempered = true; g.checkDiary();
           audio.play("forge"); this.say(`${displayName(it)}! Brom grins.`);
           g.onGearChanged(); g.persist();
         }
@@ -116,7 +138,7 @@ export class ShopMenu implements Overlay {
     panel(ctx, 6, 6, 372, 204, 0.96);
     drawText(ctx, "BROM'S SMITHY", 14, 12, C.gold2);
     TABS.forEach((t, i) => {
-      const x = 110 + i * 50, sel = i === this.tab;
+      const x = 96 + i * 40, sel = i === this.tab;
       drawText(ctx, t, x, 12, sel ? C.cream : C.faint);
       if (sel) rect(ctx, x, 19, textWidth(t), 1, C.gold2);
     });
@@ -147,6 +169,28 @@ export class ShopMenu implements Overlay {
       }
       drawText(ctx, "Gold from sales goes straight to your bank.", 14, 108, C.faint);
       hint(ctx, 370, 199, [["J", this.arm === this.sel ? "CONFIRM" : "SELL"], ["Q/E", "TABS"], ["ESC", "LEAVE"]], "right");
+    } else if (this.tab === 3) {
+      RECIPES.forEach((rc, i) => {
+        const y = 28 + i * 23, sel = i === this.sel;
+        const done = rc.once && s.flags[onceFlag(rc)];
+        if (sel) { rect(ctx, 12, y - 1, 238, 22, C.panelHi); rect(ctx, 12, y - 1, 1, 22, C.gold2); }
+        drawIcon(ctx, rc.icon, 16, y + 3);
+        drawText(ctx, rc.name, 34, y + 1, done ? C.faint : rc.item ? RARITY[3].color : C.gold2);
+        let cx = 34;
+        for (const [m, n] of Object.entries(rc.cost) as [MatId, number][]) {
+          const have = s.mats[m] ?? 0;
+          drawIcon(ctx, MATS[m].icon, cx - 1, y + 8);
+          cx += 12 + drawText(ctx, `${Math.min(have, 99)}/${n}`, cx + 11, y + 11, have >= n ? C.cream : C.bad) + 4;
+        }
+        drawText(ctx, done ? "DONE" : `${rc.gold}G`, 246, y + 1, done ? C.good : g.canAfford(rc.gold) ? C.gold2 : C.bad, { align: "right" });
+      });
+      const rc = RECIPES[this.sel];
+      panel(ctx, 256, 28, 116, 164, 0.9);
+      if (rc.item) {
+        const lines = itemLines(makeCrafted(rc.item), null, 106, false).slice(0, 17);
+        lines.forEach((l, i) => drawText(ctx, l.text, 261, 33 + i * 8, l.color));
+      } else wrap(`${rc.name}. ${rc.desc}`, 106).forEach((l, i) => drawText(ctx, l, 261, 34 + i * 8, i === 0 ? C.gold2 : C.cream));
+      hint(ctx, 370, 199, [["J", "CRAFT"], ["Q/E", "TABS"], ["ESC", "LEAVE"]], "right");
     } else {
       const list = this.forgeList(g);
       if (!list.length) drawText(ctx, "Nothing to temper.", 14, 32, C.faint);

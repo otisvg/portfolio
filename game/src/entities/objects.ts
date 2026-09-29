@@ -1,7 +1,7 @@
 import { audio } from "../core/audio";
 import { approach, clamp, overlap, type Rect } from "../core/math";
 import { rng } from "../core/rng";
-import { line, rect, type Ctx } from "../gfx/canvas";
+import { disc, line, rect, type Ctx } from "../gfx/canvas";
 import { drawGhost, drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import { shadow, SpriteBuf } from "../gfx/sprite";
@@ -9,6 +9,7 @@ import type { Game } from "../game";
 import { milestonesFor } from "../systems/bounties";
 import type { FaceId } from "../systems/dice";
 import { baseOf, type Item } from "../systems/items";
+import type { PetId } from "../systems/save";
 import { drawDie } from "../ui/dice";
 import type { NpcDef, ShrineDef, SignDef } from "../world/level";
 import { moveBody, type Body } from "../world/physics";
@@ -195,7 +196,7 @@ export class NPC {
   get x() { return this.def.x; }
   get y() { return this.def.y; }
   get id() { return this.def.id; }
-  get name() { return { brom: "Brom the Smith", maud: "Elder Maud", pip: "Pip" }[this.id]; }
+  get name() { return { brom: "Brom the Smith", maud: "Elder Maud", pip: "Pip", tam: "Old Tam" }[this.id]; }
 
   update(g: Game, dt: number) {
     this.t += dt;
@@ -222,16 +223,18 @@ export class NPC {
     const c = npcBuf.begin();
     if (this.id === "brom") this.drawBrom(c);
     else if (this.id === "maud") this.drawMaud(c);
+    else if (this.id === "tam") this.drawTam(c);
     else this.drawPip(c);
-    npcBuf.end(ctx, sx, sy, { flip: this.facing < 0 });
+    npcBuf.end(ctx, sx, sy, { flip: this.facing < 0, alpha: this.id === "tam" ? 0.8 : 1 });
   }
 
   /** Draw a scaled portrait for dialogue boxes. */
   portrait(ctx: Ctx, x: number, y: number) {
-    y += { brom: 2, maud: 4, pip: -7 }[this.id];
+    y += { brom: 2, maud: 4, pip: -7, tam: 3 }[this.id];
     const c = npcBuf.begin();
     if (this.id === "brom") this.drawBrom(c, true);
     else if (this.id === "maud") this.drawMaud(c);
+    else if (this.id === "tam") this.drawTam(c);
     else this.drawPip(c);
     npcBuf.end(ctx, x, y, { flip: false });
   }
@@ -278,6 +281,22 @@ export class NPC {
     rect(c, 7, -13 + bob, 3, 1, C.wood2);
   }
 
+  /** The last lamplighter of the Deep. Not entirely here any more. */
+  private drawTam(c: Ctx) {
+    const bob = Math.round(Math.sin(this.t * 1.6) * 1);
+    const coat = "#5a7a8a", coatD = "#3a5a6a", skin = "#a8c8c8";
+    // no feet to speak of: the coat trails into mist
+    for (let yy = 0; yy < 6; yy++) if ((yy + Math.floor(this.t * 6)) % 2 === 0) rect(c, -4 + (yy % 2), -6 + yy - bob, 8 - (yy % 2) * 2, 1, coatD);
+    for (let yy = 0; yy < 12; yy++) rect(c, -4, -18 + yy - bob, 8, 1, yy % 4 === 3 ? coatD : coat);
+    rect(c, -1, -24 - bob, 6, 6, skin); rect(c, 3, -22 - bob, 1, 1, C.ink);
+    rect(c, -1, -20 - bob, 6, 2, "#d8e8e8"); // beard
+    rect(c, -2, -26 - bob, 8, 2, "#6a5a2a"); rect(c, -1, -27 - bob, 6, 1, "#8a7a3a"); // helmet
+    rect(c, 4, -27 - bob, 2, 2, C.fire2);
+    // lantern held out
+    line(c, 3, -15 - bob, 8, -12 - bob, coat);
+    rect(c, 7, -13 - bob, 4, 5, "#4a3a1a"); rect(c, 8, -12 - bob, 2, 3, Math.sin(this.t * 7) > 0 ? C.fire2 : C.fire1);
+  }
+
   private drawPip(c: Ctx) {
     const hop = Math.max(0, Math.sin(this.t * 5)) > 0.8 ? 2 : 0;
     rect(c, -2, -5 - hop, 2, 5, "#2a2433"); rect(c, 1, -5 - hop, 2, 5, "#2a2433");
@@ -313,6 +332,8 @@ export class NPC {
         "The mill's turning. I can hear it from my chair. Hollowmere remembers you.",
       ][Math.min(ms, 5) - 1]];
       if (s.bountiesDone === 0 && rng.chance(0.5)) return ["If you're looking for work, the notice board by the gate never runs short of it. Every job done gives this village a little hope."];
+      if (kc > 0 && !s.flags.minesOpen && rng.chance(0.5)) return ["There's a beacon by the mill cellar. It burned once, over the old mines. Wick's embers might light it again.", "What's down there? Water, mostly. And old Tam, if the stories are true."];
+      if (s.flags.minesOpen && rng.chance(0.3)) return ["You went down into the Deep? Give my love to Tam. He'll pretend not to remember me."];
       if (kc > 0) return [rng.pick([
         "You laid him down, and yet come morning the post isn't empty. The Rot remembers its shapes.",
         "Each time you fell him, the fields breathe a little easier. Keep at it, dear.",
@@ -327,11 +348,33 @@ export class NPC {
     }
     if (this.id === "brom") {
       if (!met) return ["Name's Brom. I make things sharp and people grateful.", "Buy, sell, or let me put an edge on that. Bring Blight Shards and I'll temper the Rot right out of your gear."];
+      const parts = Object.values(s.mats ?? {}).some((n) => (n ?? 0) > 0);
+      if (parts && !s.flags.crafted && rng.chance(0.7)) return ["Is that Warden's straw? And an ember, still warm... Give 'em here. I can make something of those.", "Have a look at what I can CRAFT. Boss parts and a bit of coin, that's all it takes."];
+      if ((s.kills.grimwater ?? 0) > 0 && rng.chance(0.4)) return ["Chain from the flood? Good links, these. Heavy. Honest. I'll make you mail that drips."];
       if (kc > 0 && rng.chance(0.4)) return ["Heard the old scarecrow screaming from here. Nice work. Bring me what's left of him."];
       return [rng.pick([
         "Steel won't fix itself. Well. It will, for coin.",
         "Mind the pitchforks out there. I made most of 'em.",
         "Shards of the Rot. Nasty stuff. Makes a lovely temper, though.",
+      ])];
+    }
+    if (this.id === "tam") {
+      const gk = s.kills.grimwater ?? 0;
+      if (!met) return [
+        "Mind the water, friend. It's been rising since the night the seam broke.",
+        "I'm Tam. I kept the lamps down here for forty years. Still do, after a fashion.",
+        "The Foreman rang the flood bell to warn us. Then he kept ringing it. He rings it still, down in the Sunken Shaft.",
+        "When that bell tolls, get up on the scaffolds. The water down here bites.",
+        "The lads hid three caches before the end. One up high, where only a Warden's light shows the way. One behind the orchard roots. One past the Watchers.",
+        "Bring the right tools and they're yours. The Hearth down here fills them again every time you rest.",
+      ];
+      if (gk > 0 && rng.chance(0.4)) return ["You silenced the bell. For a night. He'll ring it again. He always does."];
+      return [rng.pick([
+        "The Watchers don't mind scarecrows. Never have. Something about the straw.",
+        "Roots that thick? You'd want a curved blade. A scythe, say.",
+        "Those ledges past the galleries are darker than a miner's pocket. Only the Warden's own lantern could show you them.",
+        "Old Brom still owes me a pick. Tell him Tam said so. He'll go pale.",
+        "Treasure maps turn up down here. The lads were forever burying things and forgetting where.",
       ])];
     }
     if (!met) return ["Are you going out THERE? Cool!!", "Tip: the little goo ones? Jump on their heads! They go SPLUT."];
@@ -346,12 +389,12 @@ export class NPC {
   }
 }
 
-// ======================================================================= Pet: Lil' Wick
-const petBuf = new SpriteBuf(24, 22);
+// ======================================================================= Pets
+const petBuf = new SpriteBuf(24, 24);
 
 export class Pet {
   x: number; y: number; vy = 0; facing = 1; t = 0; hop = 0;
-  constructor(x: number, y: number) { this.x = x; this.y = y; }
+  constructor(x: number, y: number, public id: PetId = "wick", public stage = 0) { this.x = x; this.y = y; }
   update(g: Game, dt: number) {
     this.t += dt;
     const p = g.player;
@@ -368,11 +411,37 @@ export class Pet {
   }
   draw(ctx: Ctx, camX: number, camY: number) {
     const c = petBuf.begin();
+    if (this.id === "grim") this.drawGrim(c);
+    else this.drawWick(c);
+    petBuf.end(ctx, this.x - camX, this.y - camY, { flip: this.facing < 0 });
+  }
+  private drawWick(c: Ctx) {
     line(c, 0, -1, 0, -6, C.wood1);
     rect(c, -3, -9, 7, 4, C.cloth1); rect(c, -5, -9, 2, 1, C.straw2); rect(c, 4, -9, 2, 1, C.straw2);
     rect(c, -2, -14, 5, 5, "#9a8055");
-    c.fillStyle = C.fire2; c.fillRect(-1, -12, 1, 1); c.fillRect(1, -12, 1, 1);
-    rect(c, -4, -15, 9, 1, "#4a3528"); rect(c, -2, -18, 5, 3, "#5a4030");
-    petBuf.end(ctx, this.x - camX, this.y - camY, { flip: this.facing < 0 });
+    const eye = this.stage >= 1 ? C.fire3 : C.fire2;
+    c.fillStyle = eye; c.fillRect(-1, -12, 1, 1); c.fillRect(1, -12, 1, 1);
+    if (this.stage >= 2) {
+      // a little crown of wheat
+      rect(c, -3, -16, 7, 2, C.straw3);
+      for (const k of [-3, -1, 1, 3]) { c.fillStyle = k === -1 || k === 1 ? C.gold2 : C.straw3; c.fillRect(k, -18, 1, 2); }
+    } else { rect(c, -4, -15, 9, 1, "#4a3528"); rect(c, -2, -18, 5, 3, "#5a4030"); }
+    if (this.stage >= 1) {
+      // an ember burns in its head
+      const f = Math.sin(this.t * 9) > 0;
+      c.fillStyle = f ? C.fire2 : C.fire1; c.fillRect(0, this.stage >= 2 ? -20 : -20, 1, 2);
+      c.fillStyle = C.fire3; c.fillRect(0, -19, 1, 1);
+    }
+  }
+  private drawGrim(c: Ctx) {
+    const step = Math.floor(this.t * 6) % 2;
+    rect(c, -3, -3, 2, 3 - step, "#262a38"); rect(c, 1, -3, 2, 2 + step, "#262a38");
+    rect(c, -3, -8, 7, 5, "#24444a"); rect(c, -3, -8, 7, 1, "#35606a");
+    const brass = this.stage >= 2 ? C.gold2 : "#8a7a3a", brassD = this.stage >= 2 ? C.gold1 : "#5a4a22";
+    disc(c, 0, -12, 4, 4, brassD); disc(c, 0, -12, 3, 3, brass);
+    disc(c, 1, -12, 2, 2, "#0f2226");
+    c.fillStyle = "#6ad0c0"; c.fillRect(1, -12, 1, 1);
+    rect(c, -1, -17, 3, 2, brassD);
+    c.fillStyle = this.stage >= 1 ? (Math.sin(this.t * 8) > 0 ? C.fire2 : C.fire3) : "#4a3a2a"; c.fillRect(0, -17, 1, 1);
   }
 }

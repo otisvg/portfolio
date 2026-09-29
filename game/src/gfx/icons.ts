@@ -17,6 +17,7 @@ const MAP: Record<string, string> = {
   i: C.skin2, I: C.skin1, j: C.skin0,
   q: "#9ad8ff", Q: "#4a7ab0",
   z: "#c9773f", Z: "#7a3f22",
+  H: "#6ad0c0", J: "#2e7a78", K: "#b8f0e0", L: "#e9ddf5", M: "#8a7a3a", P: "#5a4a22", S: "#1a4a52",
 };
 
 const ICONS: Record<string, string[]> = {
@@ -50,6 +51,25 @@ const ICONS: Record<string, string[]> = {
   star: ["....y.....", "....y.....", "...yyy....", "yyyyeyyyy.", ".yyyyyyy..", "..yyyyy...", "..yy.yy...", ".yy...yy..", ".y.....y..", ".........."],
   feather: ["........qq", ".......qqQ", "......qqQ.", ".....qqQ..", "....qqQ...", "...qqQ....", "..qqQ.....", "..qQ......", ".b........", "b........."],
   moonface: ["...TTT....", "..ttT.....", ".ttt......", ".ttt......", ".ttt......", ".ttt......", ".tttT.....", "..tttTT...", "...ttt....", ".........."],
+  pick: [".sslllss..", "s...B...s.", "....B.....", "....B.....", "....b.....", "....B.....", "....b.....", "....B.....", "....b.....", "....B....."],
+  diver: ["...MMMM...", "..MMMMMM..", ".MMPPPPMM.", ".MPSHHSPM.", ".MPSHSSPM.", ".MPPPPPPM.", ".MMMMMMMM.", "PPPPPPPPPP", ".P.t.t.tP.", ".........."],
+  bell: ["....PP....", "...MMMM...", "..MYMMMM..", "..MYMMMM..", ".MYMMMMMP.", ".MYMMMMMP.", "MMMMMMMMMP", "PPPPPPPPPP", "....PP....", ".........."],
+  compass: ["...yyyy...", "..yTTTTy..", ".yTTxTTTy.", ".yTTxTTTy.", ".yTTkTTTy.", ".yTTTsTTy.", ".yTTTsTTy.", "..yTTTTy..", "...yyyy...", ".........."],
+  lamp: ["....ff....", "...fFFf...", "..MMffMM..", ".MMMMMMMM.", ".MYMMMMMM.", ".MMMMMMMP.", "PPPPPPPPPP", ".P......P.", "..........", ".........."],
+  scarecharm: ["...BBBB...", "....BB....", "..cccccc..", ".cckcckcc.", ".ccccccCc.", ".cckkkkcC.", "..cccccC..", "...cCcC...", "....cc....", ".........."],
+  sickle: ["..lllll...", ".l.....w..", "l.......l.", "l.......s.", ".l.....s..", "..s..BB...", ".....B....", "....B.....", "...B......", "..B......."],
+  pearl: ["...KKK....", "..KLKHK...", "..KHHHK...", "...ssss...", "..s....s..", ".s......s.", ".s......s.", "..s....s..", "...ssss...", ".........."],
+  ember: ["....f.....", "...fF.....", "...FfF....", "..fFOFf...", "..FOOOFf..", ".fFOffOFf.", ".FOfttfOF.", ".FOfttfOF.", "..FOOOOF..", "...FFFF..."],
+  straw: ["c..e..c...", ".c.e.c....", ".c.e.c..e.", "..cecc.c..", "..RRRRRR..", "..cecCcc..", ".c.e.Cc...", ".c.e..C...", "c..e...C..", ".........."],
+  button: ["..........", "...TTTT...", "..TttttT..", ".TtkttktT.", ".TttttttT.", ".TtkttktT.", "..TttttT..", "...TTTT...", "..........", ".........."],
+  rblade: ["zzlllll...", "..zz..lww.", "......zlw.", ".......ls.", ".......zs.", "........s.", "........B.", "........B.", "..........", ".........."],
+  chain: ["..ss......", ".s..s.....", ".s.lsl....", "..sl.ls...", "...ls.ls..", "....sl.ls.", ".....ls.s.", "......sls.", ".......s..", ".........."],
+  bellshard: ["..........", "...MM.....", "..MYMM....", "..MYMMM...", ".MYMMMMP..", ".MMMMkP...", ".PPPPk....", "....k.....", "..........", ".........."],
+  map: [".TTTTTTTT.", ".TtttttTT.", ".TtBtttxT.", ".TttBtxtT.", ".TtttBtxT.", ".TtttttBT.", ".TtxxtttT.", ".TtttttTT.", ".TTTTTTTT.", ".........."],
+  chest: ["..........", ".AAAAAAAA.", "AaaaaaaaaA", "AYYYYYYYYA", "AaaaYYaaaA", "AaaaYyaaaA", "AaaaaaaaaA", "AAAAAAAAAA", "..........", ".........."],
+  dice: [".TTTTTTT..", "TtttttttT.", "TtktttktT.", "TtttttttT.", "TtttktttT.", "TtttttttT.", "TtktttktT.", "TtttttttT.", ".TTTTTTT..", ".........."],
+  sigil: ["....v.....", "...vuv....", "..v.u.v...", ".v..u..v..", "vuuuuuuuv.", ".v..u..v..", "..v.u.v...", "...vuv....", "....v.....", ".........."],
+  book: [".RRRRRRR..", "RrrrrrrrR.", "RryyyyyrR.", "RrrrrrrrR.", "RryyyyyrR.", "RrrrrrrrR.", "RrrrrrrrR.", "RTTTTTTTR.", ".RRRRRRR..", ".........."],
   crate: ["..........", ".AAAAAAAA.", ".AaBaaBaA.", ".AaaBBaaA.", ".AaaBBaaA.", ".AaBaaBaA.", ".AAAAAAAA.", "..........", "..........", ".........."],
 };
 

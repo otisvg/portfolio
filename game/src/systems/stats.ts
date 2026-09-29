@@ -1,5 +1,7 @@
-import { milestonesFor } from "./bounties";
-import { diceBonus, type Perk } from "./dice";
+import { milestonesFor, moonFor, weekKey, type MoonId } from "./bounties";
+import { DICE_REROLLS, diceBonus, type Perk } from "./dice";
+import { diaryPerks } from "./diary";
+import { petStage } from "./pets";
 import { allAffixes, baseOf, itemStats, SLOTS, type AffixType, type WeaponKind } from "./items";
 import type { SaveData } from "./save";
 import { levelForXp, type Skill } from "./skills";
@@ -21,8 +23,13 @@ export interface Stats {
   moveMult: number;
   regenMult: number;
   light: number;
-  /** Extra tonic charges from the Hearth Dice. */
+  /** Extra tonic charges (Hearth Dice, Hope, diary, Ember Flask). */
   tonicBonus: number;
+  /** Hearth Dice rerolls per roll. */
+  rerolls: number;
+  /** Treasure map drop-rate multiplier (diary, Rotmoon). */
+  mapMult: number;
+  moon: MoonId;
   foeDmgMult: number;
   gearMult: number;
   perks: Perk[];
@@ -51,6 +58,15 @@ export function computeStats(s: SaveData): Stats {
   const ms = milestonesFor(s.hope ?? 0);
   if (ms >= 3) aff.gold += 10;
   if (ms >= 4) db.tonics += 1;
+  const diary = diaryPerks(s);
+  db.tonics += diary.tonics + (s.flags.emberFlask ? 1 : 0);
+  // the pet lights the way once it has grown
+  const pet = s.activePet;
+  if (pet && petStage(s.petKc?.[pet] ?? 0) >= 1) light += 0.5;
+  // this week's Rotmoon
+  const moon = moonFor(weekKey());
+  if (moon === "gilded") aff.gold += 50;
+  if (moon === "hungry") { db.foeDmg *= 1.15; db.gearMult *= 1.5; }
   aff.dmg += db.dmg; aff.def += db.armour; aff.gold += db.gold; aff.leech += db.leech;
   aff.crit += db.crit; aff.speed += db.speed; aff.stam += db.stam;
   const armour = gearDef + aff.def + (levels.defence - 1);
@@ -70,8 +86,11 @@ export function computeStats(s: SaveData): Stats {
     goldFind: aff.gold,
     moveMult: 1 + aff.speed / 100,
     regenMult: 1 + aff.regen / 100,
-    light,
+    light: light * diary.lightMult,
     tonicBonus: db.tonics,
+    rerolls: DICE_REROLLS + (ms >= 1 ? 1 : 0) + diary.rerolls + (s.flags.bellCharm ? 1 : 0),
+    mapMult: diary.mapMult * (moon === "drowned" ? 3 : 1),
+    moon,
     foeDmgMult: db.foeDmg,
     gearMult: db.gearMult,
     perks: db.perks,

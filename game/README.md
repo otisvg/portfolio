@@ -1,11 +1,11 @@
-# Hollowmere — Level 1: The Blighted Outskirts
+# Hollowmere — The Blighted Outskirts & The Drowned Mines
 
 A pixel-art action RPG platformer. It has OldSchool RuneScape's grind and charm, Zelda's simplicity,
 Souls-like difficulty and a little Mario bounce.
 
 It's a standalone Vite + TypeScript project with no engine and no asset files. Every sprite, tile,
 parallax layer, light, sound effect and music loop is generated in code at runtime.
-The production bundle is about 60 KB gzipped.
+The production bundle is about 90 KB gzipped.
 
 ```bash
 cd game
@@ -36,7 +36,7 @@ his post. He guarded the wheat for forty years; the Rot found that duty and kept
 is told in a short intro, through three villagers (Elder Maud, Brom the smith, and Pip),
 through signposts and graves, and through item flavour text.
 
-## Level layout
+## Level 1 layout: The Blighted Outskirts
 
 Hollowmere (safe hub) → The Wheatfields → Wayside Hearth → The Rotting Orchard → Mill Gate Hearth → Miller's Field (boss).
 
@@ -48,6 +48,106 @@ Hollowmere (safe hub) → The Wheatfields → Wayside Hearth → The Rotting Orc
 - **Pixel lighting:** stepped, dithered light pools from lanterns, windows, the forge, Hearthstones,
   fireflies, rot spores, enemy eyes, loot beams and boss fire.
 - **Hazards:** bogs, where Zelda-style falls cost 20% HP and return you to your last safe footing, and thorn brambles.
+
+## Level 2: The Drowned Mines
+
+Wick drops **Warden's Embers**. Three of them relight the beacon by the mill cellar in Miller's Field. That opens the way down, and a lift in the Mines brings you back up.
+
+The Mine Mouth → The Flooded Galleries → The Rooted Deep → The Sunken Shaft (boss).
+
+- **A new look.** The tunnels are carved out of solid rock, and every rock tile knows its distance to open air, so rims catch the light and deep rock falls to black. There's wet moss on the floors, stalactites and drips under the ceilings, drowned crystal, and flood water in place of bog.
+- **A new background.** Three new parallax layers: a far cavern wall with crystal veins and threads of falling water, pillars and old scaffolds with a few lamps still lit, and a near curtain of stalactites.
+- **It's dark.** Light matters down here: Wick's Lantern, the craftable Miner's Lamp, the Diver's Helm and a grown pet all push the dark back.
+- **New foes:**
+  - Sludgelings: tougher flood-water goo.
+  - Cave Bats.
+  - Drowned Miners: Husk rules, but with a pick that sticks in the rock, and a helmet lamp you can see coming.
+- **Old Tam**, the last lamplighter, has stories and hints.
+
+**Grimwater, the Drowned Foreman** (560 HP, two phases, posture) rang the flood bell the night the seam broke, and never stopped.
+- **Pick slam:** a long, honest overhead wind-up. The pick then sticks in the rock for about a second, and he takes 35% extra damage while it's stuck.
+- **Chained anchor:** thrown along the floor, out and back. Jump it or roll through it.
+- **Bubbles** that drift after you.
+- **The flood bell:** the shaft floods for a few seconds. The rot-water slows you and burns steadily, and only the scaffolds stay dry.
+- **Phase 2:** ripples of rock follow the pick, the bell rings more often, and he calls up Sludgelings.
+
+## Secrets: Wick's uniques are keys
+
+Each of Wick's uniques opens a secret cache in the Mines. The caches refill every time you rest.
+
+| Secret | Key | How |
+| --- | --- | --- |
+| The Lamplighter's Cache | Wick's Lantern | Its light makes ghostly ledges solid, all the way up to a high alcove |
+| The Root-Bound Cache | Harvest Scythe (or the crafted Warden's Sickle) | Any curved blade cuts the orchard roots that seal a chamber. The roots regrow on rest |
+| The Watched Cache | Strawman's Hood | Ceiling Watchers sweep the gallery with light. If they see you, the gate slams shut until you rest, and bats come. In the hood, they see only straw. Without it, you can still time your way past |
+
+## Boss parts and crafting
+
+Bosses drop materials at fixed odds, alongside their normal loot:
+- **Wick:** Embers 1–2, Straw 3–6, Button Eye 1/6, Rusted Scythe Blade 1/20.
+- **Grimwater:** Chain Links 2–4, Brine Pearl 1/2, Cracked Bell Shard 1/12.
+
+Brom's new **CRAFT** tab turns them into fixed-stat Epic gear and permanent upgrades:
+
+| Recipe | Cost | Result |
+| --- | --- | --- |
+| Miner's Lamp | 2 Embers, 8 Straw, 60g | Helm that lights the dark |
+| Ember Flask | 4 Embers, 12 Straw, 150g | Permanent +1 tonic charge |
+| Scarecrow Charm | 10 Straw, 2 Button Eyes, 90g | +8% damage, +10 stamina |
+| Warden's Sickle | 1 Blade, 3 Embers, 120g | A scythe: cuts roots |
+| Brine Pearl Ring | 2 Pearls, 3 Chain Links, 140g | +15% stamina regen, +4 armour |
+| Drowned Mail | 8 Chain Links, 1 Bell Shard, 200g | Heavy body armour |
+| Bell-Charm Dice | 2 Bell Shards, 2 Pearls, 250g | Permanent +1 Hearth Dice reroll |
+
+## Boss sigils
+
+A sigil stone stands before each fog gate. Once you've felled that boss, you can switch on any of three sigils:
+- **Haste:** the boss is 20% faster.
+- **Ash:** the boss has 40% more health.
+- **Ruin:** the boss hits 30% harder.
+
+Each active sigil adds a guaranteed gear roll and a shard. With all three, the unique table is rolled twice.
+
+## Loot chests
+
+Bosses, dug-up treasure, secret caches and the Daily Chest all drop a chest. When you open it, face-down cards flip one at a time, cheapest first, so the best drop always lands last. Unopened chests are gathered for you when the world resets, so nothing is lost.
+
+## Treasure maps
+
+Maps drop from foes (about 1/80–1/90), Husks and Miners (1/25–1/30), and bosses and caches (1/5–1/6).
+- Each map points to one of ten dig sites across both levels.
+- The Journal shows a parchment sketch of the area with an X, plus a clue.
+- Stand on the X and dig to get the treasure table: gold, elite gear, shards, runes, and the Cartographer's Compass (1/25).
+- You carry one map at a time. Spares sell for 25 gold.
+
+## Pets grow up
+
+Lil' Wick and Lil' Grim (each 1/500) grow with every boss you fell while they follow you:
+- **25 kills:** they glow, giving a light of their own.
+- **100 kills:** they also gather gold and shards from twice as far away.
+
+## Achievement Diary
+
+Hollowmere and the Drowned Mines each have Easy, Medium and Hard tiers of four tasks. Examples: stomp 10 Blightlings, fell Wick without taking a hit, open all three caches, fell Grimwater with all three sigils.
+
+| Area | Easy | Medium | Hard |
+| --- | --- | --- | --- |
+| Hollowmere | 150 gold + a rune | Maps drop twice as often | +1 tonic charge |
+| Drowned Mines | 200 gold + a rune | Light reaches 25% further | +1 Hearth Dice reroll |
+
+## Daily bounty and weekly Rotmoon
+
+- **The daily bounty.** Every day a 4th notice goes up on the board. It's the same for everyone that day, needs double the usual count, and pays +15 Hope and the Daily Chest.
+- **The Rotmoon.** Every week one Rotmoon rules for everyone, and the title screen, the board and the Journal all show which. The possible moons:
+
+| Rotmoon | Effect |
+| --- | --- |
+| Blood | Rotborn are 1/12 |
+| Gilded | +50% gold |
+| Hungry | Foes hit 15% harder, gear drops x1.5 |
+| Pale | The perfect-dodge window is 0.06s longer |
+| Harvest | Bosses drop an extra gear piece |
+| Drowned | Maps drop three times as often |
 
 ## Combat (Souls-like)
 
@@ -93,17 +193,22 @@ Every drop is an independent roll at fixed, published odds. The Collection Log s
 | Rotcrow | 1/22 | — | 1/12 |
 | Husk | 1/7 | 1/25 | 1/5 |
 | Wick | always (+1 bonus at 1/3) | 2–3 | — |
+| Sludgeling | 1/16 | 1/100 | 1/10 |
+| Cave Bat | 1/20 | — | 1/12 |
+| Drowned Miner | 1/6 | 1/20 | 1/5 |
+| Grimwater | always (+1 bonus at 1/3) | 3–4 | — |
 
 Rarity odds per gear drop (Common / Uncommon / Rare / Epic / Legendary):
 
 | Source | C | U | R | E | L |
 | --- | --- | --- | --- | --- | --- |
 | Trash foes | 70% | 23% | 5.8% | 1% | 0.2% |
-| Husk | 55% | 31% | 10.5% | 2.8% | 0.7% |
-| Wick | — | 52% | 34% | 11.5% | 2.5% |
+| Husk, Miner | 55% | 31% | 10.5% | 2.8% | 0.7% |
+| Bosses | — | 52% | 34% | 11.5% | 2.5% |
 
 Wick's uniques and pet: Wick's Lantern (1/40), Strawman's Hood (1/60), Harvest Scythe (1/90) and the pet
-Lil' Wick (1/500).
+Lil' Wick (1/500). Grimwater's: Tide Bell (1/40), Diver's Helm (1/60), Foreman's Pick (1/90) and the pet
+Lil' Grim (1/500).
 
 Gold Find only scales gold, never rarity, so the loot curve can't run away.
 
@@ -147,7 +252,7 @@ Gold Find only scales gold, never rarity, so the loot curve can't run away.
 | Skulls: Death Wish | Foes hit 60% harder, gear drops x3 |
 | Blanks: Nothing At All | 60 gold to your bank |
 
-**Runes.** Runes drop at published odds: 1/150 from Blightlings and Rotcrows, 1/60 from Husks, and 1/5 from Wick. You inscribe them over a face from the Hearth Dice screen. A replaced face goes back to your runes, unless it was blank.
+**Runes.** Runes drop at published odds: 1/140–1/150 from small foes, 1/50–1/60 from Husks and Miners, 1/5 from Wick and 1/4 from Grimwater. You inscribe them over a face from the Hearth Dice screen. A replaced face goes back to your runes, unless it was blank.
 
 **Finisher die.** The third hit of your combo rolls a six-sided die tied to your weapon type. The faces are listed in each weapon's tooltip.
 
@@ -207,11 +312,13 @@ src/
   core/      constants, input (keyboard + gamepad), seeded RNG, WebAudio sfx + music sequencer
   gfx/       palette, bitmap font, icons, sprite compositor (outline/flash), tiles, props,
              three-layer parallax background, lighting, particles, weapons
-  world/     level data and builder, tile physics, pre-rendered props
-  entities/  player, enemies (Blightling, Rotcrow, Husk, pots), boss (Wick + projectiles),
-             pickups, purse, Hearthstones, signs, NPCs, pet
-  systems/   items and affixes, loot tables, skills and XP curve, derived stats, save, chat
-  ui/        HUD, inventory/skills/collection menus, shop and forge, dialogue, title/intro/pause/death
+  world/     level data (Outskirts, Mines) and registry, tile physics, pre-rendered props
+  entities/  player, enemies (Outskirts foes and their Mines variants), bossBase, Wick and
+             Grimwater (+ projectiles, flood), loot chests, Watchers, pickups, NPCs, pets
+  systems/   items and affixes, loot tables, crafting, sigils, diary, pets, bounties (daily,
+             Rotmoon, Hope), skills and XP curve, derived stats, save, chat
+  ui/        HUD, inventory (gear, skills, log, diary, journal), shop/forge/craft, chest reveal,
+             sigil stone, notice board, dialogue, title/intro/pause/death
   game.ts    the game loop: world, combat resolution, loot, camera, render pipeline
 ```
 

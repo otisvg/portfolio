@@ -5,7 +5,8 @@ import { drawText, textWidth } from "../gfx/font";
 import { drawIcon } from "../gfx/icons";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
-import { POSTURE_MAX } from "../entities/boss";
+import { POSTURE_MAX } from "../entities/bossBase";
+import { BEACON_EMBERS } from "../systems/crafting";
 import { describe } from "../systems/bounties";
 import { DICE_CHARGE } from "../systems/dice";
 import { drawDie } from "./dice";
@@ -45,7 +46,7 @@ export function drawHud(g: Game, ctx: Ctx) {
   }
 
   // pinned bounty
-  const b = g.save.bounties.find((x) => !x.done);
+  const b = g.save.bounties.find((x) => !x.done) ?? (g.save.daily && !g.save.daily.done ? g.save.daily : undefined);
   if (g.banner) { /* keep the top clear while a title card shows */ }
   else if (b) {
     drawText(ctx, "\u2022", 6, 53, C.gold2);
@@ -61,6 +62,12 @@ export function drawHud(g: Game, ctx: Ctx) {
     y += 13;
     drawText(ctx, `${g.save.shards}`, W - 20, y + 3, C.blight5, { align: "right" });
     drawIcon(ctx, "shard", W - 17, y);
+  }
+  const embers = g.save.mats.ember ?? 0;
+  if (embers > 0 && !g.save.flags.minesOpen) {
+    y += 13;
+    drawText(ctx, `${Math.min(embers, BEACON_EMBERS)}/${BEACON_EMBERS}`, W - 20, y + 3, C.fire1, { align: "right" });
+    drawIcon(ctx, "ember", W - 17, y);
   }
   // OSRS-style XP drops
   for (const d of g.xpDrops) {

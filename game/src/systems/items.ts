@@ -65,14 +65,34 @@ export const BASES: Record<string, ItemBase> = {
   straw_hood: { id: "straw_hood", name: "Strawman's Hood", slot: "helm", icon: "hood", def: 5, hp: 10, weight: 0, unique: true, look: "hood", implicit: [{ t: "stam", v: 18 }], lore: "Itchy. Watchful. Faintly warm." },
   harvest_crown: { id: "harvest_crown", name: "Harvest Crown", slot: "helm", icon: "strawhat", def: 3, hp: 15, weight: 0, unique: true, look: "crown", implicit: [{ t: "dmg", v: 10 }, { t: "gold", v: 10 }], lore: "Woven from the first healthy wheat in years. Hollowmere remembers." },
   harvest_scythe: { id: "harvest_scythe", name: "Harvest Scythe", slot: "weapon", icon: "scythe", kind: "scythe", dmg: [14, 21], speed: 0.85, reach: 34, weight: 0, unique: true, implicit: [{ t: "leech", v: 2 }], lore: "The last harvest of Miller's Field. It was not wheat." },
+
+  // --- Grimwater uniques ---
+  foreman_pick: { id: "foreman_pick", name: "Foreman's Pick", slot: "weapon", icon: "pick", kind: "axe", dmg: [17, 25], speed: 0.78, reach: 25, weight: 0, unique: true, implicit: [{ t: "crit", v: 8 }], lore: "He struck the seam that let the water in. He kept striking." },
+  divers_helm: { id: "divers_helm", name: "Diver's Helm", slot: "helm", icon: "diver", def: 7, hp: 12, weight: 0, unique: true, look: "diver", light: 1, implicit: [{ t: "regen", v: 15 }], lore: "You can hear the sea in it. There is no sea." },
+  tide_bell: { id: "tide_bell", name: "Tide Bell", slot: "trinket", icon: "bell", hp: 10, weight: 0, unique: true, implicit: [{ t: "stam", v: 20 }, { t: "def", v: 3 }], lore: "Ring it and the water listens. Briefly." },
+  // --- treasure ---
+  compass: { id: "compass", name: "Cartographer's Compass", slot: "trinket", icon: "compass", hp: 6, weight: 0, unique: true, implicit: [{ t: "gold", v: 15 }, { t: "speed", v: 5 }], lore: "The needle points at whatever you want most. Usually gold." },
+
+  // --- crafted by Brom from boss parts (always Epic) ---
+  miners_lamp: { id: "miners_lamp", name: "Miner's Lamp", slot: "helm", icon: "lamp", def: 3, hp: 6, weight: 0, look: "lamp", light: 1, lore: "An ember of the Warden, caged in brass. It hates the dark." },
+  scare_charm: { id: "scare_charm", name: "Scarecrow Charm", slot: "trinket", icon: "scarecharm", hp: 12, weight: 0, implicit: [{ t: "dmg", v: 8 }, { t: "stam", v: 10 }], lore: "Two button eyes that never close. Crows give you a wide berth." },
+  wardens_sickle: { id: "wardens_sickle", name: "Warden's Sickle", slot: "weapon", icon: "sickle", kind: "scythe", dmg: [11, 17], speed: 0.95, reach: 30, weight: 0, implicit: [{ t: "crit", v: 5 }], lore: "Reforged from the Warden's blade. Still curved enough to cut roots." },
+  pearl_ring: { id: "pearl_ring", name: "Brine Pearl Ring", slot: "trinket", icon: "pearl", hp: 10, weight: 0, implicit: [{ t: "regen", v: 15 }, { t: "def", v: 4 }], lore: "Cold to the touch. Warm to the lungs." },
+  drowned_mail: { id: "drowned_mail", name: "Drowned Mail", slot: "body", icon: "mail", def: 9, hp: 14, weight: 0, look: "mail", implicit: [{ t: "hp", v: 10 }], lore: "Chain links from the flood, riveted tight. It drips, sometimes." },
 };
+
+/** Fixed-stat Epic items made at Brom's forge from boss parts. */
+export function makeCrafted(baseId: string): Item {
+  const it = makeUnique(baseId);
+  it.rarity = 3;
+  return it;
+}
 
 export const AFFIXES: Record<AffixType, { label: (v: number) => string; range: [number, number]; prefix: string; suffix: string; w: Partial<Record<Slot, number>> }> = {
   hp: { label: (v) => `+${v} Max Health`, range: [4, 12], prefix: "Hale", suffix: "of Vigour", w: { helm: 3, body: 4, trinket: 3, weapon: 1 } },
   stam: { label: (v) => `+${v} Max Stamina`, range: [5, 14], prefix: "Tireless", suffix: "of Endurance", w: { helm: 2, body: 3, trinket: 3, weapon: 1 } },
   dmg: { label: (v) => `+${v}% Damage`, range: [4, 10], prefix: "Cruel", suffix: "of Ruin", w: { weapon: 5, trinket: 2, helm: 1 } },
-  crit: { label: (v) => `+${v}% Crit Chance`, range: [2, 6], prefix: "Keen", suffix: "of Precision", w: { weapon: 4, trinket: 2, helm: 1 } },
-  leech: { label: (v) => `+${v} Health on Hit`, range: [1, 3], prefix: "Leeching", suffix: "of the Leech", w: { weapon: 3, trinket: 1 } },
+  crit: { label: (v) => `+${v}% Crit Chance`, range: [2, 6], prefix: "Keen", suffix: "of Precision", w: { weapon: 4, trinket: 2, helm: 1 } },  leech: { label: (v) => `+${v} Health on Hit`, range: [1, 3], prefix: "Leeching", suffix: "of the Leech", w: { weapon: 3, trinket: 1 } },
   gold: { label: (v) => `+${v}% Gold Find`, range: [5, 15], prefix: "Gilded", suffix: "of Greed", w: { trinket: 4, helm: 2, body: 1 } },
   def: { label: (v) => `+${v} Armour`, range: [1, 4], prefix: "Warded", suffix: "of the Bulwark", w: { helm: 3, body: 4, trinket: 1 } },
   speed: { label: (v) => `+${v}% Move Speed`, range: [3, 7], prefix: "Swift", suffix: "of Haste", w: { body: 2, trinket: 2, helm: 1 } },
