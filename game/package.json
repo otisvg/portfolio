@@ -1,0 +1,17 @@
+{
+  "name": "hollowmere",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Hollowmere — a pixel-art action RPG platformer. Level 1: The Blighted Outskirts.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^8.3.1"
+  }
+}
