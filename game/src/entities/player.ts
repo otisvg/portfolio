@@ -286,7 +286,7 @@ export class Player implements Body {
       const ok = groundBelow(L, this.x - 6, this.bottom) && groundBelow(L, this.x + this.w + 6, this.bottom) &&
         !touchesTile(L, this.x - 16, this.y, this.w + 32, this.h + 4, T.BOG, 0) &&
         !touchesTile(L, this.x - 8, this.y, this.w + 16, this.h, T.THORN, 0);
-      if (ok && this.safeT > 0.12) { this.lastSafe = { x: this.x, y: this.y }; this.safeT = 0; }
+      if (ok) { this.lastSafe = { x: this.x, y: this.y }; this.safeT = 0; }
     } else this.safeT = 0;
   }
 
