@@ -5,14 +5,20 @@ const canvas = document.getElementById("game") as HTMLCanvasElement;
 
 /** Scale by whole pixels so the art stays crisp; fall back to fractional only on tiny screens. */
 function resize() {
-  const s = Math.min(window.innerWidth / W, window.innerHeight / H);
+  // Fit the canvas's container (the page, or an embedding frame's stage element).
+  const host = canvas.parentElement;
+  const aw = host && host !== document.body ? host.clientWidth : window.innerWidth;
+  const ah = host && host !== document.body ? host.clientHeight : window.innerHeight;
+  const s = Math.min(aw / W, ah / H);
   const scale = s >= 1 ? Math.floor(s) : s;
   canvas.style.width = `${Math.floor(W * scale)}px`;
   canvas.style.height = `${Math.floor(H * scale)}px`;
 }
 window.addEventListener("resize", resize);
+if (canvas.parentElement && "ResizeObserver" in window) new ResizeObserver(resize).observe(canvas.parentElement);
 resize();
 canvas.focus();
+canvas.addEventListener("pointerdown", () => canvas.focus());
 
 const game = new Game(canvas);
 // Never lose a run to a closed tab.
