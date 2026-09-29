@@ -1,3 +1,4 @@
+import { diceBonus, type Perk } from "./dice";
 import { allAffixes, baseOf, itemStats, SLOTS, type AffixType, type WeaponKind } from "./items";
 import type { SaveData } from "./save";
 import { levelForXp, type Skill } from "./skills";
@@ -19,6 +20,11 @@ export interface Stats {
   moveMult: number;
   regenMult: number;
   light: number;
+  /** Extra tonic charges from the Hearth Dice. */
+  tonicBonus: number;
+  foeDmgMult: number;
+  gearMult: number;
+  perks: Perk[];
 }
 
 export function computeStats(s: SaveData): Stats {
@@ -40,6 +46,9 @@ export function computeStats(s: SaveData): Stats {
   const w = s.eq.weapon;
   const wb = w ? baseOf(w) : null;
   const wd = w ? itemStats(w).dmg ?? [2, 3] : [2, 3];
+  const db = diceBonus(s.diceRoll ?? []);
+  aff.dmg += db.dmg; aff.def += db.armour; aff.gold += db.gold; aff.leech += db.leech;
+  aff.crit += db.crit; aff.speed += db.speed; aff.stam += db.stam;
   const armour = gearDef + aff.def + (levels.defence - 1);
   return {
     levels,
@@ -58,5 +67,9 @@ export function computeStats(s: SaveData): Stats {
     moveMult: 1 + aff.speed / 100,
     regenMult: 1 + aff.regen / 100,
     light,
+    tonicBonus: db.tonics,
+    foeDmgMult: db.foeDmg,
+    gearMult: db.gearMult,
+    perks: db.perks,
   };
 }

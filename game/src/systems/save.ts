@@ -1,5 +1,6 @@
 import { SAVE_KEY } from "../core/constants";
 import { rollItem, type Item, type Slot } from "./items";
+import { DICE_CHARGE, STARTER_DIE, type FaceId } from "./dice";
 import { xpForLevel, type Skill } from "./skills";
 
 export interface SaveData {
@@ -21,6 +22,15 @@ export interface SaveData {
   bestRarity: number;
   deaths: number;
   playTime: number;
+  /** Hearth Dice: three dice of six faces each. */
+  dice: FaceId[][];
+  /** The current roll (buffs), empty until the first roll. */
+  diceRoll: FaceId[];
+  /** Foes slain toward the next roll (full at DICE_CHARGE). */
+  diceCharge: number;
+  /** Uninscribed rune faces owned. */
+  runes: Partial<Record<FaceId, number>>;
+  secondWindUsed: boolean;
 }
 
 export const INV_SIZE = 28;
@@ -37,6 +47,7 @@ export function newSave(): SaveData {
     xp: { attack: 0, strength: 0, defence: 0, hitpoints: xpForLevel(10) },
     kills: {}, log: {}, shrines: ["village"], lastShrine: "village", tonicMax: 3,
     purse: null, pet: false, flags: {}, bestRarity: 0, deaths: 0, playTime: 0,
+    dice: [[...STARTER_DIE], [...STARTER_DIE], [...STARTER_DIE]], diceRoll: [], diceCharge: DICE_CHARGE, runes: {}, secondWindUsed: false,
   };
 }
 

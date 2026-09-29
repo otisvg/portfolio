@@ -41,9 +41,9 @@ export class Wick extends Enemy {
 
   wake() { if (this.mode === "dormant") { this.mode = "wake"; this.st = 0; } }
 
-  takeHit(g: Game, dmg: number, crit: boolean, dir: number) {
-    if (this.invulnerable || this.dead) { audio.play("clink", 3); return; }
-    super.takeHit(g, dmg, crit, dir);
+  takeHit(g: Game, dmg: number, crit: boolean, dir: number, quiet = false) {
+    if (this.invulnerable || this.dead) { if (!quiet) audio.play("clink", 3); return; }
+    super.takeHit(g, dmg, crit, dir, quiet);
     if (!this.dead && this.mode !== "dying" && this.phase === 1 && this.hp <= this.maxHp * 0.5) {
       this.phase = 2; this.mode = "roar"; this.st = 0; this.vx = 0;
       audio.play("roar");

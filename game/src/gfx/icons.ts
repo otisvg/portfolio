@@ -46,6 +46,10 @@ const ICONS: Record<string, string[]> = {
   pet: ["...BBBB...", "..BBBBBB..", "BBBBBBBBBB", "..aaaaaa..", "..afaafa..", "..aaaaaa..", "..aBaBaa..", "...aaaa...", "..c.cc.c..", ".........."],
   skull: ["..tttttt..", ".tttttttt.", ".tkkttkkt.", ".tkkttkkt.", ".tttkkttt.", "..tttttt..", "..tTtTtT..", "...tTtT...", "..........", ".........."],
   purse: ["...BAAB...", "....BB....", "...aAAa...", "..aaaaaa..", ".aaayyaaa.", ".aaayYaaA.", ".AaaaaaaA.", "..AAAAAA..", "..........", ".........."],
+  fang: ["..........", "tttttttttt", "tTttttttTt", ".tt....tt.", ".tt....tt.", ".tT....tT.", "..v....v..", "..u....u..", "..........", ".........."],
+  star: ["....y.....", "....y.....", "...yyy....", "yyyyeyyyy.", ".yyyyyyy..", "..yyyyy...", "..yy.yy...", ".yy...yy..", ".y.....y..", ".........."],
+  feather: ["........qq", ".......qqQ", "......qqQ.", ".....qqQ..", "....qqQ...", "...qqQ....", "..qqQ.....", "..qQ......", ".b........", "b........."],
+  moonface: ["...TTT....", "..ttT.....", ".ttt......", ".ttt......", ".ttt......", ".ttt......", ".tttT.....", "..tttTT...", "...ttt....", ".........."],
   crate: ["..........", ".AAAAAAAA.", ".AaBaaBaA.", ".AaaBBaaA.", ".AaaBBaaA.", ".AaBaaBaA.", ".AAAAAAAA.", "..........", "..........", ".........."],
 };
 

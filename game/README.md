@@ -109,6 +109,55 @@ Gold Find only scales gold, never rarity, so the loot curve can't run away.
   temper gear from +1 to +5. Tempering costs gold and Blight Shards, and each level adds 10% to base stats.
   It never fails.
 
+## Dice (inspired by Slice & Dice and Balatro)
+
+**Hearth Dice.** You carry three bone dice. Each has six faces and starts as Sword, Shield, Coin, Heart, Blank, Blank.
+
+- **Charging:** slay 12 foes (or kill Wick) to charge the dice.
+- **Rolling:** the next time you rest at a Hearthstone, the dice roll. You get 2 rerolls and can lock any dice you want to keep.
+- **Duration:** the rolled faces are your buffs until the next roll, even through death.
+
+| Face | Effect |
+| --- | --- |
+| Sword | +15% damage |
+| Shield | +3 armour |
+| Coin | +25% gold found |
+| Heart | +1 tonic charge |
+| Skull | Foes hit 20% harder, gear drops x1.5 |
+| Fang (rare) | +2 health on hit |
+| Star (rare) | +6% crit |
+| Feather (rare) | +8% move speed |
+| Moon (rare) | +20 max stamina |
+
+**Combos.** Matching faces combine: a pair counts as 2.5 faces, and a triple counts as 4.5 faces plus a named bonus.
+
+| Triple | Bonus |
+| --- | --- |
+| Swords: Bloodlust | Kills heal 4 health |
+| Shields: Bulwark | Hits don't knock you off balance |
+| Coins: Windfall | Every foe drops gold |
+| Hearts: Second Wind | Survive one lethal hit |
+| Skulls: Death Wish | Foes hit 60% harder, gear drops x3 |
+| Blanks: Nothing At All | 60 gold to your bank |
+
+**Runes.** Runes drop at published odds: 1/150 from Blightlings and Rotcrows, 1/60 from Husks, and 1/5 from Wick. You inscribe them over a face from the Hearth Dice screen. A replaced face goes back to your runes, unless it was blank.
+
+**Finisher die.** The third hit of your combo rolls a six-sided die tied to your weapon type. The faces are listed in each weapon's tooltip.
+
+| Weapon | Faces |
+| --- | --- |
+| Sword | - - x1.5 x1.5 x2 REND |
+| Axe | - - x1.5 x2 CLEAVE CLEAVE |
+| Dagger | - x1.5 x1.5 TWIN TWIN REND |
+| Spear | - - x1.5 x2 SKEWER SKEWER |
+| Scythe | - - x1.5 x2 REAP REAP |
+
+- **Rend:** the target bleeds for 75% more over 2 seconds.
+- **Cleave:** hits nearby foes for 60%.
+- **Twin:** strikes again for 70%.
+- **Skewer:** x1.5 damage and a huge knockback.
+- **Reap:** heals you for 30% of the damage dealt.
+
 ## Progression (OSRS-style)
 
 - **Skills:** Attack, Strength, Defence and Hitpoints use the real OSRS XP curve. Hitpoints starts at

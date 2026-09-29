@@ -210,14 +210,15 @@ function drawCollection(g: Game, ctx: Ctx) {
   // published odds
   panel(ctx, 198, 92, 174, 110, 0.8);
   drawText(ctx, "DROP RATES", 204, 98, C.dim);
-  drawText(ctx, "GEAR", 300, 98, C.faint, { align: "right" }); drawText(ctx, "SHARD", 340, 98, C.faint, { align: "right" }); drawText(ctx, "TONIC", 368, 98, C.faint, { align: "right" });
+  drawText(ctx, "GEAR", 282, 98, C.faint, { align: "right" }); drawText(ctx, "SHARD", 312, 98, C.faint, { align: "right" }); drawText(ctx, "TONIC", 340, 98, C.faint, { align: "right" }); drawText(ctx, "RUNE", 368, 98, C.faint, { align: "right" });
   (["blightling", "crow", "husk", "wick"] as const).forEach((k, i) => {
     const tb = TABLES[k];
     const y = 108 + i * 9;
     drawText(ctx, k === "wick" ? "WICK" : tb.name.toUpperCase(), 204, y, C.cream);
-    drawText(ctx, tb.gear === 1 ? "ALWAYS" : tb.gear ? fmtRate(tb.gear) : "-", 300, y, C.cream, { align: "right" });
-    drawText(ctx, tb.shards ? `${tb.shards[0]}-${tb.shards[1]}` : tb.shard ? fmtRate(tb.shard) : "-", 340, y, C.cream, { align: "right" });
-    drawText(ctx, tb.orb ? fmtRate(tb.orb) : "-", 368, y, C.cream, { align: "right" });
+    drawText(ctx, tb.gear === 1 ? "ALWAYS" : tb.gear ? fmtRate(tb.gear) : "-", 282, y, C.cream, { align: "right" });
+    drawText(ctx, tb.shards ? `${tb.shards[0]}-${tb.shards[1]}` : tb.shard ? fmtRate(tb.shard) : "-", 312, y, C.cream, { align: "right" });
+    drawText(ctx, tb.orb ? fmtRate(tb.orb) : "-", 340, y, C.cream, { align: "right" });
+    drawText(ctx, tb.rune ? fmtRate(tb.rune) : "-", 368, y, C.cream, { align: "right" });
   });
   drawText(ctx, "RARITY ODDS PER GEAR DROP", 204, 148, C.dim);
   const rows: [string, readonly number[]][] = [["FOES", RARITY_WEIGHTS.trash], ["HUSK", RARITY_WEIGHTS.elite], ["WICK", RARITY_WEIGHTS.boss]];
@@ -257,6 +258,8 @@ function drawHelp(ctx: Ctx) {
     "Attacks, rolls and double-jumps cost stamina. Out of stamina, out of options.",
     "Resting at a Hearthstone heals you, refills tonics and banks your gold... and revives every foe.",
     "Die and your carried gold stays where you fell. Die again before reclaiming it and it's gone.",
+    "Slay 12 foes to charge the Hearth Dice, then rest to roll them. Lock, reroll, and inscribe runes to shape them.",
+    "Your 3rd combo hit rolls your weapon's finisher die. Every weapon type has its own faces.",
   ];
   let y = 148;
   for (const t of tips) for (const l of wrap(t, 350)) { drawText(ctx, l, 16, y, C.dim); y += 8; }

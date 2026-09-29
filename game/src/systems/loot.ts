@@ -1,4 +1,5 @@
 import { RNG, rng as defaultRng } from "../core/rng";
+import { RUNE_WEIGHTS, type FaceId } from "./dice";
 import { BASES, makeUnique, rollItem, type Item, type Slot } from "./items";
 
 /**
@@ -12,7 +13,8 @@ export type Drop =
   | { type: "item"; item: Item }
   | { type: "shard"; amount: number }
   | { type: "orb" }
-  | { type: "pet" };
+  | { type: "pet" }
+  | { type: "rune"; face: FaceId };
 
 /** Rarity weights: Common, Uncommon, Rare, Epic, Legendary. */
 export const RARITY_WEIGHTS = {
@@ -36,17 +38,19 @@ export interface DropTable {
   bias?: Record<string, number>;
   uniques?: { id: string; rate: number }[];
   pet?: number;
+  /** 1 in N chance of a Hearth Dice rune. */
+  rune?: number;
 }
 
 export const TABLES: Record<string, DropTable> = {
-  blightling: { name: "Blightling", gold: [1, 4], goldChance: 1, gear: 18, rarity: "trash", shard: 120, orb: 10 },
-  crow: { name: "Rotcrow", gold: [1, 3], goldChance: 0.9, gear: 22, rarity: "trash", orb: 12 },
-  husk: { name: "Husk", gold: [4, 9], goldChance: 1, gear: 7, rarity: "elite", shard: 25, orb: 5, bias: { pitchfork: 5, straw_hat: 4 } },
+  blightling: { name: "Blightling", gold: [1, 4], goldChance: 1, gear: 18, rarity: "trash", shard: 120, orb: 10, rune: 150 },
+  crow: { name: "Rotcrow", gold: [1, 3], goldChance: 0.9, gear: 22, rarity: "trash", orb: 12, rune: 150 },
+  husk: { name: "Husk", gold: [4, 9], goldChance: 1, gear: 7, rarity: "elite", shard: 25, orb: 5, rune: 60, bias: { pitchfork: 5, straw_hat: 4 } },
   pot: { name: "Pot", gold: [1, 3], goldChance: 0.6, rarity: "trash", orb: 8 },
   wick: {
     name: "Wick, the Harvest Warden", gold: [55, 95], goldChance: 1, gear: 1, gearRolls: 1, bonusGear: 3, rarity: "boss", shards: [2, 3],
     uniques: [{ id: "wick_lantern", rate: 40 }, { id: "straw_hood", rate: 60 }, { id: "harvest_scythe", rate: 90 }],
-    pet: 500,
+    pet: 500, rune: 5,
   },
 };
 
@@ -62,14 +66,18 @@ export function rollGear(rarityKey: keyof typeof RARITY_WEIGHTS, bias: Record<st
   return rollItem(r.weighted(pool), rarity, r);
 }
 
-export function rollDrops(tableId: string, goldFind: number, r: RNG = defaultRng): Drop[] {
+/**
+ * `gearMult` comes only from Skull faces on the Hearth Dice (a risk you opt into);
+ * `alwaysGold` from the Windfall triple. Both are shown to the player where they apply.
+ */
+export function rollDrops(tableId: string, goldFind: number, r: RNG = defaultRng, gearMult = 1, alwaysGold = false): Drop[] {
   const t = TABLES[tableId];
   const out: Drop[] = [];
-  if (r.chance(t.goldChance)) {
+  if (alwaysGold || r.chance(t.goldChance)) {
     const amount = Math.round(r.int(t.gold[0], t.gold[1]) * (1 + goldFind / 100));
     if (amount > 0) out.push({ type: "gold", amount });
   }
-  if (t.gear && r.oneIn(t.gear)) {
+  if (t.gear && r.next() * t.gear < gearMult) {
     for (let i = 0; i < (t.gearRolls ?? 1); i++) out.push({ type: "item", item: rollGear(t.rarity, t.bias, r) });
   }
   if (t.bonusGear && r.oneIn(t.bonusGear)) out.push({ type: "item", item: rollGear(t.rarity, t.bias, r) });
@@ -78,6 +86,7 @@ export function rollDrops(tableId: string, goldFind: number, r: RNG = defaultRng
   if (t.orb && r.oneIn(t.orb)) out.push({ type: "orb" });
   for (const u of t.uniques ?? []) if (r.oneIn(u.rate)) out.push({ type: "item", item: makeUnique(u.id) });
   if (t.pet && r.oneIn(t.pet)) out.push({ type: "pet" });
+  if (t.rune && r.oneIn(t.rune)) out.push({ type: "rune", face: r.weighted(RUNE_WEIGHTS) });
   return out;
 }
 

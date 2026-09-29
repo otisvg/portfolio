@@ -5,6 +5,8 @@ import { drawText, textWidth } from "../gfx/font";
 import { drawIcon } from "../gfx/icons";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
+import { DICE_CHARGE } from "../systems/dice";
+import { drawDie } from "./dice";
 import { bar, panel } from "./widgets";
 
 export interface XpDrop { text: string; color: string; t: number; icon: string }
@@ -21,8 +23,22 @@ export function drawHud(g: Game, ctx: Ctx) {
   bar(ctx, 19, 15, stW, 3, Math.max(0, p.stam) / s.maxStam, p.stam < 15 ? "#bfa35a" : C.stam, C.stamDark);
   // tonic flask charges
   drawIcon(ctx, "tonic", 5, 20);
-  for (let i = 0; i < g.save.tonicMax; i++) rect(ctx, 19 + i * 5, 25, 4, 4, i < p.tonics ? C.hp : C.hpDark);
-  if (g.healFlash > 0) { ctx.globalAlpha = g.healFlash; rect(ctx, 19, 25, g.save.tonicMax * 5, 4, C.cream); ctx.globalAlpha = 1; }
+  const tMax = g.save.tonicMax + s.tonicBonus;
+  for (let i = 0; i < tMax; i++) rect(ctx, 19 + i * 5, 25, 4, 4, i < p.tonics ? (i >= g.save.tonicMax ? C.scarf2 : C.hp) : C.hpDark);
+  if (g.healFlash > 0) { ctx.globalAlpha = g.healFlash; rect(ctx, 19, 25, tMax * 5, 4, C.cream); ctx.globalAlpha = 1; }
+
+  // Hearth Dice: current faces and charge
+  const roll = g.save.diceRoll;
+  for (let i = 0; i < 3; i++) drawDie(ctx, 5 + i * 16, 34, 14, roll[i] ?? null, { dim: !roll.length });
+  const charged = g.save.diceCharge >= DICE_CHARGE;
+  if (charged) {
+    if (Math.floor(g.time * 2.5) % 2 === 0) drawText(ctx, "ROLL AT A HEARTH", 55, 39, C.gold2);
+  } else {
+    rect(ctx, 54, 39, 32, 5, C.ink);
+    rect(ctx, 55, 40, 30, 3, C.border);
+    rect(ctx, 55, 40, Math.round((30 * g.save.diceCharge) / DICE_CHARGE), 3, C.gold1);
+    drawText(ctx, `${g.save.diceCharge}/${DICE_CHARGE}`, 90, 39, C.dim);
+  }
 
   // gold (carried) and shards, top right
   let y = 5;

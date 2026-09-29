@@ -15,10 +15,12 @@ import { NPC, Pet, Pickup, Purse, Shrine, Sign } from "./entities/objects";
 import { Player } from "./entities/player";
 import { Chat } from "./systems/chat";
 import { baseOf, displayName, type Item, type Slot } from "./systems/items";
+import { DICE_CHARGE, FACES, rollFinisher, type FinFace } from "./systems/dice";
 import { rollDrops } from "./systems/loot";
 import { loadSave, newSave, wipeSave, writeSave, type SaveData } from "./systems/save";
 import { levelForXp, SKILL_INFO, type Skill } from "./systems/skills";
 import { computeStats, type Stats } from "./systems/stats";
+import { DiceMenu, drawFinFx, type FinFx } from "./ui/dice";
 import { Dialog } from "./ui/dialog";
 import { drawFloaters, drawHud, type Floater, type XpDrop } from "./ui/hud";
 import { InventoryMenu, type Overlay } from "./ui/menu";
@@ -80,6 +82,10 @@ export class Game {
   time = 0;
   private attackIds = 1;
   private lastAttackStart = -10;
+  /** The finisher die is rolled once per heavy swing, on its first hit. */
+  private finFor = -1;
+  private finFace: FinFace = "blank";
+  finFx: FinFx[] = [];
   private dodged = new Set<number>();
   prompt: { x: number; y: number; text: string } | null = null;
   private region = "";
@@ -150,7 +156,7 @@ export class Game {
     const s = this.stats;
     this.placeAtShrine(shrineId);
     const p = this.player;
-    p.hp = p.hpTrail = s.maxHp; p.stam = s.maxStam; p.tonics = this.save.tonicMax;
+    p.hp = p.hpTrail = s.maxHp; p.stam = s.maxStam; p.tonics = this.save.tonicMax + s.tonicBonus;
     p.state = "normal"; p.st = 0; p.healLeft = 0; p.deathHandled = false; p.invuln = 0;
     this.snapCamera();
   }
@@ -341,8 +347,20 @@ export class Game {
       if (t instanceof Pot) { t.break(this); continue; }
       if (t instanceof Wick && t.invulnerable) { t.takeHit(this, 0, false, p.facing); this.particles.hit(t.cx - p.facing * 8, p.y + 6, -p.facing, C.steel2, 4); continue; }
       const crit = rng.chance(s.crit);
-      const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * (crit ? 1.75 : 1)));
+      let fin: FinFace | null = null;
+      if (heavy) {
+        if (this.finFor !== id) {
+          this.finFor = id;
+          this.finFace = rollFinisher(s.kind);
+          this.finFx.push({ x: t.cx, y: t.y - 16, t: 0, face: this.finFace, seed: rng.int(0, 5) });
+          audio.play("diceLand");
+        }
+        fin = this.finFace;
+      }
+      const finMult = fin === "x2" ? 2 : fin === "x15" || fin === "skewer" ? 1.5 : 1;
+      const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * finMult * (crit ? 1.75 : 1)));
       t.takeHit(this, dmg, crit, p.facing);
+      if (fin) this.applyFinisher(fin, t, dmg, id);
       const hx = clamp(p.cx + p.facing * 14, t.x, t.x + t.w), hy = clamp(p.y + 8, t.y, t.y + t.h);
       this.particles.hit(hx, hy, p.facing, crit ? C.gold2 : C.fire3, crit ? 12 : 7);
       this.particles.splat(hx, hy, t instanceof Crow ? [C.inkSoft, C.blight2] : [C.blight3, C.blight4], crit ? 6 : 3);
@@ -358,19 +376,56 @@ export class Game {
     }
   }
 
+  /** Signature finisher-die effects (the damage multipliers are applied by the caller). */
+  private applyFinisher(fin: FinFace, t: Enemy, dmg: number, id: number) {
+    const p = this.player, s = this.stats;
+    if (fin === "rend") t.bleed(Math.max(1, Math.round(dmg * 0.15)));
+    else if (fin === "reap") {
+      const heal = Math.max(1, Math.round(dmg * 0.3));
+      p.hp = Math.min(s.maxHp, p.hp + heal);
+      this.addFloat(`+${heal}`, p.cx, p.y - 8, C.good);
+    } else if (fin === "skewer" && !t.isBoss && !t.dead) { t.vx = p.facing * 260; t.vy = -140; }
+    else if (fin === "twin" && t.hp > 0) {
+      const d2 = Math.max(1, Math.round(dmg * 0.7));
+      t.takeHit(this, d2, false, p.facing);
+      this.addFloat(`${d2}`, t.cx + 6, t.y - 10, C.xp);
+    } else if (fin === "cleave") {
+      const others: Enemy[] = this.enemies.filter((e) => e !== t && !e.dead && Math.abs(e.cx - t.cx) < 56 && Math.abs(e.bottom - t.bottom) < 40);
+      if (this.boss && this.boss !== t && !this.boss.dead && Math.abs(this.boss.cx - t.cx) < 56) others.push(this.boss);
+      for (const o of others) {
+        if (o.lastHitId === id) continue;
+        o.lastHitId = id;
+        const d2 = Math.max(1, Math.round(dmg * 0.6));
+        o.takeHit(this, d2, false, p.facing);
+        this.addFloat(`${d2}`, o.cx, o.y - 4, C.fire1);
+        this.particles.hit(o.cx, o.y + o.h / 2, p.facing, C.fire1, 5);
+      }
+    }
+  }
+
   /** Returns true if damage landed. */
   damagePlayer(raw: number, fromX: number, _o: { source?: string } = {}) {
     const p = this.player;
     if (!p.alive || p.invuln > 0 || p.iframes || p.state === "rest" || p.state === "fog") return false;
-    const dmg = Math.max(1, Math.round(raw * (1 - this.stats.dr)));
+    const dmg = Math.max(1, Math.round(raw * this.stats.foeDmgMult * (1 - this.stats.dr)));
+    const perks = this.stats.perks;
     p.hpTrail = Math.max(p.hpTrail, p.hp);
     p.trailDelay = 0.55;
     const taken = Math.min(dmg, Math.max(0, p.hp));
     p.hp -= dmg;
     p.invuln = 1.0; p.hurtFlash = 0.2;
     if (p.state === "drink" && !p.drinkDone) this.toast("The tonic spills from your hands!", C.bad);
-    p.state = "hurt"; p.st = 0;
-    p.vx = (Math.sign(p.cx - fromX) || -p.facing) * 130; p.vy = -150;
+    if (!perks.includes("bulwark")) {
+      p.state = "hurt"; p.st = 0;
+      p.vx = (Math.sign(p.cx - fromX) || -p.facing) * 130; p.vy = -150;
+    }
+    if (p.hp <= 0 && perks.includes("secondWind") && !this.save.secondWindUsed) {
+      this.save.secondWindUsed = true;
+      p.hp = 1;
+      this.chat.push("Second Wind! The Hearth Dice hold you up.", C.gold2);
+      this.flash(C.gold2, 0.4);
+      audio.loot(4);
+    }
     this.gainXp("defence", taken * 2);
     this.shake(3.5, 0.22);
     this.hitstopFor(0.07);
@@ -487,11 +542,26 @@ export class Game {
   onEnemyKilled(e: Enemy) {
     if (e.isBoss) return;
     this.save.kills[e.table] = (this.save.kills[e.table] ?? 0) + 1;
+    this.chargeDice(1);
+    if (this.stats.perks.includes("bloodlust") && this.player.alive) {
+      this.player.hp = Math.min(this.stats.maxHp, this.player.hp + 4);
+      this.addFloat("+4", this.player.cx, this.player.y - 8, C.good);
+    }
     this.spawnDrops(e.table, e.cx, e.y + e.h / 2);
   }
 
+  chargeDice(n: number) {
+    const s = this.save;
+    if (s.diceCharge >= DICE_CHARGE) return;
+    s.diceCharge = Math.min(DICE_CHARGE, s.diceCharge + n);
+    if (s.diceCharge >= DICE_CHARGE) {
+      this.chat.push("Your Hearth Dice are charged. Rest at a Hearthstone to roll.", C.gold2);
+      audio.play("dice");
+    }
+  }
+
   spawnDrops(table: string, x: number, y: number) {
-    for (const d of rollDrops(table, this.stats.goldFind)) {
+    for (const d of rollDrops(table, this.stats.goldFind, rng, this.stats.gearMult, this.stats.perks.includes("windfall"))) {
       if (d.type === "gold") {
         const n = Math.min(10, Math.ceil(d.amount / 4));
         let left = d.amount;
@@ -507,6 +577,7 @@ export class Game {
           this.chat.push(`Valuable drop: ${displayName(d.item)}`, RARITY[d.item.rarity].color);
         }
       } else if (d.type === "shard") this.pickups.push(new Pickup("shard", x, y, d.amount));
+      else if (d.type === "rune") { const pk = new Pickup("rune", x, y); pk.face = d.face; this.pickups.push(pk); }
       else if (d.type === "orb") this.pickups.push(new Pickup("orb", x, y));
       else if (d.type === "pet") {
         if (!this.save.pet) {
@@ -530,6 +601,13 @@ export class Game {
       p.hp = Math.min(this.stats.maxHp, p.hp + Math.round(this.stats.maxHp * 0.12));
       audio.play("heal");
       this.addFloat("+HP", pk.cx, pk.y - 4, C.good);
+    } else if (pk.kind === "rune" && pk.face) {
+      s.runes[pk.face] = (s.runes[pk.face] ?? 0) + 1;
+      audio.loot(FACES[pk.face].rare ? 4 : 3);
+      this.chat.push(`You find a ${FACES[pk.face].name} rune.`, FACES[pk.face].color);
+      if (!s.flags.runeHint) { s.flags.runeHint = true; this.chat.push("Inscribe it onto your Hearth Dice at any Hearthstone.", C.dim); }
+      this.addFloat("RUNE", pk.cx, pk.y - 8, FACES[pk.face].color);
+      this.persist();
     } else if (pk.kind === "shard") {
       s.shards += pk.amount;
       audio.play("purse");
@@ -606,7 +684,7 @@ export class Game {
       this.particles.burst(sh.x, sh.y - 30, 40, { speed: 90, colors: [C.fire1, C.fire2, C.fire3], max: 1.2, g: -40, drag: 2, light: 8, lightColor: C.fire1 });
     } else audio.play("shrine");
     p.state = "rest"; p.st = 0; p.vx = 0;
-    p.hp = p.hpTrail = this.stats.maxHp; p.stam = this.stats.maxStam; p.tonics = s.tonicMax; p.healLeft = 0;
+    p.hp = p.hpTrail = this.stats.maxHp; p.stam = this.stats.maxStam; p.tonics = s.tonicMax + this.stats.tonicBonus; p.healLeft = 0;
     this.healFlash = 1;
     if (s.gold > 0) { this.chat.push(`The Hearth keeps your ${s.gold} gold safe. (Bank: ${s.bank + s.gold})`, C.gold2); s.bank += s.gold; s.gold = 0; }
     s.lastShrine = id;
@@ -614,6 +692,7 @@ export class Game {
     this.persist();
     for (let i = 0; i < 16; i++) this.particles.spawn(sh.x + rng.range(-8, 8), sh.y - 30, { vy: -rng.range(20, 60), vx: rng.range(-10, 10), max: rng.range(0.6, 1.2), color: C.fire2, color2: C.fire0, light: 6, lightColor: C.fire1 });
     this.openOverlay(new RestMenu(id));
+    if (s.diceCharge >= DICE_CHARGE) this.openOverlay(new DiceMenu(this, true));
   }
 
   travelTo(id: string) {
@@ -652,6 +731,7 @@ export class Game {
   onBossDefeated(b: Wick) {
     const s = this.save;
     s.kills.wick = (s.kills.wick ?? 0) + 1;
+    this.chargeDice(DICE_CHARGE);
     this.bossActive = false;
     this.level.setFog(false);
     this.chat.push(`Your Wick kill count is: ${s.kills.wick}.`, "#e0605a");
@@ -699,6 +779,8 @@ export class Game {
     for (const f of this.floaters) { f.t += dt; f.y += f.vy * dt; f.vy *= 0.94; }
     this.floaters = this.floaters.filter((f) => f.t < 1);
     for (const d of this.xpDrops) d.t += dt;
+    for (const f of this.finFx) f.t += dt;
+    this.finFx = this.finFx.filter((f) => f.t < 1.25);
     this.xpDrops = this.xpDrops.filter((d) => d.t < 2.2);
 
     if (this.mode === "dead") {
@@ -867,6 +949,7 @@ export class Game {
     if (this.bossActive && this.boss?.phase === 2) dark += 0.08;
     this.lighting.render(ctx, dark, "#07050f", 0.3);
     this.particles.draw(ctx, camX, camY, "glow");
+    for (const f of this.finFx) drawFinFx(ctx, f, camX, camY);
     ctx.drawImage(this.vignette, 0, 0);
 
     if (playing) {

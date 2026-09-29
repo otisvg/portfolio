@@ -6,16 +6,19 @@ import { drawGhost, drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import { shadow, SpriteBuf } from "../gfx/sprite";
 import type { Game } from "../game";
+import type { FaceId } from "../systems/dice";
 import { baseOf, type Item } from "../systems/items";
+import { drawDie } from "../ui/dice";
 import type { NpcDef, ShrineDef, SignDef } from "../world/level";
 import { moveBody, type Body } from "../world/physics";
 
 // ======================================================================= Pickups
-export type PickupKind = "gold" | "item" | "shard" | "orb";
+export type PickupKind = "gold" | "item" | "shard" | "orb" | "rune";
 
 export class Pickup implements Body {
   x: number; y: number; w = 8; h = 8; vx: number; vy: number; onGround = false;
   t = 0; dead = false; blocked = 0;
+  face: FaceId | null = null;
   constructor(public kind: PickupKind, cx: number, cy: number, public amount = 1, public item: Item | null = null) {
     this.x = cx - 4; this.y = cy - 4;
     const burst = kind === "item" ? 1.3 : 1;
@@ -58,6 +61,9 @@ export class Pickup implements Body {
       ctx.fillStyle = C.ink; ctx.fillRect(x + 1, y + 1, 7, 7);
       ctx.fillStyle = C.hp; ctx.fillRect(x + 2, y + 2, 5, 5);
       ctx.fillStyle = C.scarf2; ctx.fillRect(x + 2, y + 2, 2 + pulse, 2);
+    } else if (this.kind === "rune" && this.face) {
+      const b = Math.round(Math.sin(time * 3 + this.x) * 1.5);
+      drawDie(ctx, x - 3, y - 4 + b, 14, this.face);
     } else if (this.kind === "shard") {
       const b = Math.round(Math.sin(time * 3 + this.x) * 1);
       ctx.fillStyle = C.ink; ctx.fillRect(x + 2, y - 2 + b, 5, 10);
@@ -272,6 +278,7 @@ export class NPC {
       if (!met) return [
         "Oh! A traveller. Come in from the dark, dear, and warm your hands at the Hearth.",
         "That stone has kept Hollowmere safe for three hundred winters. Rest beside it and it will mend you and refill your tonic flask.",
+        "It keeps the old bone dice, too. Fight for the Hearth and it will roll them for you. Fortune favours the stubborn.",
         "It keeps your coin safe, too. Coin you carry, you can lose. Fall out there and your purse stays where you fell.",
         "Fall again before you fetch it... and the Rot keeps it.",
         "One more thing. When you rest, the Rot stirs anew. Whatever you cut down out there will crawl back up.",

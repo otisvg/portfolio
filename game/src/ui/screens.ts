@@ -6,6 +6,7 @@ import { drawText, textWidth, wrap } from "../gfx/font";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
 import { hasSave } from "../systems/save";
+import { DiceMenu } from "./dice";
 import { InventoryMenu, type Overlay } from "./menu";
 import { hint, panel } from "./widgets";
 
@@ -137,6 +138,7 @@ export class RestMenu implements Overlay {
       const o = opts[this.sel];
       if (o.id === "rise") this.leave(g);
       else if (o.id === "gear") g.openOverlay(new InventoryMenu());
+      else if (o.id === "dice") g.openOverlay(new DiceMenu(g, false));
       else if (o.id !== this.here) { audio.play("fog"); g.travelTo(o.id); }
       else audio.play("deny");
     }
@@ -145,6 +147,7 @@ export class RestMenu implements Overlay {
   options(g: Game) {
     const out: { id: string; label: string }[] = [];
     for (const sh of g.level.shrines) if (g.save.shrines.includes(sh.id)) out.push({ id: sh.id, label: sh.name.toUpperCase() });
+    out.push({ id: "dice", label: "HEARTH DICE" });
     out.push({ id: "gear", label: "GEAR & SKILLS" });
     out.push({ id: "rise", label: "RISE" });
     return out;

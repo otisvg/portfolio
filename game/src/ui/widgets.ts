@@ -2,6 +2,7 @@ import { rect, type Ctx } from "../gfx/canvas";
 import { drawText, LINE_H, textWidth, wrap } from "../gfx/font";
 import { drawGhost, drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
+import { FIN, FINISHER } from "../systems/dice";
 import { AFFIXES, allAffixes, baseOf, displayName, itemStats, sellValue, type Item } from "../systems/items";
 
 export function panel(ctx: Ctx, x: number, y: number, w: number, h: number, alpha = 0.94) {
@@ -66,6 +67,7 @@ export function itemLines(it: Item, compare: Item | null, maxW: number, showValu
     const avg = (s.dmg[0] + s.dmg[1]) / 2, cavg = cs?.dmg ? (cs.dmg[0] + cs.dmg[1]) / 2 : undefined;
     out.push({ text: `Damage ${s.dmg[0]}-${s.dmg[1]}${diff(avg, cavg)}`, color: dcol(avg, cavg) });
     out.push({ text: `Speed ${Math.round((b.speed ?? 1) * 100)}%   Reach ${b.reach}`, color: C.dim });
+    if (b.kind) out.push({ text: `Finisher die: ${FINISHER[b.kind].map((f) => FIN[f].label).join(" ")}`, color: C.dim });
   }
   if (s.def || cs?.def) out.push({ text: `Armour ${s.def}${diff(s.def, cs?.def)}`, color: dcol(s.def, cs?.def) });
   if (s.hp || cs?.hp) out.push({ text: `Health +${s.hp}${diff(s.hp, cs?.hp)}`, color: dcol(s.hp, cs?.hp) });

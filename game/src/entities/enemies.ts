@@ -36,10 +36,11 @@ export abstract class Enemy implements Body {
   /** Body contact only hurts while the enemy is mid-attack, never from idle bumping. */
   contactActive() { return false; }
 
-  takeHit(g: Game, dmg: number, _crit: boolean, dir: number) {
+  /** `quiet` hits (bleeding) deal damage without knockback or interrupting the foe. */
+  takeHit(g: Game, dmg: number, _crit: boolean, dir: number, quiet = false) {
     this.hp -= dmg;
-    this.flash = 0.14;
-    this.onHurt(g, dmg, dir);
+    this.flash = quiet ? 0.06 : 0.14;
+    if (!quiet) this.onHurt(g, dmg, dir);
     if (this.hp <= 0 && !this.dead) {
       this.dead = true; this.deathT = 0;
       this.onDeath(g);
@@ -59,10 +60,25 @@ export abstract class Enemy implements Body {
     }
   }
 
+  bleedT = 0; bleedTick = 0; bleedDmg = 0;
+  /** Rend: damage over time, refreshed (not stacked) by repeat procs. */
+  bleed(dmg: number, dur = 2) { this.bleedDmg = Math.max(this.bleedDmg, dmg); this.bleedT = dur; this.bleedTick = 0.4; }
+
   update(g: Game, dt: number) {
     this.t += dt; this.st += dt;
     this.flash = Math.max(0, this.flash - dt);
     if (this.dead) { this.deathT += dt; this.updateDead(g, dt); return; }
+    if (this.bleedT > 0) {
+      this.bleedT -= dt; this.bleedTick -= dt;
+      if (this.bleedTick <= 0) {
+        this.bleedTick = 0.4;
+        this.takeHit(g, this.bleedDmg, false, 0, true);
+        g.addFloat(`${this.bleedDmg}`, this.cx, this.y - 2, "#e0605a");
+        g.particles.burst(this.cx, this.y + this.h / 2, 4, { speed: 40, colors: ["#c7373f", "#6e1a24"], g: 300, max: 0.5 });
+      }
+      if (this.bleedT <= 0) this.bleedDmg = 0;
+      if (this.dead) return;
+    }
     this.think(g, dt);
   }
   protected updateDead(g: Game, dt: number) {
