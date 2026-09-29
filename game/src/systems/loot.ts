@@ -47,6 +47,8 @@ export const TABLES: Record<string, DropTable> = {
   crow: { name: "Rotcrow", gold: [1, 3], goldChance: 0.9, gear: 22, rarity: "trash", orb: 12, rune: 150 },
   husk: { name: "Husk", gold: [4, 9], goldChance: 1, gear: 7, rarity: "elite", shard: 25, orb: 5, rune: 60, bias: { pitchfork: 5, straw_hat: 4 } },
   pot: { name: "Pot", gold: [1, 3], goldChance: 0.6, rarity: "trash", orb: 8 },
+  /** Extra drops on top of the normal table when a foe was Rotborn. */
+  rotborn: { name: "Rotborn", gold: [15, 30], goldChance: 1, gear: 1, rarity: "elite", shards: [1, 2], rune: 3 },
   wick: {
     name: "Wick, the Harvest Warden", gold: [55, 95], goldChance: 1, gear: 1, gearRolls: 1, bonusGear: 3, rarity: "boss", shards: [2, 3],
     uniques: [{ id: "wick_lantern", rate: 40 }, { id: "straw_hood", rate: 60 }, { id: "harvest_scythe", rate: 90 }],
@@ -89,6 +91,9 @@ export function rollDrops(tableId: string, goldFind: number, r: RNG = defaultRng
   if (t.rune && r.oneIn(t.rune)) out.push({ type: "rune", face: r.weighted(RUNE_WEIGHTS) });
   return out;
 }
+
+/** Each regular foe has a 1 in N chance to rise as a Rotborn when the world resets. */
+export const ROTBORN_RATE = 35;
 
 /** "1/40" style odds for UI. */
 export const fmtRate = (n: number) => `1/${n}`;

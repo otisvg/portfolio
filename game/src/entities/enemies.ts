@@ -9,6 +9,8 @@ import { groundBelow, moveBody, T, touchesTile, type Body } from "../world/physi
 
 export interface AttackBox extends Rect { dmg: number; id: number }
 
+const ROT_OUTLINE = "#c85ab8";
+
 export abstract class Enemy implements Body {
   x: number; y: number; w: number; h: number;
   vx = 0; vy = 0; onGround = false;
@@ -20,6 +22,16 @@ export abstract class Enemy implements Body {
   stompable = false; contactDmg = 0; contactId = 0;
   /** Holds one of the limited "may attack now" slots (see Game.requestAttack). */
   token = false;
+  /** Rare empowered variant: triple health, harder hits, much better loot. */
+  rotborn = false;
+  dmgMult = 1;
+  announced = false;
+
+  makeRotborn() {
+    this.rotborn = true;
+    this.hp = this.maxHp = this.maxHp * 3;
+    this.dmgMult = 1.3;
+  }
   abstract readonly table: string;
   abstract readonly label: string;
   isBoss = false;
@@ -70,6 +82,9 @@ export abstract class Enemy implements Body {
     this.t += dt; this.st += dt;
     this.flash = Math.max(0, this.flash - dt);
     if (this.dead) { this.deathT += dt; this.updateDead(g, dt); return; }
+    if (this.rotborn && rng.chance(dt * 14)) {
+      g.particles.spawn(this.x + rng.range(0, this.w), this.bottom - rng.range(0, this.h), { vy: -rng.range(15, 35), max: rng.range(0.4, 0.8), color: C.blight5, color2: C.blight3, light: 5, lightColor: C.blight4, wobble: 10 });
+    }
     if (this.bleedT > 0) {
       this.bleedT -= dt; this.bleedTick -= dt;
       if (this.bleedTick <= 0) {
@@ -202,7 +217,7 @@ export class Blightling extends Enemy {
     rect(c, ex + (look > 0 ? 1 : 0), ey, 2, 2, C.ink);
     rect(c, ex - 1, ey - 2, 4, 1, C.blight1);
     const tell = this.mode === "tell" && Math.floor(this.st * 12) % 2 === 0 ? 0.55 : 0;
-    blobBuf.end(ctx, sx, sy, { flip: false, flash: this.flash * 8 + tell });
+    blobBuf.end(ctx, sx, sy, { flip: false, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + tell });
   }
   lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 4 - camY, 14, C.blight4, 0.5); }
 }
@@ -289,7 +304,7 @@ export class Crow extends Enemy {
     else if (flap === 1) { rect(c, -4, -7, 8, 2, body); rect(c, -3, -7, 6, 1, hi); }
     else { line(c, -2, -3, -5, 1, body, 2); line(c, 0, -3, -2, 2, hi); }
     if (this.dead) { c.fillStyle = C.ink; c.fillRect(6, -7, 1, 1); }
-    crowBuf.end(ctx, sx, sy, { flip: this.facing < 0, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
+    crowBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
   }
   lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx + this.facing * 4 - camX, this.y + 2 - camY, 8, "#e0405a", 0.5); }
 }
@@ -306,6 +321,7 @@ export class Husk extends Enemy {
   poise = 26; poiseDmg = 0; poiseT = 0;
   thrustId = 0; walkPhase = 0; glinted = false;
   constructor(cx: number, gy: number) { super(cx, gy, 12, 22, 60); }
+  makeRotborn() { super.makeRotborn(); this.poise *= 2; }
 
   protected think(g: Game, dt: number) {
     this.physics(g, dt);
@@ -447,7 +463,7 @@ export class Husk extends Enemy {
     rect(c, handX - 1, handY - 1, 2, 2, skin);
     line(c, lean, -16 + bob, handX, handY, shirt);
     const alpha = this.dead ? 1 - dying : 1;
-    huskBuf.end(ctx, sx, sy, { flip: this.facing < 0, flash: this.flash * 8 + (m === "windup" && this.glinted && this.st < HUSK_GLINT + 0.06 ? 0.8 : 0), alpha });
+    huskBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + (m === "windup" && this.glinted && this.st < HUSK_GLINT + 0.06 ? 0.8 : 0), alpha });
     if (m === "windup" && this.glinted) {
       // telegraph glint on the tines
       const tx = sx + this.facing * (handX + ca * 22), ty = sy + handY + sa * 22;

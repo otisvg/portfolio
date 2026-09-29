@@ -11,15 +11,17 @@ import { Particles } from "./gfx/particles";
 import { drawBog, drawFog, renderTiles, type TileLayers } from "./gfx/tiles";
 import { Puddle, Wick, type Projectile } from "./entities/boss";
 import { Blightling, Crow, Enemy, Husk, Pot } from "./entities/enemies";
-import { NPC, Pet, Pickup, Purse, Shrine, Sign } from "./entities/objects";
+import { drawBoard, NPC, Pet, Pickup, Purse, Shrine, Sign } from "./entities/objects";
 import { Player } from "./entities/player";
 import { Chat } from "./systems/chat";
-import { baseOf, displayName, type Item, type Slot } from "./systems/items";
-import { DICE_CHARGE, FACES, rollFinisher, type FinFace } from "./systems/dice";
-import { rollDrops } from "./systems/loot";
+import { baseOf, displayName, makeUnique, type Item, type Slot } from "./systems/items";
+import { describe, milestonesFor, MILESTONES, recedeFor, refreshBounties, rewardText, WICK_FAST_SECONDS, HOPE_MAX, type Bounty, type BountyKind, type BountyTarget } from "./systems/bounties";
+import { DICE_CHARGE, FACES, rollFinisher, RUNE_WEIGHTS, type FinFace } from "./systems/dice";
+import { rollDrops, ROTBORN_RATE } from "./systems/loot";
 import { loadSave, newSave, wipeSave, writeSave, type SaveData } from "./systems/save";
 import { levelForXp, SKILL_INFO, type Skill } from "./systems/skills";
 import { computeStats, type Stats } from "./systems/stats";
+import { BountyBoard } from "./ui/bounty";
 import { DiceMenu, drawFinFx, type FinFx } from "./ui/dice";
 import { Dialog } from "./ui/dialog";
 import { drawFloaters, drawHud, type Floater, type XpDrop } from "./ui/hud";
@@ -85,6 +87,8 @@ export class Game {
   private attackIds = 1;
   private lastAttackStart = -10;
   private riposteFor = -1;
+  private fightStart = 0;
+  private fightTonics = 0;
   /** Real-time seconds of slow motion left (perfect dodge). */
   private slowT = 0;
   /** Stamina bar flash when an attack is refused. */
@@ -111,11 +115,13 @@ export class Game {
     this.input = new Input(window);
     this.input.onFirstGesture = () => audio.unlock();
     this.level = buildLevel1();
+    this.save = loadSave() ?? newSave();
+    const m = milestonesFor(this.save.hope);
+    this.level.setRestoration(m, recedeFor(m));
     this.bg = new Background(this.level);
     this.tiles = renderTiles(this.level);
     this.props = renderProps(this.level);
     this.vignette = makeVignette(C.black);
-    this.save = loadSave() ?? newSave();
     this.stats = computeStats(this.save);
     this.player = new Player(0, 0);
     this.npcs = this.level.npcs.map((d) => new NPC(d));
@@ -131,6 +137,8 @@ export class Game {
   startGame(fresh: boolean) {
     if (fresh) { wipeSave(); this.save = newSave(); }
     else this.save = loadSave() ?? newSave();
+    if (!this.save.bounties?.length) this.save.bounties = refreshBounties([]);
+    this.applyRestoration();
     this.stats = computeStats(this.save);
     this.pickups = []; this.floaters = []; this.xpDrops = []; this.chat.lines = [];
     this.seenRegions.clear(); this.region = "";
@@ -186,6 +194,7 @@ export class Game {
       else if (s.kind === "husk") this.enemies.push(new Husk(s.x, s.y));
       else this.pots.push(new Pot(s.x, s.y, hash(s.x, 0, 1) > 0.6 ? 1 : 0));
     }
+    for (const e of this.enemies) if (rng.oneIn(ROTBORN_RATE)) e.makeRotborn();
     this.boss = new Wick(L.arena.bossX, L.arena.bossY);
     this.bossActive = false;
     L.setFog(true);
@@ -351,10 +360,10 @@ export class Game {
     for (const t of targets) {
       if (t.lastHitId === id || !overlap(box, t.hurtbox())) continue;
       t.lastHitId = id;
-      if (t instanceof Pot) { t.break(this); continue; }
+      if (t instanceof Pot) { t.break(this); this.bountyEvent("pots"); continue; }
       if (t instanceof Wick && t.invulnerable) { t.takeHit(this, 0, false, p.facing); this.particles.hit(t.cx - p.facing * 8, p.y + 6, -p.facing, C.steel2, 4); continue; }
       // a riposte (after a perfect dodge) turns the whole next swing into a guard-breaking crit
-      if (p.riposteT > 0 && this.riposteFor !== id) { this.riposteFor = id; p.riposteT = 0; }
+      if (p.riposteT > 0 && this.riposteFor !== id) { this.riposteFor = id; p.riposteT = 0; this.bountyEvent("riposte"); }
       const riposte = this.riposteFor === id;
       const crit = riposte || rng.chance(s.crit);
       let fin: FinFace | null = null;
@@ -362,6 +371,7 @@ export class Game {
         if (this.finFor !== id) {
           this.finFor = id;
           this.finFace = rollFinisher(s.kind);
+          if (this.finFace !== "blank") this.bountyEvent("finisher");
           this.finFx.push({ x: t.cx, y: t.y - 16, t: 0, face: this.finFace, seed: rng.int(0, 5) });
           audio.play("diceLand");
         }
@@ -457,12 +467,13 @@ export class Game {
     if (this.boss && this.boss.awake) all.push(this.boss);
     for (const e of all) {
       if (e.dead) continue;
-      for (const box of e.attackBoxes()) if (overlap(box, hb)) this.tryHit(box.dmg, box.x + box.w / 2, box.id, e);
+      for (const box of e.attackBoxes()) if (overlap(box, hb)) this.tryHit(box.dmg * e.dmgMult, box.x + box.w / 2, box.id, e);
       if (e.contactDmg > 0 && overlap(e.hurtbox(), hb)) {
         const falling = p.vy > 40 && p.bottom - p.vy * STEP <= e.y + 5;
         if (e.stompable && falling && p.state !== "roll") {
           p.vy = this.input.isHeld("jump") ? -330 : -240; p.canDouble = true; p.jumpHeld = this.input.isHeld("jump");
           audio.play("stomp");
+          this.bountyEvent("stomp");
           if (e instanceof Blightling) e.stomped(this);
           const dmg = Math.round(12 * this.stats.dmgMult);
           e.takeHit(this, dmg, false, 0);
@@ -470,7 +481,7 @@ export class Game {
           this.hitstopFor(0.04);
           this.gainXp("attack", dmg); this.gainXp("strength", dmg * 2); this.gainXp("hitpoints", dmg * 1.33);
           this.xpDrop(dmg * 4.33, "sword", C.cream);
-        } else if (e.contactActive()) this.tryHit(e.contactDmg, e.cx, e.contactId, e);
+        } else if (e.contactActive()) this.tryHit(e.contactDmg * e.dmgMult, e.cx, e.contactId, e);
       }
     }
     for (const pr of this.projectiles) {
@@ -499,6 +510,7 @@ export class Game {
   /** Rolling just as an attack lands: slow motion, stamina back, and a guaranteed counter. */
   private perfectDodge(source: Enemy | null) {
     const p = this.player, s = this.stats;
+    this.bountyEvent("perfect");
     p.perfectUsed = true;
     p.riposteT = 1.6;
     p.stam = Math.min(s.maxStam, p.stam + 30);
@@ -550,6 +562,7 @@ export class Game {
 
   private respawn() {
     this.mode = "play";
+    this.applyRestoration();
     this.resetWorld();
     this.respawnPlayer(this.save.lastShrine);
     this.player.invuln = 1;
@@ -583,12 +596,83 @@ export class Game {
   onEnemyKilled(e: Enemy) {
     if (e.isBoss) return;
     this.save.kills[e.table] = (this.save.kills[e.table] ?? 0) + 1;
+    this.bountyEvent("kill", e.table as BountyTarget);
+    if (e.rotborn) {
+      this.save.kills.rotborn = (this.save.kills.rotborn ?? 0) + 1;
+      this.spawnDrops("rotborn", e.cx, e.y + e.h / 2);
+      this.bountyEvent("rotborn");
+      this.addHope(2, "Rotborn slain");
+    }
     this.chargeDice(1);
     if (this.stats.perks.includes("bloodlust") && this.player.alive) {
       this.player.hp = Math.min(this.stats.maxHp, this.player.hp + 4);
       this.addFloat("+4", this.player.cx, this.player.y - 8, C.good);
     }
     this.spawnDrops(e.table, e.cx, e.y + e.h / 2);
+  }
+
+  onTonicDrunk() { this.fightTonics++; }
+
+  /** Advance every open contract that matches an event. */
+  bountyEvent(kind: BountyKind, target?: BountyTarget) {
+    for (const b of this.save.bounties) {
+      if (b.done || b.kind !== kind || (b.target && b.target !== target)) continue;
+      b.have = Math.min(b.need, b.have + 1);
+      if (b.have >= b.need) this.completeBounty(b);
+    }
+  }
+
+  private completeBounty(b: Bounty) {
+    const s = this.save;
+    b.done = true;
+    s.bountiesDone++;
+    const r = b.reward;
+    if (r.type === "rune") s.runes[r.face] = (s.runes[r.face] ?? 0) + 1;
+    else if (r.type === "shards") s.shards += r.amount;
+    else if (r.type === "gold") s.bank += r.amount;
+    else s.diceCharge = DICE_CHARGE;
+    audio.play("purse"); audio.loot(3);
+    this.showBanner("BOUNTY COMPLETE", describe(b), C.gold2, false, 3);
+    this.chat.push(`Bounty complete: ${describe(b)}. Reward: ${rewardText(r, (f) => FACES[f].name)}${r.type === "gold" ? " (banked)" : ""}.`, C.gold2);
+    this.addHope(b.hope, "bounty");
+    this.persist();
+  }
+
+  /** Raise Hollowmere's Hope; crossing a milestone restores part of the village. */
+  addHope(n: number, _why: string) {
+    const s = this.save;
+    const before = milestonesFor(s.hope);
+    s.hope = Math.min(HOPE_MAX, s.hope + n);
+    this.chat.push(`+${n} Hope for Hollowmere (${s.hope}/${HOPE_MAX}).`, C.fire2);
+    const after = milestonesFor(s.hope);
+    for (let i = before; i < after; i++) {
+      const m = MILESTONES[i];
+      this.showBanner(m.title.toUpperCase(), "Hollowmere remembers", C.fire2, true, 4);
+      this.chat.push(m.text, C.fire2);
+      if (i === 1) s.runeStock = rng.weighted(RUNE_WEIGHTS);
+      if (i === 4) {
+        const crown = makeUnique("harvest_crown");
+        if (!this.giveItem(crown)) this.pickups.push(new Pickup("item", this.player.cx, this.player.y, 1, crown));
+        s.log.harvest_crown = (s.log.harvest_crown ?? 0) + 1;
+      }
+    }
+    if (after > before) {
+      audio.play("kindle");
+      this.onGearChanged();
+      // re-rendering the world takes a moment, so the village changes while you rest
+      if (this.level.restored !== after) this.chat.push("Rest at a Hearthstone to see Hollowmere change.", C.dim);
+    }
+    this.persist();
+  }
+
+  /** Re-render the world art if the number of Hope milestones changed. */
+  applyRestoration() {
+    const m = milestonesFor(this.save.hope);
+    if (this.level.setRestoration(m, recedeFor(m))) {
+      this.bg = new Background(this.level);
+      this.tiles = renderTiles(this.level);
+      this.props = renderProps(this.level);
+    }
   }
 
   chargeDice(n: number) {
@@ -698,6 +782,11 @@ export class Game {
       const d = Math.abs(p.cx - sg.x);
       if (d < 12 && Math.abs(p.bottom - sg.y) < 20) cands.push({ d, x: sg.x, y: sg.y - 22, text: "READ", act: () => this.openOverlay(new Dialog("Signpost", sg.def.text.split("\n\n"), null)) });
     }
+    const bd = this.level.board;
+    if (Math.abs(p.cx - bd.x) < 14 && Math.abs(p.bottom - bd.y) < 20) {
+      const open = this.save.bounties.filter((b) => !b.done).length;
+      cands.push({ d: Math.abs(p.cx - bd.x), x: bd.x, y: bd.y - 30, text: open ? `BOUNTIES (${open})` : "BOUNTIES", act: () => this.openOverlay(new BountyBoard()) });
+    }
     const A = this.level.arena;
     const fogX = A.fogCol * TILE;
     if (this.level.get(A.fogCol, A.fogBottom) === T.FOG && !this.bossActive && p.cx < fogX && fogX - p.cx < 32) {
@@ -729,11 +818,17 @@ export class Game {
     this.healFlash = 1;
     if (s.gold > 0) { this.chat.push(`The Hearth keeps your ${s.gold} gold safe. (Bank: ${s.bank + s.gold})`, C.gold2); s.bank += s.gold; s.gold = 0; }
     s.lastShrine = id;
+    this.applyRestoration();
     this.resetWorld();
     this.persist();
     for (let i = 0; i < 16; i++) this.particles.spawn(sh.x + rng.range(-8, 8), sh.y - 30, { vy: -rng.range(20, 60), vx: rng.range(-10, 10), max: rng.range(0.6, 1.2), color: C.fire2, color2: C.fire0, light: 6, lightColor: C.fire1 });
     this.openOverlay(new RestMenu(id));
     if (s.diceCharge >= DICE_CHARGE) this.openOverlay(new DiceMenu(this, true));
+    const before = s.bounties.filter((b) => b.done).length;
+    s.bounties = refreshBounties(s.bounties);
+    if (before) this.chat.push(`${before === 1 ? "A new notice is" : "New notices are"} pinned to the board in Hollowmere.`, C.dim);
+    if (milestonesFor(s.hope) >= 2) s.runeStock = rng.weighted(RUNE_WEIGHTS);
+    this.persist();
   }
 
   travelTo(id: string) {
@@ -759,6 +854,7 @@ export class Game {
     this.bossActive = true;
     this.bossTrail = this.boss.maxHp;
     this.boss.wake();
+    this.fightStart = this.time; this.fightTonics = 0;
     audio.music("boss");
     this.showBanner("WICK", "THE HARVEST WARDEN", C.cream, true, 3.6);
   }
@@ -773,6 +869,10 @@ export class Game {
     const s = this.save;
     s.kills.wick = (s.kills.wick ?? 0) + 1;
     this.chargeDice(DICE_CHARGE);
+    this.bountyEvent("wick");
+    if (this.fightTonics === 0) this.bountyEvent("wickNoTonic");
+    if (this.time - this.fightStart < WICK_FAST_SECONDS) this.bountyEvent("wickFast");
+    this.addHope(s.kills.wick === 1 ? 10 : 5, "Wick felled");
     this.bossActive = false;
     this.level.setFog(false);
     this.chat.push(`Your Wick kill count is: ${s.kills.wick}.`, "#e0605a");
@@ -875,6 +975,15 @@ export class Game {
     if (this.boss && this.boss.mode === "dormant" && p.alive && p.state !== "fog" && p.x > A.x0 + 10 && p.x < A.x1) this.startBoss();
     if (this.boss && this.bossActive) this.bossTrail = this.bossTrail > this.boss.hp ? approach(this.bossTrail, this.boss.hp, 90 * dt) : this.boss.hp;
 
+    for (const e of this.enemies) {
+      if (!e.rotborn || e.announced || e.dead) continue;
+      const sx = e.cx - this.cam.x;
+      if (sx > 0 && sx < W) {
+        e.announced = true;
+        this.chat.push(`A Rotborn ${e.label} rises from the Rot...`, C.blight5);
+        audio.play("fog");
+      }
+    }
     this.interact();
     this.updateRegion();
     this.updateCamera(dt);
@@ -960,7 +1069,8 @@ export class Game {
 
     this.bg.draw(ctx, camX, camY, t);
     blit(ctx, this.props.canvas, camX, camY);
-    if (this.props.millHub) drawMillBlades(ctx, this.props.millHub, camX, camY, t);
+    if (this.props.millHub) drawMillBlades(ctx, this.props.millHub, camX, camY, t, milestonesFor(this.save.hope) >= 5 ? 0.7 : 0.12);
+    drawBoard(ctx, this.level.board.x, this.level.board.y, camX, camY, this.save.bounties.some((b) => !b.done));
     for (const sh2 of this.shrines) sh2.draw(ctx, camX, camY, this.save.shrines.includes(sh2.def.id), t);
     for (const s of this.signs) s.draw(ctx, camX, camY);
     blit(ctx, this.tiles.tiles, camX, camY);

@@ -24,6 +24,8 @@ export class Level {
   npcs: NpcDef[] = [];
   regions: Region[] = [];
   lamps: { x: number; y: number }[] = [];
+  /** The bounty notice board in Hollowmere. */
+  board = { x: 0, y: 0 };
   /** Boss arena bounds in px, fog gate column, boss home. */
   arena = { x0: 0, x1: 0, fogCol: 0, fogTop: 0, fogBottom: 0, bossX: 0, bossY: 0 };
 
@@ -58,7 +60,27 @@ export class Level {
   }
 
   /** 0 in the village, rising to 1 at the mill — drives colour grading and tile blight. */
-  blightAt(px: number) { return smoothstep(clamp((px / TILE - 50) / 140, 0, 1)); }
+  blightAt(px: number) { return smoothstep(clamp((px / TILE - 50 - this.recede) / 140, 0, 1)); }
+
+  /** Tiles the Rot has been pushed back by Hollowmere's Hope. */
+  recede = 0;
+  restored = -1;
+  private baseProps: PropDef[] = [];
+  private baseLamps: { x: number; y: number }[] = [];
+  /** Lamps relit by the first Hope milestone. */
+  relitLamps: { prop: PropDef; lamp: { x: number; y: number } }[] = [];
+
+  snapshot() { this.baseProps = [...this.props]; this.baseLamps = [...this.lamps]; }
+
+  /** Apply a number of Hope milestones. Returns true if the art needs re-rendering. */
+  setRestoration(m: number, recede: number) {
+    if (m === this.restored) return false;
+    this.restored = m;
+    this.recede = recede;
+    this.props = [...this.baseProps, ...(m >= 1 ? this.relitLamps.map((r) => r.prop) : [])];
+    this.lamps = [...this.baseLamps, ...(m >= 1 ? this.relitLamps.map((r) => r.lamp) : [])];
+    return true;
+  }
 
   regionAt(px: number): Region {
     const tx = px / TILE;
@@ -108,7 +130,7 @@ export function buildLevel1(): Level {
   prop("smithy", 34);
   L.npcs.push({ id: "brom", x: at(37) + 4, y: gy(37) });
   lamp(41);
-  L.npcs.push({ id: "pip", x: at(43), y: gy(43) });
+  L.npcs.push({ id: "pip", x: at(42), y: gy(42) });
   prop("gate", 46);
 
   // ---- The Wheatfields ----
@@ -169,11 +191,16 @@ export function buildLevel1(): Level {
   L.arena = { x0: 194 * TILE, x1: 222 * TILE, fogCol: 193, fogTop: 0, fogBottom: G - 1, bossX: at(208), bossY: gy(208) };
   L.setFog(true);
 
+  // lamps that come back when Hollowmere's Hope rises
+  for (const tx of [58, 80, 100, 128]) L.relitLamps.push({ prop: { kind: "lamp", x: tx * TILE, y: gy(tx), v: 0 }, lamp: { x: at(tx), y: gy(tx) - 30 } });
+  L.board = { x: at(44), y: gy(44) };
+
   L.regions = [
     { id: "village", name: "HOLLOWMERE", sub: "The last warm hearth", x0: 0, x1: 47, music: "village" },
     { id: "wheat", name: "THE WHEATFIELDS", sub: "Blighted Outskirts", x0: 47, x1: 111, music: "outskirts" },
     { id: "orchard", name: "THE ROTTING ORCHARD", sub: "Blighted Outskirts", x0: 111, x1: 188, music: "outskirts" },
     { id: "mill", name: "MILLER'S FIELD", sub: "Blighted Outskirts", x0: 188, x1: 224, music: "outskirts" },
   ];
+  L.snapshot();
   return L;
 }

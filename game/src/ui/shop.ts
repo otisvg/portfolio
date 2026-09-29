@@ -5,6 +5,7 @@ import { drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import type { Game } from "../game";
 import { baseOf, BASES, displayName, FORGE_MAX, forgeCost, itemStats, rollItem, sellValue, SLOTS, type Item } from "../systems/items";
+import { FACES } from "../systems/dice";
 import { INV_SIZE } from "../systems/save";
 import { gridNav, type Overlay } from "./menu";
 import { ellipsize, hint, itemLines, panel, slotBox } from "./widgets";
@@ -31,6 +32,11 @@ function wares(g: Game): Ware[] {
     gear("gambeson", 80, "Quilted, warm, surprisingly stab-proof."),
     gear("wood_axe", 95, "Slow, but it hits like a falling tree."),
     gear("copper_ring", 45, "Plain copper. Rolls one random blessing."),
+    ...(s.runeStock ? [{
+      name: `${FACES[s.runeStock].name} Rune`, icon: FACES[s.runeStock].icon ?? "star", price: FACES[s.runeStock].rare ? 220 : 120,
+      desc: `From the apprentice. ${FACES[s.runeStock].text}.`,
+      buy: (g2: Game) => { const f = g2.save.runeStock!; g2.save.runes[f] = (g2.save.runes[f] ?? 0) + 1; g2.save.runeStock = null; return true; },
+    }] : []),
   ];
 }
 const BASE_NAME = (id: string) => BASES[id].name;

@@ -1,3 +1,4 @@
+import { milestonesFor } from "./bounties";
 import { diceBonus, type Perk } from "./dice";
 import { allAffixes, baseOf, itemStats, SLOTS, type AffixType, type WeaponKind } from "./items";
 import type { SaveData } from "./save";
@@ -47,6 +48,9 @@ export function computeStats(s: SaveData): Stats {
   const wb = w ? baseOf(w) : null;
   const wd = w ? itemStats(w).dmg ?? [2, 3] : [2, 3];
   const db = diceBonus(s.diceRoll ?? []);
+  const ms = milestonesFor(s.hope ?? 0);
+  if (ms >= 3) aff.gold += 10;
+  if (ms >= 4) db.tonics += 1;
   aff.dmg += db.dmg; aff.def += db.armour; aff.gold += db.gold; aff.leech += db.leech;
   aff.crit += db.crit; aff.speed += db.speed; aff.stam += db.stam;
   const armour = gearDef + aff.def + (levels.defence - 1);

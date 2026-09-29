@@ -357,10 +357,10 @@ export function renderProps(L: Level): PropLayer {
 }
 
 /** Slowly turning, half-broken mill sails. */
-export function drawMillBlades(ctx: Ctx, hub: { x: number; y: number }, camX: number, camY: number, time: number) {
+export function drawMillBlades(ctx: Ctx, hub: { x: number; y: number }, camX: number, camY: number, time: number, speed = 0.12) {
   const hx = hub.x - camX, hy = hub.y - camY;
   if (hx < -120 || hx > 520) return;
-  const base = time * 0.12;
+  const base = time * speed;
   for (let i = 0; i < 4; i++) {
     const a = base + (i * Math.PI) / 2;
     const len = i === 2 ? 30 : 62;

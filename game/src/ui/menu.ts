@@ -5,7 +5,7 @@ import { drawGhost, drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import type { Game } from "../game";
 import { baseOf, BASES, displayName, score, SLOTS, type Item, type Slot } from "../systems/items";
-import { fmtRate, RARITY_WEIGHTS, TABLES } from "../systems/loot";
+import { fmtRate, RARITY_WEIGHTS, ROTBORN_RATE, TABLES } from "../systems/loot";
 import { INV_SIZE } from "../systems/save";
 import { combatLevel, levelForXp, SKILL_INFO, SKILLS, xpForLevel } from "../systems/skills";
 import { bar, ellipsize, hint, itemLines, panel, slotBox } from "./widgets";
@@ -200,21 +200,21 @@ function drawCollection(g: Game, ctx: Ctx) {
   // kill counts
   panel(ctx, 198, 30, 174, 58, 0.8);
   drawText(ctx, "SLAIN", 204, 36, C.dim);
-  (["blightling", "crow", "husk"] as const).forEach((k, i) => {
-    drawText(ctx, TABLES[k].name.toUpperCase(), 204, 47 + i * 10, C.cream);
-    drawText(ctx, `${s.kills[k] ?? 0}`, 366, 47 + i * 10, C.cream, { align: "right" });
+  (["blightling", "crow", "husk", "rotborn"] as const).forEach((k, i) => {
+    drawText(ctx, TABLES[k].name.toUpperCase(), 204, 46 + i * 8, k === "rotborn" ? C.blight5 : C.cream);
+    drawText(ctx, `${s.kills[k] ?? 0}`, 366, 46 + i * 8, C.cream, { align: "right" });
   });
-  drawText(ctx, `BEST FIND`, 204, 77, C.dim);
-  drawText(ctx, RARITY[s.bestRarity].name.toUpperCase(), 366, 77, RARITY[s.bestRarity].color, { align: "right" });
+  drawText(ctx, `BEST FIND`, 204, 79, C.dim);
+  drawText(ctx, RARITY[s.bestRarity].name.toUpperCase(), 366, 79, RARITY[s.bestRarity].color, { align: "right" });
 
   // published odds
   panel(ctx, 198, 92, 174, 110, 0.8);
   drawText(ctx, "DROP RATES", 204, 98, C.dim);
   drawText(ctx, "GEAR", 282, 98, C.faint, { align: "right" }); drawText(ctx, "SHARD", 312, 98, C.faint, { align: "right" }); drawText(ctx, "TONIC", 340, 98, C.faint, { align: "right" }); drawText(ctx, "RUNE", 368, 98, C.faint, { align: "right" });
-  (["blightling", "crow", "husk", "wick"] as const).forEach((k, i) => {
+  (["blightling", "crow", "husk", "wick", "rotborn"] as const).forEach((k, i) => {
     const tb = TABLES[k];
-    const y = 108 + i * 9;
-    drawText(ctx, k === "wick" ? "WICK" : tb.name.toUpperCase(), 204, y, C.cream);
+    const y = 107 + i * 8;
+    drawText(ctx, k === "wick" ? "WICK" : k === "rotborn" ? `ROTBORN 1/${ROTBORN_RATE}` : tb.name.toUpperCase(), 204, y, k === "rotborn" ? C.blight5 : C.cream);
     drawText(ctx, tb.gear === 1 ? "ALWAYS" : tb.gear ? fmtRate(tb.gear) : "-", 282, y, C.cream, { align: "right" });
     drawText(ctx, tb.shards ? `${tb.shards[0]}-${tb.shards[1]}` : tb.shard ? fmtRate(tb.shard) : "-", 312, y, C.cream, { align: "right" });
     drawText(ctx, tb.orb ? fmtRate(tb.orb) : "-", 340, y, C.cream, { align: "right" });
@@ -259,6 +259,7 @@ function drawHelp(ctx: Ctx) {
     "Roll just as a blow lands for a PERFECT dodge: slow motion, stamina back, and a guaranteed counter.",
     "Husks can't be interrupted once they wind up. Roll the thrust, then punish while the fork is stuck.",
     "Resting heals, refills tonics, banks gold and revives every foe. Slay 12 foes to charge the Hearth Dice.",
+    "Take contracts from the notice board by the gate. Bounties, Wick and Rotborn raise Hollowmere's Hope.",
   ];
   let y = 148;
   for (const t of tips) for (const l of wrap(t, 350)) { drawText(ctx, l, 16, y, C.dim); y += 8; }

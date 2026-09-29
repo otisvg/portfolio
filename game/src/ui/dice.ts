@@ -7,6 +7,7 @@ import { drawIcon } from "../gfx/icons";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
 import { bonusLines, DICE_CHARGE, DICE_REROLLS, diceBonus, FACES, FIN, rollDie, type FaceId, type FinFace } from "../systems/dice";
+import { milestonesFor } from "../systems/bounties";
 import type { Overlay } from "./menu";
 import { hint, panel } from "./widgets";
 
@@ -90,6 +91,7 @@ export class DiceMenu implements Overlay {
 
   constructor(g: Game, charged: boolean) {
     this.session = charged;
+    this.rerolls = DICE_REROLLS + (milestonesFor(g.save.hope) >= 1 ? 1 : 0);
     const cur = g.save.diceRoll.length === 3 ? g.save.diceRoll : (["blank", "blank", "blank"] as FaceId[]);
     this.faces = [...cur];
     this.shown = [...cur];

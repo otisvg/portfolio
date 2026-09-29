@@ -207,6 +207,7 @@ export class Player implements Body {
     if (inp.pressed("heal")) {
       if (this.tonics > 0 && this.onGround) {
         this.state = "drink"; this.st = 0; this.drinkDone = false; this.tonics--;
+        g.onTonicDrunk();
         audio.play("drink");
       } else if (this.tonics <= 0) { audio.play("deny"); g.toast("Your tonic flask is empty."); }
     }
@@ -432,6 +433,10 @@ export class Player implements Body {
     } else if (hl === "kettle") {
       rect(c, hx - 1, hy - 3, 8, 4, C.steel1); rect(c, hx, hy - 4, 6, 1, C.steel2); rect(c, hx - 2, hy + 1, 10, 1, C.steel0);
       rect(c, hx + 1, hy - 3, 2, 1, C.steel3);
+    } else if (hl === "crown") {
+      rect(c, hx - 2, hy, 10, 1, C.straw3); rect(c, hx - 1, hy - 2, 8, 2, C.straw2);
+      for (const k of [0, 2, 4, 6]) { c.fillStyle = k % 4 === 0 ? C.gold2 : C.straw3; c.fillRect(hx - 1 + k, hy - 4, 1, 2); }
+      c.fillStyle = C.scarf2; c.fillRect(hx + 2, hy - 2, 1, 1);
     } else if (hl === "hood") {
       rect(c, hx - 1, hy - 2, 7, 8, "#9a8055"); rect(c, hx + 2, hy + 1, 4, 4, "#b89a66");
       c.fillStyle = C.fire2; c.fillRect(hx + 4, hy + 2, 1, 1); c.fillRect(hx + 2, hy + 2, 1, 1);

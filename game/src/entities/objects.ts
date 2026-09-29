@@ -6,6 +6,7 @@ import { drawGhost, drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import { shadow, SpriteBuf } from "../gfx/sprite";
 import type { Game } from "../game";
+import { milestonesFor } from "../systems/bounties";
 import type { FaceId } from "../systems/dice";
 import { baseOf, type Item } from "../systems/items";
 import { drawDie } from "../ui/dice";
@@ -165,6 +166,24 @@ export class Sign {
   }
 }
 
+// ======================================================================= Bounty board
+/** The notice board by the village gate. Fresh notices glow while contracts are open. */
+export function drawBoard(ctx: Ctx, wx: number, wy: number, camX: number, camY: number, open: boolean) {
+  const x = Math.round(wx - camX), y = Math.round(wy - camY);
+  if (x < -40 || x > 430) return;
+  rect(ctx, x - 13, y - 26, 3, 26, C.wood1); rect(ctx, x + 10, y - 26, 3, 26, C.wood1);
+  rect(ctx, x - 16, y - 30, 32, 3, C.wood2); rect(ctx, x - 16, y - 30, 32, 1, C.wood3);
+  rect(ctx, x - 13, y - 27, 26, 17, C.ink);
+  rect(ctx, x - 12, y - 26, 24, 15, C.wood1);
+  const papers: [number, number, string][] = [[-10, -24, C.paper], [-2, -25, C.cream], [5, -23, C.paper]];
+  papers.forEach(([px, py, col], i) => {
+    rect(ctx, x + px, y + py, 6, 8, col);
+    rect(ctx, x + px + 1, y + py + 2, 4, 1, C.wood1); rect(ctx, x + px + 1, y + py + 4, 3, 1, C.wood1);
+    rect(ctx, x + px + 2, y + py, 2, 1, i === 1 ? C.hp : C.steel1);
+  });
+  if (open && Math.floor(performance.now() / 500) % 2 === 0) { rect(ctx, x - 1, y - 36, 2, 4, C.gold2); rect(ctx, x - 1, y - 31, 2, 1, C.gold2); }
+}
+
 // ======================================================================= NPCs
 const npcBuf = new SpriteBuf(60, 50);
 
@@ -285,6 +304,15 @@ export class NPC {
         "Old Wick has walked since the last harvest moon. He guarded our wheat for forty years. Now he guards it from us.",
       ];
       if (s.pet && rng.chance(0.4)) return ["Is that... a little Wick? Well. Don't let it near the bread."];
+      const ms = milestonesFor(s.hope);
+      if (ms > 0 && rng.chance(0.5)) return [[
+        "Someone's been lighting the road lamps again. I cried a little. Don't tell Brom.",
+        "Brom's apprentice came home. Skinny lad. He can carve a rune better than his master, mind.",
+        "Did you see the wheat? Gold again, right up to the orchard. You did that, dear.",
+        "The Hearth hasn't burned this bright since I was a girl.",
+        "The mill's turning. I can hear it from my chair. Hollowmere remembers you.",
+      ][Math.min(ms, 5) - 1]];
+      if (s.bountiesDone === 0 && rng.chance(0.5)) return ["If you're looking for work, the notice board by the gate never runs short of it. Every job done gives this village a little hope."];
       if (kc > 0) return [rng.pick([
         "You laid him down, and yet come morning the post isn't empty. The Rot remembers its shapes.",
         "Each time you fell him, the fields breathe a little easier. Keep at it, dear.",

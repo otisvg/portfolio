@@ -165,6 +165,31 @@ Gold Find only scales gold, never rarity, so the loot curve can't run away.
 - **Skewer:** x1.5 damage and a huge knockback.
 - **Reap:** heals you for 30% of the damage dealt.
 
+## Reasons to keep going
+
+**Bounties.** The notice board by the gate always has three contracts, and at most one of them is a kill contract. Examples:
+- Slay Husks.
+- Land ripostes.
+- Make perfect dodges.
+- Stomp Blightlings.
+- Roll finisher faces.
+- Fell Wick without drinking a tonic, or in under 2:30.
+- Slay a Rotborn.
+
+Progress is tracked automatically, and a finished contract pays out on the spot: a rune, shards, banked gold, or a full dice charge. New notices are posted when you rest.
+
+**Hollowmere's Hope.** Bounties, Wick kills (+10 the first time, then +5) and Rotborn kills (+2) raise Hope. The milestones restore the village and grant permanent unlocks. The world art changes the next time you rest.
+
+| Hope | Milestone | Effect |
+| --- | --- | --- |
+| 10 | The Road Lamps | Lamps relit along the road, +1 Hearth Dice reroll |
+| 25 | Brom's Apprentice | Brom sells a fresh rune each rest |
+| 45 | The Wheat Recovers | The Rot retreats 30 tiles, +10% gold found |
+| 70 | A Brighter Hearth | +1 tonic charge |
+| 100 | The Mill Turns | The Rot retreats 70 tiles, the mill spins, and you get the Harvest Crown |
+
+**Rotborn.** Each regular foe has a 1/35 chance to rise as a Rotborn when the world resets. Rotborn have a glowing violet outline, 3x health, hit 30% harder, and Husks get double poise. On top of their normal drops, they always drop a gear piece at elite odds, 1–2 shards, and a rune 1 time in 3.
+
 ## Progression (OSRS-style)
 
 - **Skills:** Attack, Strength, Defence and Hitpoints use the real OSRS XP curve. Hitpoints starts at

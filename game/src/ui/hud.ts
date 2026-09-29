@@ -6,6 +6,7 @@ import { drawIcon } from "../gfx/icons";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
 import { POSTURE_MAX } from "../entities/boss";
+import { describe } from "../systems/bounties";
 import { DICE_CHARGE } from "../systems/dice";
 import { drawDie } from "./dice";
 import { bar, panel } from "./widgets";
@@ -42,6 +43,14 @@ export function drawHud(g: Game, ctx: Ctx) {
     rect(ctx, 55, 40, Math.round((30 * g.save.diceCharge) / DICE_CHARGE), 3, C.gold1);
     drawText(ctx, `${g.save.diceCharge}/${DICE_CHARGE}`, 90, 39, C.dim);
   }
+
+  // pinned bounty
+  const b = g.save.bounties.find((x) => !x.done);
+  if (g.banner) { /* keep the top clear while a title card shows */ }
+  else if (b) {
+    drawText(ctx, "\u2022", 6, 53, C.gold2);
+    drawText(ctx, `${describe(b)}  ${b.have}/${b.need}`, 12, 53, C.dim);
+  } else if (g.save.bounties.length) drawText(ctx, "Bounties done. Rest for new notices.", 6, 53, C.faint);
 
   // gold (carried) and shards, top right
   let y = 5;

@@ -63,6 +63,7 @@ export const BASES: Record<string, ItemBase> = {
   // --- Wick uniques ---
   wick_lantern: { id: "wick_lantern", name: "Wick's Lantern", slot: "trinket", icon: "lantern", hp: 12, weight: 0, unique: true, light: 1, implicit: [{ t: "gold", v: 20 }, { t: "regen", v: 10 }], lore: "It still burns. Nobody ever saw it lit." },
   straw_hood: { id: "straw_hood", name: "Strawman's Hood", slot: "helm", icon: "hood", def: 5, hp: 10, weight: 0, unique: true, look: "hood", implicit: [{ t: "stam", v: 18 }], lore: "Itchy. Watchful. Faintly warm." },
+  harvest_crown: { id: "harvest_crown", name: "Harvest Crown", slot: "helm", icon: "strawhat", def: 3, hp: 15, weight: 0, unique: true, look: "crown", implicit: [{ t: "dmg", v: 10 }, { t: "gold", v: 10 }], lore: "Woven from the first healthy wheat in years. Hollowmere remembers." },
   harvest_scythe: { id: "harvest_scythe", name: "Harvest Scythe", slot: "weapon", icon: "scythe", kind: "scythe", dmg: [14, 21], speed: 0.85, reach: 34, weight: 0, unique: true, implicit: [{ t: "leech", v: 2 }], lore: "The last harvest of Miller's Field. It was not wheat." },
 };
 
