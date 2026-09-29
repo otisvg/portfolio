@@ -29,6 +29,9 @@ import { drawMillBlades, renderProps, type PropLayer } from "./world/props";
 
 type Mode = "title" | "intro" | "play" | "dead";
 
+const MAX_ATTACKERS = 2;
+const ATTACK_GAP = 0.35;
+
 export class Game {
   readonly ctx: Ctx;
   readonly input: Input;
@@ -76,6 +79,7 @@ export class Game {
   private fade = 0;
   time = 0;
   private attackIds = 1;
+  private lastAttackStart = -10;
   private dodged = new Set<number>();
   prompt: { x: number; y: number; text: string } | null = null;
   private region = "";
@@ -192,6 +196,46 @@ export class Game {
   }
 
   nextAttackId() { return this.attackIds++; }
+
+  /**
+   * Crowd control: at most MAX_ATTACKERS foes may commit to an attack at once, new attacks
+   * start at least ATTACK_GAP apart, and only foes on screen may attack. Everyone else waits
+   * their turn, so a crowd stays dangerous but every hit can be read and dodged.
+   */
+  requestAttack(e: Enemy) {
+    if (e.token) return true;
+    if (!this.player.alive || this.time - this.lastAttackStart < ATTACK_GAP) return false;
+    const sx = e.cx - this.cam.x;
+    if (sx < 0 || sx > W) return false;
+    let active = 0;
+    for (const o of this.enemies) if (o.token && !o.dead) active++;
+    if (active >= (this.bossActive ? 1 : MAX_ATTACKERS)) return false;
+    e.token = true;
+    this.lastAttackStart = this.time;
+    return true;
+  }
+
+  /** Nudge overlapping ground foes apart so they can't stack into one unreadable pile. */
+  private separateEnemies() {
+    const L = this.level;
+    const ground = this.enemies.filter((e) => !e.dead && !(e instanceof Crow));
+    for (let i = 0; i < ground.length; i++) {
+      for (let j = i + 1; j < ground.length; j++) {
+        const a = ground[i], b = ground[j];
+        if (Math.abs(a.bottom - b.bottom) > 12) continue;
+        const minGap = (a.w + b.w) / 2 + 4;
+        const d = b.cx - a.cx;
+        if (Math.abs(d) >= minGap) continue;
+        const push = Math.min(1.5, (minGap - Math.abs(d)) / 2) * (d === 0 ? 1 : Math.sign(d));
+        const free = (e: Enemy, dx: number) => {
+          const edge = dx > 0 ? e.x + e.w + dx : e.x + dx;
+          return !L.solidAt(Math.floor(edge / TILE), Math.floor((e.bottom - 2) / TILE));
+        };
+        if (free(a, -push)) a.x -= push;
+        if (free(b, push)) b.x += push;
+      }
+    }
+  }
   shake(amount: number, dur = 0.2) { this.shakeAmt = Math.max(this.shakeAmt, amount); this.shakeT = Math.max(this.shakeT, dur); }
   hitstopFor(t: number) { this.hitstop = Math.max(this.hitstop, t); }
   flash(color: string, t = 0.25) { this.flashColor = color; this.flashT = t; }
@@ -323,7 +367,7 @@ export class Game {
     p.trailDelay = 0.55;
     const taken = Math.min(dmg, Math.max(0, p.hp));
     p.hp -= dmg;
-    p.invuln = 0.8; p.hurtFlash = 0.2;
+    p.invuln = 1.0; p.hurtFlash = 0.2;
     if (p.state === "drink" && !p.drinkDone) this.toast("The tonic spills from your hands!", C.bad);
     p.state = "hurt"; p.st = 0;
     p.vx = (Math.sign(p.cx - fromX) || -p.facing) * 130; p.vy = -150;
@@ -359,7 +403,7 @@ export class Game {
           this.hitstopFor(0.04);
           this.gainXp("attack", dmg); this.gainXp("strength", dmg * 2); this.gainXp("hitpoints", dmg * 1.33);
           this.xpDrop(dmg * 4.33, "sword", C.cream);
-        } else this.tryHit(e.contactDmg, e.cx, e.contactId);
+        } else if (e.contactActive()) this.tryHit(e.contactDmg, e.cx, e.contactId);
       }
     }
     for (const pr of this.projectiles) {
@@ -687,6 +731,7 @@ export class Game {
     this.pet?.update(this, dt);
     this.combat();
     this.enemies = this.enemies.filter((e) => !e.remove);
+    this.separateEnemies();
 
     // reclaim a lost purse
     if (this.purse && p.alive && overlap(p.hurtbox(), this.purse.hitbox())) {

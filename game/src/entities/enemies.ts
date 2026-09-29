@@ -18,6 +18,8 @@ export abstract class Enemy implements Body {
   flash = 0; lastHitId = -1;
   st = 0; t = rng.range(0, 10);
   stompable = false; contactDmg = 0; contactId = 0;
+  /** Holds one of the limited "may attack now" slots (see Game.requestAttack). */
+  token = false;
   abstract readonly table: string;
   abstract readonly label: string;
   isBoss = false;
@@ -31,6 +33,8 @@ export abstract class Enemy implements Body {
   get bottom() { return this.y + this.h; }
   hurtbox(): Rect { return this; }
   attackBoxes(): AttackBox[] { return []; }
+  /** Body contact only hurts while the enemy is mid-attack, never from idle bumping. */
+  contactActive() { return false; }
 
   takeHit(g: Game, dmg: number, _crit: boolean, dir: number) {
     this.hp -= dmg;
@@ -88,30 +92,65 @@ export class Blightling extends Enemy {
     super(cx, gy, 14, 10, 24);
     this.stompable = true; this.contactDmg = 10;
   }
+  mode: "idle" | "approach" | "tell" | "lunge" | "recover" = "idle";
   protected think(g: Game, dt: number) {
     const was = this.onGround;
     this.physics(g, dt);
     if (!was && this.onGround) { this.squashT = 0.14; this.vx = 0; }
     this.squashT = Math.max(0, this.squashT - dt);
     const { dx, dy } = this.toPlayer(g);
-    const aggro = Math.abs(dx) < 150 && Math.abs(dy) < 70 && g.player.alive;
-    if (this.onGround) {
-      this.vx = approach(this.vx, 0, 400 * dt);
-      this.hopT -= dt;
-      if (this.hopT <= 0) {
-        const dir = aggro ? sign(dx) || 1 : rng.sign();
-        const ahead = this.cx + dir * 30;
-        const safe = !touchesTile(g.level, ahead - 4, this.y, 8, this.h + 4, T.BOG, 0);
-        this.facing = dir;
-        this.vy = aggro ? -rng.range(170, 215) : -110;
-        this.vx = safe ? dir * (aggro ? rng.range(55, 85) : 25) : 0;
-        this.hopT = aggro ? rng.range(0.7, 1.3) : rng.range(1.2, 2.4);
-        if (aggro && Math.abs(dx) < 200) audio.play("hop");
+    const aggro = Math.abs(dx) < 120 && Math.abs(dy) < 60 && g.player.alive;
+    const bogAhead = (dir: number) => touchesTile(g.level, this.cx + dir * 30 - 4, this.y, 8, this.h + 4, T.BOG, 0);
+    switch (this.mode) {
+      case "idle":
+        if (!this.onGround) break;
+        this.vx = approach(this.vx, 0, 400 * dt);
+        this.hopT -= dt;
+        if (aggro) { this.mode = "approach"; this.hopT = rng.range(0.2, 0.5); break; }
+        if (this.hopT <= 0) {
+          const dir = rng.sign();
+          this.facing = dir; this.vy = -110; this.vx = bogAhead(dir) ? 0 : dir * 25;
+          this.hopT = rng.range(1.2, 2.4);
+        }
+        break;
+      case "approach": {
+        if (!aggro) { this.mode = "idle"; break; }
+        if (!this.onGround) break;
+        this.vx = approach(this.vx, 0, 400 * dt);
+        this.hopT -= dt;
+        if (this.hopT > 0) break;
+        const adx = Math.abs(dx);
+        if (adx < 75 && g.requestAttack(this)) { this.mode = "tell"; this.st = 0; this.facing = sign(dx) || this.facing; audio.play("hop"); break; }
+        // wait for a turn at a respectful distance: close in if far, shuffle back if crowding
+        const dir = adx > 50 ? sign(dx) || 1 : -(sign(dx) || 1);
+        this.facing = sign(dx) || this.facing;
+        this.vy = -rng.range(100, 130);
+        this.vx = bogAhead(dir) ? 0 : dir * rng.range(30, 45);
+        this.hopT = rng.range(0.45, 0.8);
+        break;
       }
+      case "tell":
+        // squash down and flash: the jump is coming
+        this.vx = 0;
+        if (this.st > 0.45) {
+          const reach = Math.min(Math.abs(dx) * 1.7, 110);
+          this.mode = "lunge"; this.st = 0;
+          this.vy = -205; this.vx = bogAhead(this.facing) ? 0 : this.facing * Math.max(55, reach);
+          this.contactId = g.nextAttackId();
+          audio.play("hop");
+        }
+        break;
+      case "lunge":
+        if (this.onGround && this.st > 0.1) { this.mode = "recover"; this.st = 0; this.token = false; }
+        break;
+      case "recover":
+        this.vx = approach(this.vx, 0, 400 * dt);
+        if (this.st > rng.range(0.7, 1.1)) { this.mode = aggro ? "approach" : "idle"; this.hopT = rng.range(0.2, 0.5); }
+        break;
     }
-    this.contactId = this.contactId || g.nextAttackId();
   }
-  protected onHurt(_g: Game, _d: number, dir: number) { this.vx = dir * 110; this.vy = -90; this.hopT = 0.5; }
+  contactActive() { return this.mode === "lunge"; }
+  protected onHurt(_g: Game, _d: number, dir: number) { this.vx = dir * 110; this.vy = -90; this.mode = "recover"; this.st = 0; this.token = false; }
   protected onDeath(g: Game) {
     audio.play("splat");
     g.particles.splat(this.cx, this.y + 5, [C.blight3, C.blight4, C.sick1, C.blight2], 16);
@@ -119,6 +158,7 @@ export class Blightling extends Enemy {
   }
   stomped(g: Game) {
     this.squashT = 0.25;
+    this.mode = "recover"; this.st = 0; this.token = false;
     g.particles.splat(this.cx, this.y, [C.blight4, C.sick1], 6);
   }
   draw(g: Game, ctx: Ctx, camX: number, camY: number) {
@@ -127,7 +167,8 @@ export class Blightling extends Enemy {
     const c = blobBuf.begin();
     const air = !this.onGround;
     let rx = 7, ry = 5;
-    if (this.squashT > 0) { rx = 9; ry = 3; } else if (air) { rx = 5.5; ry = 6.5; } else { const w = Math.sin(this.t * 5) * 0.5; rx += w; ry -= w; }
+    if (this.mode === "tell") { const k = Math.min(1, this.st / 0.3); rx = 7 + 2.5 * k; ry = 5 - 2 * k; }
+    else if (this.squashT > 0) { rx = 9; ry = 3; } else if (air) { rx = 5.5; ry = 6.5; } else { const w = Math.sin(this.t * 5) * 0.5; rx += w; ry -= w; }
     const cy = -ry;
     disc(c, 0, cy, rx, ry, C.blight2);
     disc(c, -0.5, cy - 0.5, rx - 1.2, ry - 1.2, C.blight3);
@@ -142,7 +183,8 @@ export class Blightling extends Enemy {
     rect(c, ex - 1, ey - 1, 4, 3, C.cream);
     rect(c, ex + (look > 0 ? 1 : 0), ey, 2, 2, C.ink);
     rect(c, ex - 1, ey - 2, 4, 1, C.blight1);
-    blobBuf.end(ctx, sx, sy, { flip: false, flash: this.flash * 8 });
+    const tell = this.mode === "tell" && Math.floor(this.st * 12) % 2 === 0 ? 0.55 : 0;
+    blobBuf.end(ctx, sx, sy, { flip: false, flash: this.flash * 8 + tell });
   }
   lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 4 - camY, 14, C.blight4, 0.5); }
 }
@@ -173,7 +215,7 @@ export class Crow extends Enemy {
         this.vx = approach(this.vx, (tx - this.x) * 2, 200 * dt);
         this.vy = approach(this.vy, (ty - this.y) * 2, 200 * dt);
         if (Math.abs(dx) > 2) this.facing = sign(dx);
-        if (dist < 140 && this.cd <= 0 && p.alive) {
+        if (dist < 140 && this.cd <= 0 && p.alive && g.requestAttack(this)) {
           this.mode = "tell"; this.st = 0; audio.play("caw");
         }
         break;
@@ -187,7 +229,7 @@ export class Crow extends Enemy {
         const ddx = this.target.x - this.x, ddy = this.target.y - this.y;
         const d = Math.hypot(ddx, ddy) || 1;
         this.vx = (ddx / d) * 210; this.vy = (ddy / d) * 210;
-        if (d < 6 || this.st > 1.0) { this.mode = "rise"; this.st = 0; }
+        if (d < 6 || this.st > 1.0) { this.mode = "rise"; this.st = 0; this.token = false; }
         break;
       }
       case "rise":
@@ -201,10 +243,11 @@ export class Crow extends Enemy {
         break;
     }
     this.x += this.vx * dt; this.y += this.vy * dt;
-    if (g.level.solidAt(Math.floor(this.cx / 16), Math.floor(this.bottom / 16))) { this.y -= this.vy * dt; if (this.mode === "dive") { this.mode = "rise"; this.st = 0; } }
-    this.contactId = this.mode === "dive" ? this.attackId : this.contactId || g.nextAttackId();
+    if (g.level.solidAt(Math.floor(this.cx / 16), Math.floor(this.bottom / 16))) { this.y -= this.vy * dt; if (this.mode === "dive") { this.mode = "rise"; this.st = 0; this.token = false; } }
+    this.contactId = this.attackId;
   }
-  protected onHurt(_g: Game, _d: number, dir: number) { this.vx = dir * 120; this.vy = -40; this.mode = "stun"; this.st = 0; }
+  contactActive() { return this.mode === "dive"; }
+  protected onHurt(_g: Game, _d: number, dir: number) { this.vx = dir * 120; this.vy = -40; this.mode = "stun"; this.st = 0; this.token = false; }
   protected onDeath(g: Game) {
     audio.play("caw");
     g.particles.burst(this.cx, this.y + 4, 10, { speed: 60, colors: [C.inkSoft, "#2a2438", C.blight2], max: 0.9, g: 120, drag: 2, wobble: 30 });
@@ -257,11 +300,14 @@ export class Husk extends Enemy {
         break;
       case "walk": {
         this.facing = sign(dx) || this.facing;
+        const inRange = Math.abs(dx) < 38 && Math.abs(dy) < 24;
+        if (inRange && g.requestAttack(this)) { this.startWindup(0.55); break; }
+        // without a turn to attack, hold just outside fork reach
+        const want = inRange ? 0 : Math.abs(dx) < 48 ? 0 : this.facing * 34;
         const edge = !groundBelow(g.level, this.cx + this.facing * 10, this.bottom) || touchesTile(g.level, this.cx + this.facing * 10 - 2, this.y, 4, this.h + 4, T.BOG, 0);
-        this.vx = edge ? 0 : approach(this.vx, this.facing * 34, 300 * dt);
+        this.vx = edge ? 0 : approach(this.vx, want, 300 * dt);
         this.walkPhase += Math.abs(this.vx) * dt * 0.2;
         if (!aggro) { this.mode = "idle"; break; }
-        if (Math.abs(dx) < 38 && Math.abs(dy) < 24) { this.startWindup(0.55); }
         break;
       }
       case "windup":
@@ -279,11 +325,11 @@ export class Husk extends Enemy {
       case "recover":
         this.vx = approach(this.vx, 0, 400 * dt);
         if (!this.again && this.st > 0.22 && rng.chance(0.3) && Math.abs(dx) < 50) { this.again = true; this.facing = sign(dx) || this.facing; this.startWindup(0.32); break; }
-        if (this.st > 0.75) { this.again = false; this.mode = "walk"; this.st = 0; }
+        if (this.st > 0.75) { this.again = false; this.mode = "walk"; this.st = 0; this.token = false; }
         break;
       case "stagger":
         this.vx = approach(this.vx, 0, 300 * dt);
-        if (this.st > 0.5) { this.mode = "walk"; this.st = 0; this.again = false; }
+        if (this.st > 0.5) { this.mode = "walk"; this.st = 0; this.again = false; this.token = false; }
         break;
     }
   }
@@ -299,7 +345,7 @@ export class Husk extends Enemy {
   protected onHurt(_g: Game, dmg: number, dir: number) {
     this.poiseDmg += dmg; this.poiseT = 1.2;
     if (this.poiseDmg >= this.poise) {
-      this.poiseDmg = 0; this.mode = "stagger"; this.st = 0; this.vx = dir * 80;
+      this.poiseDmg = 0; this.mode = "stagger"; this.st = 0; this.vx = dir * 80; this.token = false;
     } else this.vx += dir * 25;
   }
   protected onDeath(g: Game) {
