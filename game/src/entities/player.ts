@@ -20,9 +20,9 @@ const DJUMP_COST = 8;
 
 interface Swing { wind: number; active: number; rec: number; dmg: number; a0: number; a1: number; lunge: number; cost: number; heavy?: boolean }
 const SWINGS: Swing[] = [
-  { wind: 0.08, active: 0.09, rec: 0.2, dmg: 1, a0: -2.1, a1: 1.1, lunge: 55, cost: 14 },
-  { wind: 0.06, active: 0.09, rec: 0.2, dmg: 1, a0: 1.2, a1: -1.7, lunge: 55, cost: 14 },
-  { wind: 0.16, active: 0.12, rec: 0.32, dmg: 1.6, a0: -2.8, a1: 1.35, lunge: 120, cost: 22, heavy: true },
+  { wind: 0.08, active: 0.09, rec: 0.2, dmg: 1, a0: -2.1, a1: 1.1, lunge: 55, cost: 16 },
+  { wind: 0.06, active: 0.09, rec: 0.2, dmg: 1, a0: 1.2, a1: -1.7, lunge: 55, cost: 16 },
+  { wind: 0.16, active: 0.12, rec: 0.32, dmg: 1.6, a0: -2.8, a1: 1.35, lunge: 120, cost: 24, heavy: true },
 ];
 
 const buf = new SpriteBuf(120, 100, 30);
@@ -32,6 +32,11 @@ export class Player implements Body {
   vx = 0; vy = 0; onGround = false;
   facing = 1;
   hp = 100; stam = 100; stamDelay = 0; tonics = 3;
+  /** Emptied your stamina: slower regen until it's back to 40%. */
+  winded = false;
+  /** After a perfect dodge: the next hit is a guaranteed heavy crit. */
+  riposteT = 0;
+  perfectUsed = false;
   state: PState = "normal"; st = 0;
   combo = 0; queued = false; lunged = false; airAttack = false;
   swingId = 0;
@@ -67,6 +72,7 @@ export class Player implements Body {
   spendStam(n: number) {
     this.stam -= n;
     this.stamDelay = 0.55;
+    if (this.stam <= 0) { this.stam = Math.max(this.stam, -10); this.winded = true; this.stamDelay = 1.1; }
   }
 
   update(g: Game, dt: number) {
@@ -80,7 +86,11 @@ export class Player implements Body {
 
     this.jumpBuf = inp.pressed("jump") ? 0.12 : this.jumpBuf - dt;
     this.atkBuf = inp.pressed("attack") ? 0.18 : this.atkBuf - dt;
-    this.rollBuf = inp.pressed("roll") ? 0.14 : this.rollBuf - dt;
+    this.rollBuf = inp.pressed("roll") ? 0.2 : this.rollBuf - dt;
+    if (this.riposteT > 0) {
+      this.riposteT -= dt;
+      if (Math.floor(this.animT * 20) % 3 === 0) g.particles.spawn(this.cx + rng.range(-6, 6), this.y + rng.range(0, 16), { vy: -20, max: 0.3, color: C.gold3, color2: C.gold1, light: 4, lightColor: C.gold2 });
+    }
 
     // HP damage trail (Souls-style)
     if (this.hpTrail > this.hp) { this.trailDelay -= dt; if (this.trailDelay <= 0) this.hpTrail = Math.max(this.hp, this.hpTrail - 60 * dt); }
@@ -94,7 +104,8 @@ export class Player implements Body {
     }
     if (this.state !== "attack" && this.state !== "roll") {
       if (this.stamDelay > 0) this.stamDelay -= dt;
-      else this.stam = Math.min(s.maxStam, this.stam + 58 * s.regenMult * dt);
+      else this.stam = Math.min(s.maxStam, this.stam + 58 * s.regenMult * (this.winded ? 0.6 : 1) * dt);
+      if (this.winded && this.stam >= s.maxStam * 0.4) this.winded = false;
     }
 
     const move = (inp.isHeld("right") ? 1 : 0) - (inp.isHeld("left") ? 1 : 0);
@@ -105,7 +116,9 @@ export class Player implements Body {
       case "roll": this.roll(g, dt); break;
       case "hurt":
         this.vx = approach(this.vx, 0, 500 * dt);
-        if (this.st > 0.26) this.state = "normal";
+        // a queued roll comes out as soon as you've regained footing
+        if (this.st > 0.12 && this.rollBuf > 0 && this.onGround && this.stam > 0) { this.startRoll(g, move); break; }
+        if (this.st > 0.18) this.state = "normal";
         break;
       case "drink":
         this.vx = approach(this.vx, move * RUN * 0.3, ACC * dt);
@@ -186,7 +199,10 @@ export class Player implements Body {
         }
       }
     }
-    if (this.atkBuf > 0 && this.stam > 0) { this.startAttack(g, 0); return; }
+    if (this.atkBuf > 0) {
+      if (this.stam >= SWINGS[0].cost) { this.startAttack(g, 0); return; }
+      if (inp.pressed("attack")) g.stamDenied();
+    }
     if (this.rollBuf > 0 && this.onGround && this.stam > 0) { this.startRoll(g, move); return; }
     if (inp.pressed("heal")) {
       if (this.tonics > 0 && this.onGround) {
@@ -207,7 +223,7 @@ export class Player implements Body {
 
   private startRoll(g: Game, move: number) {
     if (move) this.facing = move;
-    this.state = "roll"; this.st = 0; this.rollBuf = 0;
+    this.state = "roll"; this.st = 0; this.rollBuf = 0; this.perfectUsed = false;
     this.spendStam(ROLL_COST);
     audio.play("roll");
     g.particles.dust(this.cx, this.bottom, 4, -this.facing);
@@ -229,8 +245,12 @@ export class Player implements Body {
     if (t >= activeStart && t <= activeEnd + 0.02) g.playerStrike(this.strikeBox(g), sw.dmg, this.swingId, !!sw.heavy);
 
     if (this.atkBuf > 0 && t > sw.wind * 0.5) { this.queued = true; this.atkBuf = 0; }
-    if (t >= activeEnd + 0.05 && this.queued && this.combo < 2 && !this.airAttack && this.stam > 0) { this.startAttack(g, this.combo + 1); return; }
-    if (t >= activeEnd && this.rollBuf > 0 && this.onGround && this.stam > 0) { this.startRoll(g, move); return; }
+    if (t >= activeEnd + 0.05 && this.queued && this.combo < 2 && !this.airAttack) {
+      if (this.stam >= SWINGS[this.combo + 1].cost) { this.startAttack(g, this.combo + 1); return; }
+      this.queued = false; g.stamDenied();
+    }
+    // roll out of the wind-up or the recovery, never mid-swing
+    if ((t < activeStart || t >= activeEnd) && this.rollBuf > 0 && this.onGround && this.stam > 0) { this.startRoll(g, move); return; }
     if (t >= end || (this.airAttack && this.onGround && t > activeEnd)) { this.state = "normal"; this.st = 0; }
   }
 
@@ -357,8 +377,9 @@ export class Player implements Body {
       if (this.state === "drink") { drawIconSmall(c, hand[0] - 3, hand[1] - 5); }
       if (smear) drawSmear(c, shoulder[0] + lean, shoulder[1] + bob, smear.a0, smear.a1, 6, g.stats.reach - 3 + (SWINGS[this.combo].heavy ? 4 : 0), smear.fade, glint ?? C.cream);
     }
-    const flash = this.hurtFlash > 0 ? this.hurtFlash * 5 : 0;
-    buf.end(ctx, sx, sy, { flip: this.facing < 0, flash, flashColor: C.hp });
+    const ripo = this.riposteT > 0 && Math.floor(this.animT * 12) % 2 === 0;
+    const flash = this.hurtFlash > 0 ? this.hurtFlash * 5 : ripo ? 0.35 : 0;
+    buf.end(ctx, sx, sy, { flip: this.facing < 0, flash, flashColor: this.hurtFlash > 0 ? C.hp : C.gold2 });
   }
 
   private drawBody(c: Ctx, g: Game, bob: number, lean: number, fF: number[], bF: number[], hand: number[], wAng: number, showWeapon: boolean, dead: boolean, kind: import("../systems/items").WeaponKind, glint: string | null, t: number) {

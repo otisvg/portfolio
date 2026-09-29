@@ -12,9 +12,11 @@ type Mode =
   | "dormant" | "wake" | "roar" | "idle" | "walk"
   | "sweepWind" | "sweep" | "sweepRec"
   | "crouch" | "leap" | "slam" | "slamRec"
-  | "throwWind" | "throwRec" | "call" | "dying";
+  | "throwWind" | "throwRec" | "call" | "kneel" | "dying";
 
 const buf = new SpriteBuf(180, 130, 24);
+export const POSTURE_MAX = 100;
+const KNEEL_T = 2.2;
 export const WICK_NAME = "Wick, the Harvest Warden";
 
 export class Wick extends Enemy {
@@ -28,6 +30,9 @@ export class Wick extends Enemy {
   homeX: number; homeY: number;
   walkPhase = 0;
   shakeT = 0;
+  /** Sekiro-style posture: perfect dodges and finishers fill it; full = he kneels, open to a big punish. */
+  posture = 0;
+  postureT = 0;
 
   constructor(cx: number, gy: number) {
     super(cx, gy, 24, 46, 420);
@@ -41,11 +46,19 @@ export class Wick extends Enemy {
 
   wake() { if (this.mode === "dormant") { this.mode = "wake"; this.st = 0; } }
 
-  takeHit(g: Game, dmg: number, crit: boolean, dir: number, quiet = false) {
+  addPosture(n: number, g: Game) {
+    if (!this.awake || this.invulnerable || this.mode === "kneel") return;
+    this.posture = Math.min(POSTURE_MAX, this.posture + n);
+    this.postureT = 0;
+    void g;
+  }
+  vulnMult() { return this.mode === "kneel" ? 2 : 1; }
+
+  takeHit(g: Game, dmg: number, crit: boolean, dir: number, quiet = false, heavy = false) {
     if (this.invulnerable || this.dead) { if (!quiet) audio.play("clink", 3); return; }
-    super.takeHit(g, dmg, crit, dir, quiet);
+    super.takeHit(g, dmg, crit, dir, quiet, heavy);
     if (!this.dead && this.mode !== "dying" && this.phase === 1 && this.hp <= this.maxHp * 0.5) {
-      this.phase = 2; this.mode = "roar"; this.st = 0; this.vx = 0;
+      this.phase = 2; this.mode = "roar"; this.st = 0; this.vx = 0; this.posture = 0;
       audio.play("roar");
       g.shake(5, 1.2);
       g.onBossPhase2();
@@ -67,6 +80,16 @@ export class Wick extends Enemy {
     const fast = this.phase === 2 ? 0.72 : 1;
     this.shakeT = Math.max(0, this.shakeT - dt);
     if (this.hp <= 0 && this.mode !== "dying") { this.mode = "dying"; this.st = 0; }
+    // posture: drains slowly if you stop pressuring him; breaks into a kneel when full
+    this.postureT += dt;
+    if (this.postureT > 3 && this.mode !== "kneel") this.posture = Math.max(0, this.posture - 6 * dt);
+    const canKneel = !["dying", "roar", "dormant", "wake", "leap", "kneel"].includes(this.mode);
+    if (this.posture >= POSTURE_MAX && canKneel) {
+      this.mode = "kneel"; this.st = 0; this.vx = 0;
+      audio.play("slam"); g.shake(4, 0.3);
+      g.addFloat("STAGGERED", this.cx, this.y - 16, C.gold2, true);
+      g.particles.burst(this.cx, this.y + 20, 24, { speed: 90, colors: [C.straw1, C.straw2, C.gold2], g: 250, max: 0.9 });
+    }
 
     if (this.mode !== "dormant" && this.mode !== "wake" && this.mode !== "leap") {
       this.vy = Math.min(this.vy + 900 * dt, 400);
@@ -179,6 +202,11 @@ export class Wick extends Enemy {
           }
         }
         if (this.st > 1.3) { this.callCd = 11; this.toIdle(); }
+        break;
+      case "kneel":
+        this.vx = 0;
+        this.posture = POSTURE_MAX * Math.max(0, 1 - this.st / KNEEL_T);
+        if (this.st > KNEEL_T) { this.posture = 0; this.toIdle(); }
         break;
       case "dying":
         this.vx = 0;
@@ -303,6 +331,10 @@ export class Wick extends Enemy {
         break;
       case "call":
         armsWide = true; headDy = -2; sc = -1.7; hand = [8, -48];
+        break;
+      case "kneel":
+        bob = 9; headDy = 4; headDx = 2; lean = 4; sc = 1.5; hand = [14, -14]; fF = [7, -2]; bF = [-5, 0];
+        eyes = Math.floor(this.st * 6) % 2 ? "#3a2a2a" : eyes;
         break;
       case "dying": {
         const k = clamp(this.st / 2, 0, 1);

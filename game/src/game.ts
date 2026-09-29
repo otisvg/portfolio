@@ -9,7 +9,7 @@ import { Lighting, makeVignette } from "./gfx/lighting";
 import { C, RARITY } from "./gfx/palette";
 import { Particles } from "./gfx/particles";
 import { drawBog, drawFog, renderTiles, type TileLayers } from "./gfx/tiles";
-import { Wick, type Projectile } from "./entities/boss";
+import { Puddle, Wick, type Projectile } from "./entities/boss";
 import { Blightling, Crow, Enemy, Husk, Pot } from "./entities/enemies";
 import { NPC, Pet, Pickup, Purse, Shrine, Sign } from "./entities/objects";
 import { Player } from "./entities/player";
@@ -32,6 +32,8 @@ import { drawMillBlades, renderProps, type PropLayer } from "./world/props";
 type Mode = "title" | "intro" | "play" | "dead";
 
 const MAX_ATTACKERS = 2;
+/** A roll counts as perfect if the attack lands within this long of the roll starting. */
+const PERFECT_WINDOW = 0.24;
 const ATTACK_GAP = 0.35;
 
 export class Game {
@@ -82,6 +84,11 @@ export class Game {
   time = 0;
   private attackIds = 1;
   private lastAttackStart = -10;
+  private riposteFor = -1;
+  /** Real-time seconds of slow motion left (perfect dodge). */
+  private slowT = 0;
+  /** Stamina bar flash when an attack is refused. */
+  stamFlash = 0;
   /** The finisher die is rolled once per heavy swing, on its first hit. */
   private finFor = -1;
   private finFace: FinFace = "blank";
@@ -346,7 +353,10 @@ export class Game {
       t.lastHitId = id;
       if (t instanceof Pot) { t.break(this); continue; }
       if (t instanceof Wick && t.invulnerable) { t.takeHit(this, 0, false, p.facing); this.particles.hit(t.cx - p.facing * 8, p.y + 6, -p.facing, C.steel2, 4); continue; }
-      const crit = rng.chance(s.crit);
+      // a riposte (after a perfect dodge) turns the whole next swing into a guard-breaking crit
+      if (p.riposteT > 0 && this.riposteFor !== id) { this.riposteFor = id; p.riposteT = 0; }
+      const riposte = this.riposteFor === id;
+      const crit = riposte || rng.chance(s.crit);
       let fin: FinFace | null = null;
       if (heavy) {
         if (this.finFor !== id) {
@@ -358,14 +368,16 @@ export class Game {
         fin = this.finFace;
       }
       const finMult = fin === "x2" ? 2 : fin === "x15" || fin === "skewer" ? 1.5 : 1;
-      const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * finMult * (crit ? 1.75 : 1)));
-      t.takeHit(this, dmg, crit, p.facing);
+      const vuln = t.vulnMult();
+      const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * finMult * vuln * (riposte ? 2 : crit ? 1.75 : 1)));
+      t.takeHit(this, dmg, crit, p.facing, false, heavy || riposte);
       if (fin) this.applyFinisher(fin, t, dmg, id);
+      if (t instanceof Wick) t.addPosture((riposte ? 22 : 0) + (heavy ? (fin && fin !== "blank" ? 16 : 7) : 0), this);
       const hx = clamp(p.cx + p.facing * 14, t.x, t.x + t.w), hy = clamp(p.y + 8, t.y, t.y + t.h);
       this.particles.hit(hx, hy, p.facing, crit ? C.gold2 : C.fire3, crit ? 12 : 7);
       this.particles.splat(hx, hy, t instanceof Crow ? [C.inkSoft, C.blight2] : [C.blight3, C.blight4], crit ? 6 : 3);
-      this.addFloat(crit ? `${dmg}!` : `${dmg}`, hx, t.y - 4, crit ? C.gold2 : C.cream, crit);
-      this.hitstopFor(crit || heavy ? 0.08 : 0.05);
+      this.addFloat(riposte ? `${dmg}!!` : crit ? `${dmg}!` : `${dmg}`, hx, t.y - 4, riposte ? C.gold3 : crit ? C.gold2 : vuln > 1 ? C.fire1 : C.cream, crit || vuln > 1);
+      this.hitstopFor(riposte ? 0.12 : crit || heavy ? 0.08 : 0.05);
       this.shake(crit ? 2.5 : heavy ? 2 : 1.2, 0.12);
       audio.play(crit ? "crit" : "hit");
       if (s.leech && p.hp < s.maxHp) { p.hp = Math.min(s.maxHp, p.hp + s.leech); }
@@ -445,7 +457,7 @@ export class Game {
     if (this.boss && this.boss.awake) all.push(this.boss);
     for (const e of all) {
       if (e.dead) continue;
-      for (const box of e.attackBoxes()) if (overlap(box, hb)) this.tryHit(box.dmg, box.x + box.w / 2, box.id);
+      for (const box of e.attackBoxes()) if (overlap(box, hb)) this.tryHit(box.dmg, box.x + box.w / 2, box.id, e);
       if (e.contactDmg > 0 && overlap(e.hurtbox(), hb)) {
         const falling = p.vy > 40 && p.bottom - p.vy * STEP <= e.y + 5;
         if (e.stompable && falling && p.state !== "roll") {
@@ -458,20 +470,23 @@ export class Game {
           this.hitstopFor(0.04);
           this.gainXp("attack", dmg); this.gainXp("strength", dmg * 2); this.gainXp("hitpoints", dmg * 1.33);
           this.xpDrop(dmg * 4.33, "sword", C.cream);
-        } else if (e.contactActive()) this.tryHit(e.contactDmg, e.cx, e.contactId);
+        } else if (e.contactActive()) this.tryHit(e.contactDmg, e.cx, e.contactId, e);
       }
     }
     for (const pr of this.projectiles) {
       const box = pr.box();
-      if (box && overlap(box, hb)) this.tryHit(box.dmg, box.x + box.w / 2, box.id);
+      if (box && overlap(box, hb)) this.tryHit(box.dmg, box.x + box.w / 2, box.id, null, !(pr instanceof Puddle));
     }
   }
 
-  private tryHit(dmg: number, fromX: number, id: number) {
+  private tryHit(dmg: number, fromX: number, id: number, source: Enemy | null = null, perfectable = true) {
     const p = this.player;
+    // an attack you rolled through can't catch you as the roll ends
+    if (this.dodged.has(id)) return;
     if (p.iframes) {
-      if (!this.dodged.has(id)) {
-        this.dodged.add(id);
+      this.dodged.add(id);
+      if (perfectable && p.st <= PERFECT_WINDOW && !p.perfectUsed) this.perfectDodge(source);
+      else {
         this.gainXp("defence", 8);
         this.xpDrop(8, "shield", C.xp);
         for (let i = 0; i < 6; i++) this.particles.spawn(p.cx + rng.range(-5, 5), p.y + rng.range(0, 18), { vy: -30, max: 0.35, color: C.cream, color2: C.xp });
@@ -479,6 +494,32 @@ export class Game {
       return;
     }
     this.damagePlayer(dmg, fromX);
+  }
+
+  /** Rolling just as an attack lands: slow motion, stamina back, and a guaranteed counter. */
+  private perfectDodge(source: Enemy | null) {
+    const p = this.player, s = this.stats;
+    p.perfectUsed = true;
+    p.riposteT = 1.6;
+    p.stam = Math.min(s.maxStam, p.stam + 30);
+    p.winded = false;
+    this.slowT = 0.45;
+    this.flash(C.cream, 0.12);
+    audio.play("perfect");
+    this.addFloat("PERFECT", p.cx, p.y - 10, C.gold2, true);
+    this.gainXp("defence", 20);
+    this.xpDrop(20, "shield", C.xp);
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      this.particles.spawn(p.cx, p.y + 10, { vx: Math.cos(a) * 70, vy: Math.sin(a) * 70, max: 0.4, color: C.gold3, color2: C.gold1, drag: 4, light: 4, lightColor: C.gold2 });
+    }
+    if (source instanceof Wick) source.addPosture(34, this);
+    else if (!source && this.bossActive && this.boss) this.boss.addPosture(20, this);
+  }
+
+  stamDenied() {
+    if (this.stamFlash <= 0) audio.play("deny");
+    this.stamFlash = 0.35;
   }
 
   private playerDied() {
@@ -794,7 +835,10 @@ export class Game {
     if (top) { top.update(this, dt); return; }
     if (this.input.pressed("pause")) { this.openOverlay(new PauseMenu()); return; }
     if (this.input.pressed("menu") && this.player.alive) { this.openOverlay(new InventoryMenu()); return; }
-    this.updateWorld(dt);
+    this.stamFlash = Math.max(0, this.stamFlash - dt);
+    const slow = this.slowT > 0;
+    this.slowT = Math.max(0, this.slowT - dt);
+    this.updateWorld(slow ? dt * 0.3 : dt);
   }
 
   private updateWorld(dt: number) {

@@ -5,6 +5,7 @@ import { drawText, textWidth } from "../gfx/font";
 import { drawIcon } from "../gfx/icons";
 import { C } from "../gfx/palette";
 import type { Game } from "../game";
+import { POSTURE_MAX } from "../entities/boss";
 import { DICE_CHARGE } from "../systems/dice";
 import { drawDie } from "./dice";
 import { bar, panel } from "./widgets";
@@ -20,7 +21,9 @@ export function drawHud(g: Game, ctx: Ctx) {
   drawIcon(ctx, "heart", 5, 4);
   bar(ctx, 19, 7, hpW, 5, p.hp / s.maxHp, C.hp, C.hpDark, p.hpTrail / s.maxHp);
   drawText(ctx, `${Math.ceil(p.hp)}`, 19 + hpW + 4, 7, C.cream);
-  bar(ctx, 19, 15, stW, 3, Math.max(0, p.stam) / s.maxStam, p.stam < 15 ? "#bfa35a" : C.stam, C.stamDark);
+  const stCol = p.winded ? (Math.floor(g.time * 6) % 2 ? "#a8743a" : "#7a5230") : p.stam < 16 ? "#bfa35a" : C.stam;
+  bar(ctx, 19, 15, stW, 3, Math.max(0, p.stam) / s.maxStam, stCol, C.stamDark);
+  if (g.stamFlash > 0) { ctx.globalAlpha = Math.min(1, g.stamFlash * 4); rect(ctx, 18, 14, stW + 2, 1, C.bad); rect(ctx, 18, 18, stW + 2, 1, C.bad); ctx.globalAlpha = 1; }
   // tonic flask charges
   drawIcon(ctx, "tonic", 5, 20);
   const tMax = g.save.tonicMax + s.tonicBonus;
@@ -67,6 +70,13 @@ export function drawHud(g: Game, ctx: Ctx) {
     const bw = 240, bx = (W - bw) / 2, by = H - 22;
     drawText(ctx, boss.label.toUpperCase(), bx, by - 9, C.cream, { spacing: 1 });
     bar(ctx, bx, by, bw, 4, Math.max(0, boss.hp) / boss.maxHp, boss.phase === 2 ? "#9a3aa0" : "#a8323a", "#2a1020", g.bossTrail / boss.maxHp, "#e0b060");
+    // posture: fills from the centre outward, Sekiro-style
+    const pw = Math.round((bw / 2) * (boss.posture / POSTURE_MAX));
+    if (pw > 0) {
+      const full = boss.mode === "kneel";
+      rect(ctx, bx + bw / 2 - pw - 1, by + 6, pw * 2 + 2, 4, C.ink);
+      rect(ctx, bx + bw / 2 - pw, by + 7, pw * 2, 2, full ? C.gold3 : C.gold1);
+    }
   }
 
   // chatbox

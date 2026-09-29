@@ -62,6 +62,13 @@ Hollowmere (safe hub) → The Wheatfields → Wayside Hearth → The Rotting Orc
 - Hitstop, screen shake, damage numbers and a delayed HP "damage trail".
 - You can stomp the little Blightlings, Mario-style.
 
+**Reading fights beats mashing:**
+- **Stamina gates attacks.** Each swing needs its full stamina cost. Empty the bar and you're *winded*: it refills at 60% speed until it's back to 40%.
+- **Perfect dodges.** Roll within 0.24s of an attack landing for a **perfect dodge**. You get a moment of slow motion, 30 stamina back, and a riposte: your next swing is a guaranteed double-damage crit that breaks guards.
+- **Smoother controls.** You can roll out of a swing's wind-up or recovery. A roll pressed while you're staggered comes out as soon as you regain footing, and hit stun is 0.18s.
+- **Husks commit.** Light hits can't interrupt a Husk once it winds up; only your combo finisher or a riposte can. The fork glints 0.2s before the thrust. Then the fork sticks in the dirt for 0.9s, and the Husk takes 50% extra damage while it's stuck and pulling free.
+- **Wick has posture.** Perfect dodges and finisher hits fill his posture meter, shown in gold under his health bar. When it's full he kneels for 2.2s and takes double damage.
+
 **Wick, the Harvest Warden** has two phases:
 - Scythe sweeps you can jump or roll through.
 - Leap slams that send shockwaves along the ground.

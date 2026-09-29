@@ -255,11 +255,10 @@ function drawHelp(ctx: Ctx) {
     drawText(ctx, v, 96, 32 + i * 11, C.cream);
   });
   const tips = [
-    "Attacks, rolls and double-jumps cost stamina. Out of stamina, out of options.",
-    "Resting at a Hearthstone heals you, refills tonics and banks your gold... and revives every foe.",
-    "Die and your carried gold stays where you fell. Die again before reclaiming it and it's gone.",
-    "Slay 12 foes to charge the Hearth Dice, then rest to roll them. Lock, reroll, and inscribe runes to shape them.",
-    "Your 3rd combo hit rolls your weapon's finisher die. Every weapon type has its own faces.",
+    "Attacks need stamina. Empty the bar and you're winded: it refills slowly until it's back to 40%.",
+    "Roll just as a blow lands for a PERFECT dodge: slow motion, stamina back, and a guaranteed counter.",
+    "Husks can't be interrupted once they wind up. Roll the thrust, then punish while the fork is stuck.",
+    "Resting heals, refills tonics, banks gold and revives every foe. Slay 12 foes to charge the Hearth Dice.",
   ];
   let y = 148;
   for (const t of tips) for (const l of wrap(t, 350)) { drawText(ctx, l, 16, y, C.dim); y += 8; }

@@ -7,7 +7,7 @@ export type Sfx =
   | "jump" | "djump" | "land" | "swing" | "swingHeavy" | "hit" | "crit" | "hurt" | "roll" | "coin"
   | "levelup" | "death" | "roar" | "slam" | "shrine" | "move" | "select" | "deny" | "forge"
   | "stomp" | "pot" | "heal" | "fog" | "tell" | "caw" | "splat" | "drink" | "purse" | "clink"
-  | "throw" | "bog" | "open" | "close" | "victory" | "step" | "hop" | "kindle" | "dice" | "diceLand";
+  | "throw" | "bog" | "open" | "close" | "victory" | "step" | "hop" | "kindle" | "dice" | "diceLand" | "perfect";
 
 type Wave = OscillatorType;
 
@@ -231,6 +231,11 @@ class AudioEngine {
       case "purse": this.arp([72, 76, 79, 84], 0.05, { vol: 0.05 }); break;
       case "throw": this.noise(0.12, { freq: 1200, to: 2600, vol: 0.06 }); break;
       case "bog": this.noise(0.4, { freq: 300, to: 120, vol: 0.14, q: 4 }); this.tone(140, 0.3, { type: "sine", to: 60, vol: 0.08 }); break;
+      case "perfect":
+        this.tone(900, 0.35, { type: "sine", to: 2400, vol: 0.06, attack: 0.01 });
+        this.tone(1350, 0.3, { type: "triangle", to: 3000, vol: 0.03, delay: 0.04 });
+        this.noise(0.4, { freq: 6000, vol: 0.03, attack: 0.02 });
+        break;
       case "dice":
         for (let i = 0; i < 7; i++) this.noise(0.03, { freq: 2600 + Math.random() * 1500, vol: 0.05, q: 6, delay: i * 0.045 + Math.random() * 0.02 });
         break;

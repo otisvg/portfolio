@@ -37,17 +37,19 @@ export abstract class Enemy implements Body {
   contactActive() { return false; }
 
   /** `quiet` hits (bleeding) deal damage without knockback or interrupting the foe. */
-  takeHit(g: Game, dmg: number, _crit: boolean, dir: number, quiet = false) {
+  takeHit(g: Game, dmg: number, _crit: boolean, dir: number, quiet = false, heavy = false) {
     this.hp -= dmg;
     this.flash = quiet ? 0.06 : 0.14;
-    if (!quiet) this.onHurt(g, dmg, dir);
+    if (!quiet) this.onHurt(g, dmg, dir, heavy);
     if (this.hp <= 0 && !this.dead) {
       this.dead = true; this.deathT = 0;
       this.onDeath(g);
       g.onEnemyKilled(this);
     }
   }
-  protected onHurt(_g: Game, _dmg: number, dir: number) { this.vx = dir * 90; }
+  protected onHurt(_g: Game, _dmg: number, dir: number, _heavy = false) { this.vx = dir * 90; }
+  /** Damage multiplier while the foe is open to punishment. */
+  vulnMult() { return 1; }
   protected onDeath(_g: Game) { }
 
   protected physics(g: Game, dt: number, grav = 900) {
@@ -294,13 +296,15 @@ export class Crow extends Enemy {
 
 // ======================================================================= Husk
 const huskBuf = new SpriteBuf(90, 48, 6);
+/** Husk timing: wind-up length, when the tell glint appears, and how long the fork stays stuck. */
+const HUSK_WINDUP = 0.6, HUSK_GLINT = 0.38, HUSK_STUCK = 0.9;
 
 export class Husk extends Enemy {
   readonly table = "husk";
   readonly label = "Husk";
-  mode: "idle" | "walk" | "windup" | "thrust" | "recover" | "stagger" = "idle";
+  mode: "idle" | "walk" | "windup" | "thrust" | "stuck" | "recover" | "stagger" = "idle";
   poise = 26; poiseDmg = 0; poiseT = 0;
-  thrustId = 0; again = false; walkPhase = 0;
+  thrustId = 0; walkPhase = 0; glinted = false;
   constructor(cx: number, gy: number) { super(cx, gy, 12, 22, 60); }
 
   protected think(g: Game, dt: number) {
@@ -327,38 +331,56 @@ export class Husk extends Enemy {
         break;
       }
       case "windup":
+        // committed: the fork rises, then glints 0.2s before the thrust. That glint is your cue.
         this.vx = approach(this.vx, -this.facing * 10, 200 * dt);
-        if (this.st > (this.again ? 0.32 : 0.55)) {
+        if (!this.glinted && this.st > HUSK_GLINT) { this.glinted = true; audio.play("tell"); }
+        if (this.st > HUSK_WINDUP) {
           this.mode = "thrust"; this.st = 0; this.thrustId = g.nextAttackId();
-          this.vx = this.facing * 150;
+          this.vx = this.facing * 120;
           audio.play("swingHeavy");
         }
         break;
       case "thrust":
         this.vx = approach(this.vx, 0, 500 * dt);
-        if (this.st > 0.22) { this.mode = "recover"; this.st = 0; }
+        if (this.st > 0.2) {
+          this.mode = "stuck"; this.st = 0; this.vx = 0;
+          audio.play("land");
+          g.particles.dust(this.cx + this.facing * 22, this.bottom, 6);
+        }
+        break;
+      case "stuck":
+        // the fork is wedged in the dirt: this is the opening
+        this.vx = 0;
+        if (this.st > HUSK_STUCK) { this.mode = "recover"; this.st = 0; }
         break;
       case "recover":
         this.vx = approach(this.vx, 0, 400 * dt);
-        if (!this.again && this.st > 0.22 && rng.chance(0.3) && Math.abs(dx) < 50) { this.again = true; this.facing = sign(dx) || this.facing; this.startWindup(0.32); break; }
-        if (this.st > 0.75) { this.again = false; this.mode = "walk"; this.st = 0; this.token = false; }
+        if (this.st > 0.3) { this.mode = "walk"; this.st = 0; this.token = false; }
         break;
       case "stagger":
         this.vx = approach(this.vx, 0, 300 * dt);
-        if (this.st > 0.5) { this.mode = "walk"; this.st = 0; this.again = false; this.token = false; }
+        if (this.st > 0.6) { this.mode = "walk"; this.st = 0; this.token = false; }
         break;
     }
   }
   private startWindup(_t: number) {
-    this.mode = "windup"; this.st = 0;
-    audio.play("tell");
+    this.mode = "windup"; this.st = 0; this.glinted = false;
   }
+  vulnMult() { return this.mode === "stuck" || this.mode === "recover" ? 1.5 : 1; }
   attackBoxes(): AttackBox[] {
     if (this.mode !== "thrust" || this.st > 0.16) return [];
     const x0 = this.facing > 0 ? this.cx + 4 : this.cx - 4 - 28;
     return [{ x: x0, y: this.y + 5, w: 28, h: 10, dmg: 22, id: this.thrustId }];
   }
-  protected onHurt(_g: Game, dmg: number, dir: number) {
+  protected onHurt(g: Game, dmg: number, dir: number, heavy = false) {
+    if (this.mode === "windup" || this.mode === "thrust") {
+      // armoured while committed: only a finisher or a counter breaks through
+      if (heavy) { this.mode = "stagger"; this.st = 0; this.vx = dir * 90; this.token = false; audio.play("crit"); return; }
+      audio.play("clink", 3);
+      g.particles.hit(this.cx - dir * 4, this.y + 8, -dir, C.steel2, 4);
+      return;
+    }
+    if (this.mode === "stuck" || this.mode === "recover") return; // stays open to punishment
     this.poiseDmg += dmg; this.poiseT = 1.2;
     if (this.poiseDmg >= this.poise) {
       this.poiseDmg = 0; this.mode = "stagger"; this.st = 0; this.vx = dir * 80; this.token = false;
@@ -387,9 +409,13 @@ export class Husk extends Enemy {
       bF = [Math.round(-Math.sin(ph) * 2), -Math.round(Math.max(0, -Math.cos(ph)))];
       bob = Math.abs(Math.sin(ph)) > 0.7 ? 1 : 0;
     } else if (m === "idle") { bob = Math.sin(this.t * 1.7) > 0.4 ? 1 : 0; }
-    if (m === "windup") { lean = -1; forkAng = -0.25; handX = -3; handY = -14; fF = [3, 0]; bF = [-3, 0]; }
+    if (m === "windup") {
+      const k = Math.min(1, this.st / HUSK_GLINT);
+      lean = Math.round(1 - 2 * k); forkAng = -0.25 * k; handX = Math.round(3 - 6 * k); handY = -12 - Math.round(2 * k); fF = [3, 0]; bF = [-3, 0];
+    }
     if (m === "thrust") { lean = 4; forkAng = 0; handX = 10; handY = -12; fF = [4, 0]; bF = [-4, 0]; }
-    if (m === "recover") { lean = 3; forkAng = 0.5; handX = 7; handY = -9; }
+    if (m === "stuck") { lean = 5; forkAng = 0.95; handX = 9; handY = -9; fF = [4, 0]; bF = [-5, 0]; bob = 1; }
+    if (m === "recover") { lean = 3; forkAng = 0.95 - this.st * 1.5; handX = 7; handY = -9; }
     if (m === "stagger") { lean = -2; forkAng = -1.2; handX = 0; handY = -17; }
     let dying = 0;
     if (this.dead) { dying = clamp(this.deathT / 0.6, 0, 1); bob = Math.round(dying * 10); lean = 3 + Math.round(dying * 3); }
@@ -407,7 +433,7 @@ export class Husk extends Enemy {
     // head
     const hx = -2 + lean + 1, hy = -23 + bob;
     rect(c, hx, hy, 5, 5, skin); rect(c, hx, hy + 3, 5, 2, skinD);
-    const eyeC = m === "windup" && Math.floor(this.st * 14) % 2 === 0 ? C.white : "#d070ff";
+    const eyeC = m === "stuck" || m === "recover" ? "#4a3a5a" : m === "windup" && this.glinted ? C.white : "#d070ff";
     rect(c, hx + 3, hy + 1, 1, 1, eyeC); rect(c, hx + 1, hy + 1, 1, 1, eyeC);
     rect(c, hx + 2, hy + 3, 2, 1, C.ink);
     // tattered straw hat
@@ -421,16 +447,16 @@ export class Husk extends Enemy {
     rect(c, handX - 1, handY - 1, 2, 2, skin);
     line(c, lean, -16 + bob, handX, handY, shirt);
     const alpha = this.dead ? 1 - dying : 1;
-    huskBuf.end(ctx, sx, sy, { flip: this.facing < 0, flash: this.flash * 8 + (m === "windup" && this.st < 0.1 ? 0.8 : 0), alpha });
-    if (m === "windup") {
+    huskBuf.end(ctx, sx, sy, { flip: this.facing < 0, flash: this.flash * 8 + (m === "windup" && this.glinted && this.st < HUSK_GLINT + 0.06 ? 0.8 : 0), alpha });
+    if (m === "windup" && this.glinted) {
       // telegraph glint on the tines
       const tx = sx + this.facing * (handX + ca * 22), ty = sy + handY + sa * 22;
       if (Math.floor(this.st * 10) % 2 === 0) { ctx.fillStyle = C.white; ctx.fillRect(Math.round(tx), Math.round(ty) - 2, 1, 5); ctx.fillRect(Math.round(tx) - 2, Math.round(ty), 5, 1); }
     }
   }
   lights(g: Game, camX: number, camY: number) {
-    if (this.dead) return;
-    g.lighting.add(this.cx + this.facing * 3 - camX, this.y + 3 - camY, 10, "#d070ff", this.mode === "windup" ? 1 : 0.45);
+    if (this.dead || this.mode === "stuck" || this.mode === "recover") return;
+    g.lighting.add(this.cx + this.facing * 3 - camX, this.y + 3 - camY, 10, "#d070ff", this.mode === "windup" && this.glinted ? 1 : 0.45);
   }
 }
 
