@@ -273,7 +273,7 @@ export class Player implements Body {
   private hazards(g: Game, dt: number) {
     const L = g.level;
     if (!this.alive) return;
-    if (touchesTile(L, this.x, this.y, this.w, this.h, T.BOG, 3) || this.y > L.pxH + 20) {
+    if ((!g.diving() && touchesTile(L, this.x, this.y, this.w, this.h, T.BOG, 3)) || this.y > L.pxH + 20) {
       g.playerFellInBog();
       return;
     }
@@ -437,6 +437,10 @@ export class Player implements Body {
       rect(c, hx - 2, hy, 10, 1, C.straw3); rect(c, hx - 1, hy - 2, 8, 2, C.straw2);
       for (const k of [0, 2, 4, 6]) { c.fillStyle = k % 4 === 0 ? C.gold2 : C.straw3; c.fillRect(hx - 1 + k, hy - 4, 1, 2); }
       c.fillStyle = C.scarf2; c.fillRect(hx + 2, hy - 2, 1, 1);
+    } else if (hl === "slayer") {
+      rect(c, hx - 1, hy - 3, 8, 8, C.steel0); rect(c, hx, hy - 4, 6, 1, C.steel1); rect(c, hx - 1, hy - 3, 2, 8, "#3a3c4e");
+      rect(c, hx + 2, hy + 1, 5, 1, C.ink); rect(c, hx + 3, hy + 1, 2, 1, "#e0405a");
+      rect(c, hx + 1, hy - 6, 2, 3, C.scarf1); rect(c, hx - 1, hy - 7, 3, 2, C.scarf2);
     } else if (hl === "lamp") {
       rect(c, hx - 1, hy - 3, 8, 4, "#8a7a3a"); rect(c, hx, hy - 4, 6, 1, "#a8964a"); rect(c, hx - 2, hy + 1, 10, 1, "#5a4a22");
       rect(c, hx + 5, hy - 2, 2, 2, C.fire2); c.fillStyle = C.fire3; c.fillRect(hx + 6, hy - 2, 1, 1);

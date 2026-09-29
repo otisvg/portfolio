@@ -34,7 +34,7 @@ export class Pickup implements Body {
     const p = g.player;
     const magnet = (this.kind !== "item") && this.t > 0.45 && p.alive;
     const dx = p.cx - this.cx, dy = p.y + 10 - (this.y + 4);
-    if (magnet && Math.hypot(dx, dy) < 34) {
+    if (magnet && Math.hypot(dx, dy) < g.magnetRange()) {
       this.vx = approach(this.vx, Math.sign(dx) * 190, 900 * dt);
       this.vy = approach(this.vy, Math.sign(dy) * 190, 900 * dt);
       this.x += this.vx * dt; this.y += this.vy * dt;
@@ -367,8 +367,11 @@ export class NPC {
         "When that bell tolls, get up on the scaffolds. The water down here bites.",
         "The lads hid three caches before the end. One up high, where only a Warden's light shows the way. One behind the orchard roots. One past the Watchers.",
         "Bring the right tools and they're yours. The Hearth down here fills them again every time you rest.",
+        "And if you've a strong arm, I've work for it. The Rot's creatures want thinning. Kill what I ask and I'll pay in points, and in secrets.",
       ];
       if (gk > 0 && rng.chance(0.4)) return ["You silenced the bell. For a night. He'll ring it again. He always does."];
+      if (s.lore?.includes("o_letter") && !s.flags.tamLetter && rng.chance(0.6)) { s.flags.tamLetter = true; return ["That letter... you've been in the orchard. Mum kept it, then?", "Tell her I kept the lamps lit. Tell her I'm sorry about the rest."]; }
+      if (s.slayerTask && s.slayerTask.have < s.slayerTask.need && rng.chance(0.5)) return [`Still ${s.slayerTask.need - s.slayerTask.have} to go. Don't come back half-done.`];
       return [rng.pick([
         "The Watchers don't mind scarecrows. Never have. Something about the straw.",
         "Roots that thick? You'd want a curved blade. A scythe, say.",
@@ -379,6 +382,7 @@ export class NPC {
     }
     if (!met) return ["Are you going out THERE? Cool!!", "Tip: the little goo ones? Jump on their heads! They go SPLUT."];
     if (s.pet && rng.chance(0.5)) return ["IS THAT A TINY SCARECROW. I'm naming him Stuart."];
+    if (s.lore?.includes("m_pip") && rng.chance(0.6)) return ["You found my NOTE?! I didn't get very far. It was DARK. And wet. And something breathed.", "...Don't tell Mum. But the water IS still going down. I heard it."];
     if (kc > 0 && rng.chance(0.4)) return ["You beat WICK?! Can I have his hat? Please? ...No? Okay."];
     return [rng.pick([
       "Mum says don't go past the gate. Mum also says the scarecrow is 'just resting'.",

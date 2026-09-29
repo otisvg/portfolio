@@ -9,6 +9,8 @@ export const T = {
   ROOT: 11,
   /** Portcullis that the Watchers slam shut. */
   GATE: 12,
+  /** Cracked rock: a pick (or Mining 20) breaks through. Mends when you rest. */
+  CRACK: 13,
 } as const;
 
 export type LevelId = "outskirts" | "mines";
@@ -25,7 +27,11 @@ export interface Region { id: string; name: string; sub: string; x0: number; x1:
 /** A way to another level. `needs: "beacon"` stays sealed until the beacon is lit. */
 export interface ExitDef { x: number; y: number; to: string; label: string; needs?: "beacon" }
 /** A secret cache, refilled every time you rest. `key` is the unique item that reaches it. */
-export interface CacheDef { id: string; name: string; x: number; y: number; key: "lantern" | "scythe" | "hood" }
+export interface CacheDef { id: string; name: string; x: number; y: number; key: "lantern" | "scythe" | "hood" | "diver" | "tide" | "pick" }
+/** A lever that permanently changes the level (a bridge, a stair) once pulled from the far side. */
+export interface ShortcutDef { id: string; name: string; x: number; y: number; tiles: [number, number, number, number][] }
+export interface VeinDef { id: string; x: number; y: number; ore: "iron" | "silver" | "gleam" }
+export interface SpotDef { id: string; x: number; y: number }
 /** Where a treasure map's X is buried. */
 export interface DigSpot { id: string; x: number; y: number; clue: string }
 /** A ceiling eye whose cone of light sweeps the floor below. */
@@ -61,7 +67,15 @@ export class Level {
   sigilStone = { x: 0, y: 0 };
   /** Spirit ledges are solid while Wick's Lantern is carried. */
   spiritSight = false;
-  private rootTiles: number[] = [];
+  shortcuts: ShortcutDef[] = [];
+  veins: VeinDef[] = [];
+  /** Dead lamps in the Mines that Embers relight for good. */
+  deadLamps: SpotDef[] = [];
+  lorePages: SpotDef[] = [];
+  /** The Tide Stone and the bog it drains while the Tide Bell is worn. */
+  tideStone: { x: number; y: number; x0: number; x1: number } | null = null;
+  cartStation: { x: number; y: number } | null = null;
+  private baseTiles: Uint8Array = new Uint8Array(0);
 
   constructor(id: LevelId, theme: Theme, bossKind: BossKind, w: number, h: number) {
     this.id = id; this.theme = theme; this.bossKind = bossKind;
@@ -81,7 +95,7 @@ export class Level {
     if (tx < 0 || tx >= this.w || ty < 0 || ty >= this.h) return;
     this.tiles[ty * this.w + tx] = t;
   }
-  isSolid(t: number) { return t === T.DIRT || t === T.STONE || t === T.HAY || t === T.FOG || t === T.WALL || t === T.ROOT || t === T.GATE; }
+  isSolid(t: number) { return t === T.DIRT || t === T.STONE || t === T.HAY || t === T.FOG || t === T.WALL || t === T.ROOT || t === T.GATE || t === T.CRACK; }
   isOneWay(t: number) { return t === T.PLANK || t === T.BRANCH || (t === T.SPIRIT && this.spiritSight); }
   solidAt(tx: number, ty: number) { return this.isSolid(this.get(tx, ty)); }
 
@@ -110,14 +124,21 @@ export class Level {
 
   snapshot() {
     this.baseProps = [...this.props]; this.baseLamps = [...this.lamps];
-    this.rootTiles = [];
-    for (let i = 0; i < this.tiles.length; i++) if (this.tiles[i] === T.ROOT) this.rootTiles.push(i);
+    this.baseTiles = this.tiles.slice();
   }
 
-  /** Cut roots grow back and the Watchers' gate reopens (on rest and on death). */
+  /** Cut roots grow back, cracked rock mends, drained water returns, the Watchers' gate reopens. */
   regrow() {
-    for (const i of this.rootTiles) this.tiles[i] = T.ROOT;
+    const b = this.baseTiles;
+    for (let i = 0; i < b.length; i++) if ((b[i] === T.ROOT || b[i] === T.CRACK || b[i] === T.BOG) && this.tiles[i] !== T.PLANK) this.tiles[i] = b[i];
     this.setGate(true);
+  }
+
+  /** The tile a cell started as (before cuts, drains and shortcuts). */
+  baseAt(tx: number, ty: number) { return tx < 0 || ty < 0 || tx >= this.w || ty >= this.h ? T.EMPTY : this.baseTiles[ty * this.w + tx]; }
+
+  applyShortcut(sc: ShortcutDef) {
+    for (const [x0, x1, row, t] of sc.tiles) for (let x = x0; x < x1; x++) this.set(x, row, t);
   }
 
   setGate(open: boolean) {
@@ -253,6 +274,27 @@ export function buildLevel1(): Level {
   // the mill cellar leads down into the Drowned Mines, once the beacon burns again
   L.beacon = { x: 215 * TILE + 4, y: gy(215) };
   L.exits.push({ x: 217 * TILE + 40, y: gy(219), to: "mines_mouth", label: "DESCEND", needs: "beacon" });
+  // ---- secrets reached with gear from the Mines ----
+  // the Tide Bell calls the water out of the Wheatfields bog
+  L.tideStone = { x: at(90), y: gy(90), x0: 92, x1: 97 };
+  L.caches.push({ id: "tide", name: "The Bell-Drained Cache", x: at(95), y: 16 * TILE, key: "tide" });
+  // the Diver's Helm walks the bottom of the orchard bog
+  L.caches.push({ id: "diver", name: "The Sunken Crypt Cache", x: at(146), y: 16 * TILE, key: "diver" });
+  // a seam in the orchard's high ground, sealed with cracked rock
+  fill(165, 171, 11, 13, T.EMPTY);
+  fill(171, 172, 11, 13, T.CRACK);
+  L.caches.push({ id: "seam", name: "The Old Seam Cache", x: at(167), y: 14 * TILE, key: "pick" });
+  // shortcuts: bridges you kick down from the far bank
+  L.shortcuts.push(
+    { id: "wayside_bridge", name: "Wayside Bridge", x: at(98), y: gy(98), tiles: [[92, 97, G, T.PLANK]] },
+    { id: "orchard_bridge", name: "Orchard Bridge", x: at(149), y: gy(149), tiles: [[141, 148, G, T.PLANK]] },
+  );
+  L.lorePages.push(
+    { id: "o_pip", x: at(40), y: gy(40) }, { id: "o_notice", x: at(45) + 4, y: gy(45) },
+    { id: "o_ledger3", x: at(76), y: gy(76) }, { id: "o_ledger9", x: at(128), y: gy(128) },
+    { id: "o_letter", x: at(157), y: gy(157) }, { id: "o_burnt", x: at(191), y: gy(191) },
+  );
+
   L.digSpots.push(
     { id: "well", x: at(21), y: gy(21), clue: "Where Hollowmere draws its water, dig at the well's shadow." },
     { id: "haystack", x: at(67), y: gy(67), clue: "Atop the tallest haystack in the Wheatfields." },

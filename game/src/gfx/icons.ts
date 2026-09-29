@@ -70,6 +70,14 @@ const ICONS: Record<string, string[]> = {
   dice: [".TTTTTTT..", "TtttttttT.", "TtktttktT.", "TtttttttT.", "TtttktttT.", "TtttttttT.", "TtktttktT.", "TtttttttT.", ".TTTTTTT..", ".........."],
   sigil: ["....v.....", "...vuv....", "..v.u.v...", ".v..u..v..", "vuuuuuuuv.", ".v..u..v..", "..v.u.v...", "...vuv....", "....v.....", ".........."],
   book: [".RRRRRRR..", "RrrrrrrrR.", "RryyyyyrR.", "RrrrrrrrR.", "RryyyyyrR.", "RrrrrrrrR.", "RrrrrrrrR.", "RTTTTTTTR.", ".RRRRRRR..", ".........."],
+  anvil: ["..........", "..........", "ssssssss..", "lllllllsdd", ".ssssssd..", "...sssd...", "...ssd....", "..sssssd..", ".ddddddd..", ".........."],
+  ore: ["..........", "...ddd....", "..dsdsd...", ".dsYsdsd..", ".dssdsYd..", ".dYsdssd..", "..dsdsd...", "...ddd....", "..........", ".........."],
+  silverore: ["..........", "...ddd....", "..dsdsd...", ".dsKsdsd..", ".dssdsKd..", ".dKsdssd..", "..dsdsd...", "...ddd....", "..........", ".........."],
+  gleam: ["....L.....", "...LHL....", "..LHHHL...", ".LHHKHHL..", "LHHHHHHHL.", ".JHHHHHJ..", "..JHHHJ...", "...JHJ....", "....J.....", ".........."],
+  relic: ["...yyyy...", "..yYooYy..", ".yYFffFYy.", ".yofttfoy.", ".yofttfoy.", ".yYFffFYy.", "..yYooYy..", "...yyyy...", "....yy....", "...yyyy..."],
+  page: ["..TTTTTT..", "..TttttT..", "..TkkktT..", "..TttttT..", "..TkkkkT..", "..TttttT..", "..TkkktT..", "..TttttT..", "..TTTTTT..", ".........."],
+  lever: ["......sw..", ".....sw...", "....sw....", "...sw.....", "..sw......", "..B.......", ".dddddd...", "ddddddddd.", "..........", ".........."],
+  helmslay: ["..dssssd..", ".dslllsd..", "dsllllllsd", "dskkllkksd", "dsllllllsd", "dslkkkklsd", ".dsllllsd.", "..dxxxxd..", "..........", ".........."],
   crate: ["..........", ".AAAAAAAA.", ".AaBaaBaA.", ".AaaBBaaA.", ".AaaBBaaA.", ".AaBaaBaA.", ".AAAAAAAA.", "..........", "..........", ".........."],
 };
 

@@ -4,6 +4,7 @@ import { drawGhost, drawIcon } from "../gfx/icons";
 import { C, RARITY } from "../gfx/palette";
 import { FIN, FINISHER } from "../systems/dice";
 import { AFFIXES, allAffixes, baseOf, displayName, itemStats, sellValue, type Item } from "../systems/items";
+import { SETS, setOf } from "../systems/sets";
 
 export function panel(ctx: Ctx, x: number, y: number, w: number, h: number, alpha = 0.94) {
   ctx.globalAlpha = alpha;
@@ -73,6 +74,13 @@ export function itemLines(it: Item, compare: Item | null, maxW: number, showValu
   if (s.hp || cs?.hp) out.push({ text: `Health +${s.hp}${diff(s.hp, cs?.hp)}`, color: dcol(s.hp, cs?.hp) });
   for (const a of b.implicit ?? []) out.push({ text: AFFIXES[a.t].label(a.v), color: C.gold2 });
   for (const a of it.affixes) out.push({ text: AFFIXES[a.t].label(a.v), color: "#9ab8ff" });
+  const set = setOf(b.id);
+  if (set) {
+    const S = SETS[set];
+    out.push({ text: S.name, color: RARITY[6].color });
+    for (const l of wrap(`2: ${S.two}`, maxW)) out.push({ text: l, color: "#8ad6b8" });
+    for (const l of wrap(`4: ${S.four}`, maxW)) out.push({ text: l, color: "#8ad6b8" });
+  }
   for (const l of wrap(b.lore, maxW)) out.push({ text: l, color: C.faint });
   if (showValue) out.push({ text: `Sells for ${sellValue(it)} gold`, color: C.gold1 });
   void allAffixes;

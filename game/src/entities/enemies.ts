@@ -32,6 +32,14 @@ export abstract class Enemy implements Body {
     this.hp = this.maxHp = this.maxHp * 3;
     this.dmgMult = 1.3;
   }
+  /** Superior Slayer variant: five times the health, hits 40% harder, a gleaming outline. */
+  superior = false;
+  makeSuperior() {
+    this.superior = true;
+    this.hp = this.maxHp = this.maxHp * 5;
+    this.dmgMult = 1.4;
+  }
+  get outlineColor() { return this.superior ? (Math.floor(this.t * 6) % 2 ? "#f5f0c0" : "#c9962a") : this.rotborn ? ROT_OUTLINE : undefined; }
   abstract readonly table: string;
   abstract readonly label: string;
   isBoss = false;
@@ -82,6 +90,7 @@ export abstract class Enemy implements Body {
     this.t += dt; this.st += dt;
     this.flash = Math.max(0, this.flash - dt);
     if (this.dead) { this.deathT += dt; this.updateDead(g, dt); return; }
+    if (this.superior && rng.chance(dt * 16)) g.particles.spawn(this.x + rng.range(0, this.w), this.bottom - rng.range(0, this.h), { vy: -rng.range(15, 35), max: 0.6, color: C.gold3, color2: C.gold1, light: 5, lightColor: C.gold2 });
     if (this.rotborn && rng.chance(dt * 14)) {
       g.particles.spawn(this.x + rng.range(0, this.w), this.bottom - rng.range(0, this.h), { vy: -rng.range(15, 35), max: rng.range(0.4, 0.8), color: C.blight5, color2: C.blight3, light: 5, lightColor: C.blight4, wobble: 10 });
     }
@@ -223,7 +232,7 @@ export class Blightling extends Enemy {
     rect(c, ex + (look > 0 ? 1 : 0), ey, 2, 2, C.ink);
     rect(c, ex - 1, ey - 2, 4, 1, P[5]);
     const tell = this.mode === "tell" && Math.floor(this.st * 12) % 2 === 0 ? 0.55 : 0;
-    blobBuf.end(ctx, sx, sy, { flip: false, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + tell });
+    blobBuf.end(ctx, sx, sy, { flip: false, outline: this.outlineColor, flash: this.flash * 8 + tell });
   }
   lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 4 - camY, 14, this.pal[2], 0.5); }
 }
@@ -310,7 +319,7 @@ export class Crow extends Enemy {
     else if (flap === 1) { rect(c, -4, -7, 8, 2, body); rect(c, -3, -7, 6, 1, hi); }
     else { line(c, -2, -3, -5, 1, body, 2); line(c, 0, -3, -2, 2, hi); }
     if (this.dead) { c.fillStyle = C.ink; c.fillRect(6, -7, 1, 1); }
-    crowBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
+    crowBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.outlineColor, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
   }
   lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx + this.facing * 4 - camX, this.y + 2 - camY, 8, "#e0405a", 0.5); }
 }
@@ -488,7 +497,7 @@ export class Husk extends Enemy {
     rect(c, handX - 1, handY - 1, 2, 2, skin);
     line(c, lean, -16 + bob, handX, handY, shirt);
     const alpha = this.dead ? 1 - dying : 1;
-    huskBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + (m === "windup" && this.glinted && this.st < HUSK_GLINT + 0.06 ? 0.8 : 0), alpha });
+    huskBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.outlineColor, flash: this.flash * 8 + (m === "windup" && this.glinted && this.st < HUSK_GLINT + 0.06 ? 0.8 : 0), alpha });
     if (m === "windup" && this.glinted) {
       // telegraph glint on the tines
       const tx = sx + this.facing * (handX + ca * 22), ty = sy + handY + sa * 22;
@@ -549,7 +558,7 @@ export class Bat extends Crow {
     };
     wing(-1); wing(1);
     if (this.dead) { c.fillStyle = C.ink; c.fillRect(-1, -6, 3, 1); }
-    batBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.rotborn ? ROT_OUTLINE : undefined, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
+    batBuf.end(ctx, sx, sy, { flip: this.facing < 0, outline: this.outlineColor, flash: this.flash * 8 + (this.mode === "tell" && Math.floor(this.st * 12) % 2 ? 0.6 : 0) });
   }
   lights(g: Game, camX: number, camY: number) { g.lighting.add(this.cx - camX, this.y + 2 - camY, 9, "#6ad0c0", 0.5); }
 }

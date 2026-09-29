@@ -1,12 +1,16 @@
 /** OldSchool-style skills with the classic experience curve (level 99 cap). */
-export type Skill = "attack" | "strength" | "defence" | "hitpoints";
-export const SKILLS: Skill[] = ["attack", "strength", "defence", "hitpoints"];
+export type Skill = "attack" | "strength" | "defence" | "hitpoints" | "slayer" | "mining" | "smithing";
+export const SKILLS: Skill[] = ["attack", "strength", "defence", "hitpoints", "slayer", "mining", "smithing"];
+export const COMBAT_SKILLS: Skill[] = ["attack", "strength", "defence", "hitpoints"];
 
 export const SKILL_INFO: Record<Skill, { name: string; icon: string; color: string; perk: (lvl: number) => string }> = {
   attack: { name: "Attack", icon: "sword", color: "#e0605a", perk: (l) => `+${(0.4 * (l - 1)).toFixed(1)}% crit, +${Math.min(30, l - 1)}% attack speed` },
   strength: { name: "Strength", icon: "fist", color: "#72d672", perk: (l) => `+${3 * (l - 1)}% damage` },
   defence: { name: "Defence", icon: "shield", color: "#5aa0d8", perk: (l) => `+${l - 1} armour` },
   hitpoints: { name: "Hitpoints", icon: "heart", color: "#c7373f", perk: (l) => `${l * 10} base health` },
+  slayer: { name: "Slayer", icon: "skull", color: "#b9a8d0", perk: (l) => `Tasks: ${l >= 20 ? "all foes" : l >= 15 ? "up to Miners" : l >= 5 ? "up to Husks and Bats" : "small foes"}. +${Math.floor(l / 5)}% damage on task` },
+  mining: { name: "Mining", icon: "pick", color: "#c9962a", perk: (l) => `Ores: Rot Iron${l >= 10 ? ", Drowned Silver" : ""}${l >= 20 ? ", Gleamstone" : ""}. Faster mining` },
+  smithing: { name: "Smithing", icon: "anvil", color: "#8a90a6", perk: (l) => `Relic slots: ${l >= 30 ? 3 : 2}. Forge relics and tiers at Brom's` },
 };
 
 const XP_TABLE: number[] = [0, 0];

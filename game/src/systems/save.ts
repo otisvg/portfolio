@@ -4,6 +4,8 @@ import { refreshBounties, type Bounty } from "./bounties";
 import type { MatId } from "./crafting";
 import { DICE_CHARGE, STARTER_DIE, type FaceId } from "./dice";
 import type { SigilId } from "./sigils";
+import type { OreId, RelicId } from "./relics";
+import type { SlayerTask } from "./slayer";
 import { xpForLevel, type Skill } from "./skills";
 
 export type PetId = "wick" | "grim";
@@ -64,6 +66,23 @@ export interface SaveData {
   dailiesDone: number;
   /** Diary tiers whose reward has been granted, "area:tier". */
   diaryClaimed: string[];
+
+  /** Slayer: current assignment, points, tasks done, shop unlocks, blocked foes. */
+  slayerTask: SlayerTask | null;
+  slayerPts: number;
+  slayerDone: number;
+  slayerUnlocks: string[];
+  slayerBlocked: string[];
+  /** Mined ore. */
+  ore: Partial<Record<OreId, number>>;
+  /** Relics forged (id -> tier) and the ones worn. */
+  relics: Partial<Record<RelicId, number>>;
+  relicEq: RelicId[];
+  /** Lore pages found. */
+  lore: string[];
+  /** Mine-cart run: best time in seconds, and runs finished. */
+  cartBest: number | null;
+  cartRuns: number;
 }
 
 export const INV_SIZE = 28;
@@ -77,13 +96,15 @@ export function newSave(): SaveData {
     v: 1, gold: 0, bank: 0, shards: 0,
     inv: new Array(INV_SIZE).fill(null),
     eq: { weapon: sword, helm: null, body: tunic, trinket: null },
-    xp: { attack: 0, strength: 0, defence: 0, hitpoints: xpForLevel(10) },
+    xp: { attack: 0, strength: 0, defence: 0, hitpoints: xpForLevel(10), slayer: 0, mining: 0, smithing: 0 },
     kills: {}, log: {}, shrines: ["village"], lastShrine: "village", tonicMax: 3,
     purse: null, pet: false, flags: {}, bestRarity: 0, deaths: 0, playTime: 0,
     dice: [[...STARTER_DIE], [...STARTER_DIE], [...STARTER_DIE]], diceRoll: [], diceCharge: DICE_CHARGE, runes: {}, secondWindUsed: false,
     bounties: refreshBounties([]), bountiesDone: 0, hope: 0, runeStock: null,
     mats: {}, maps: [], c: {}, sigils: {}, pets: [], activePet: null, petKc: {},
     daily: null, dailyDay: "", dailiesDone: 0, diaryClaimed: [],
+    slayerTask: null, slayerPts: 0, slayerDone: 0, slayerUnlocks: [], slayerBlocked: [],
+    ore: {}, relics: {}, relicEq: [], lore: [], cartBest: null, cartRuns: 0,
   };
 }
 

@@ -32,7 +32,7 @@ export interface ItemBase {
 export interface Item {
   uid: string;
   base: string;
-  rarity: number; // 0..4 random, 5 = unique
+  rarity: number; // 0..4 random, 5 = unique, 6 = set
   name: string;
   dmg?: [number, number];
   def: number;
@@ -79,7 +79,27 @@ export const BASES: Record<string, ItemBase> = {
   wardens_sickle: { id: "wardens_sickle", name: "Warden's Sickle", slot: "weapon", icon: "sickle", kind: "scythe", dmg: [11, 17], speed: 0.95, reach: 30, weight: 0, implicit: [{ t: "crit", v: 5 }], lore: "Reforged from the Warden's blade. Still curved enough to cut roots." },
   pearl_ring: { id: "pearl_ring", name: "Brine Pearl Ring", slot: "trinket", icon: "pearl", hp: 10, weight: 0, implicit: [{ t: "regen", v: 15 }, { t: "def", v: 4 }], lore: "Cold to the touch. Warm to the lungs." },
   drowned_mail: { id: "drowned_mail", name: "Drowned Mail", slot: "body", icon: "mail", def: 9, hp: 14, weight: 0, look: "mail", implicit: [{ t: "hp", v: 10 }], lore: "Chain links from the flood, riveted tight. It drips, sometimes." },
+
+
+  // --- set pieces (fixed stats; see systems/sets.ts) ---
+  warden_brim: { id: "warden_brim", name: "Warden's Brim", slot: "helm", icon: "strawhat", def: 4, hp: 10, weight: 0, look: "straw", implicit: [{ t: "crit", v: 3 }], lore: "Forty summers of sun on it. Then forty of something else." },
+  warden_coat: { id: "warden_coat", name: "Warden's Coat", slot: "body", icon: "gambeson", def: 6, hp: 14, weight: 0, look: "gambeson", implicit: [{ t: "stam", v: 10 }], lore: "Patched with feed sacks. Every patch is a year." },
+  warden_hook: { id: "warden_hook", name: "Warden's Hook", slot: "weapon", icon: "sickle", kind: "scythe", dmg: [13, 19], speed: 0.95, reach: 30, weight: 0, implicit: [{ t: "dmg", v: 6 }], lore: "A hand-sickle for the corners the scythe missed." },
+  warden_button: { id: "warden_button", name: "Warden's Button", slot: "trinket", icon: "button", hp: 8, weight: 0, implicit: [{ t: "gold", v: 10 }, { t: "crit", v: 3 }], lore: "It fell off his coat the night he climbed down." },
+  foreman_helmet: { id: "foreman_helmet", name: "Foreman's Helmet", slot: "helm", icon: "lamp", def: 6, hp: 8, weight: 0, look: "lamp", light: 1, lore: "The lamp is shaped like a small, disappointed face." },
+  foreman_oilskin: { id: "foreman_oilskin", name: "Foreman's Oilskin", slot: "body", icon: "tunic", def: 7, hp: 16, weight: 0, look: "tunic", implicit: [{ t: "regen", v: 10 }], lore: "Keeps the water out. Kept him in." },
+  foreman_mattock: { id: "foreman_mattock", name: "Foreman's Mattock", slot: "weapon", icon: "pick", kind: "axe", dmg: [16, 23], speed: 0.8, reach: 24, weight: 0, implicit: [{ t: "hp", v: 10 }], lore: "Heavy enough to break a seam. Or a promise." },
+  foreman_whistle: { id: "foreman_whistle", name: "Foreman's Whistle", slot: "trinket", icon: "bell", hp: 10, weight: 0, implicit: [{ t: "def", v: 3 }, { t: "speed", v: 4 }], lore: "Three blasts meant run. Nobody heard the third." },
+  // --- Slayer ---
+  slayer_helm: { id: "slayer_helm", name: "Slayer Helm", slot: "helm", icon: "helmslay", def: 5, hp: 8, weight: 0, look: "slayer", lore: "Tam's own. It still smells of lamp oil and stubbornness." },
 };
+
+/** Fixed-stat set pieces (rarity 6). */
+export function makeSetPiece(baseId: string): Item {
+  const it = makeUnique(baseId);
+  it.rarity = 6;
+  return it;
+}
 
 /** Fixed-stat Epic items made at Brom's forge from boss parts. */
 export function makeCrafted(baseId: string): Item {
@@ -99,9 +119,9 @@ export const AFFIXES: Record<AffixType, { label: (v: number) => string; range: [
   regen: { label: (v) => `+${v}% Stamina Regen`, range: [6, 15], prefix: "Steady", suffix: "of Breath", w: { body: 2, trinket: 3, helm: 2, weapon: 1 } },
 };
 
-const RARITY_STAT = [1, 1.12, 1.25, 1.42, 1.65, 1];
-const RARITY_AFFIX = [1, 1, 1.15, 1.3, 1.5, 1];
-const AFFIX_COUNT = [0, 1, 2, 3, 3, 0];
+const RARITY_STAT = [1, 1.12, 1.25, 1.42, 1.65, 1, 1];
+const RARITY_AFFIX = [1, 1, 1.15, 1.3, 1.5, 1, 1];
+const AFFIX_COUNT = [0, 1, 2, 3, 3, 0, 0];
 const LEGEND_NAMES: Record<Slot, string[]> = {
   weapon: ["Hollowmere's Oath", "The Last Harvest", "Maud's Hearthbrand", "Crowbane"],
   helm: ["Crown of Brambles", "The Watchful Brim", "Lamplighter's Cowl"],
@@ -189,13 +209,13 @@ export function score(it: Item): number {
 }
 
 export function sellValue(it: Item): number {
-  const base = [4, 12, 35, 90, 260, 150][it.rarity];
+  const base = [4, 12, 35, 90, 260, 150, 180][it.rarity];
   return Math.round(base * (1 + 0.35 * it.plus));
 }
 
 export const FORGE_MAX = 5;
 export function forgeCost(it: Item): { gold: number; shards: number } {
   const n = it.plus + 1;
-  const rm = [1, 1.2, 1.5, 1.9, 2.5, 2.2][it.rarity];
+  const rm = [1, 1.2, 1.5, 1.9, 2.5, 2.2, 2.2][it.rarity];
   return { gold: Math.round(20 * n * n * rm), shards: n };
 }

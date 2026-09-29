@@ -149,6 +149,84 @@ Hollowmere and the Drowned Mines each have Easy, Medium and Hard tiers of four t
 | Harvest | Bosses drop an extra gear piece |
 | Drowned | Maps drop three times as often |
 
+## Slayer (Old Tam)
+
+Old Tam, the ghost lamplighter at the Mine Mouth, hands out Slayer assignments across both levels (for example, "kill 18 Husks").
+- **XP:** kills on task give Slayer XP equal to the foe's health.
+- **Harder tasks:** higher Slayer levels unlock tougher assignments. Husks and Bats open at level 5, Miners at 15, and Rotborn at 20 (once unlocked).
+- **Points:** a finished task pays 10 points, every 10th task pays 50, and every 50th pays 150.
+- **Damage:** Slayer level adds a small damage bonus against your task.
+
+| Tam's shop | Cost | Effect |
+| --- | --- | --- |
+| Bigger and Badder | 150 | Unlocks **Superiors**: while you're on task, each kill has a 1/120 chance to summon a gleaming Superior (5x HP, hits 40% harder). They drop elite gear, 2–4 shards, a rune at 1/2 and a set piece at 1/8 |
+| Boss Hunter | 120 | Wick and Grimwater can be assigned |
+| Rot Stalker | 100 | Rotborn tasks (Slayer 20) |
+| Need More Darkness | 80 | Tasks are 50% longer |
+| Slayer Helm | 300 | +15% damage and +10% Slayer XP on task |
+| Skip / Block Task | 30 / 100 | Get a different task, or never get this foe again (max 2 blocked) |
+| Hearth Charge / Tam's Rune | 25 / 40 | Fully charge your dice, or get a random rune |
+
+## Mining, Smithing and Relics
+
+- **Ore veins.** Veins in the Mines are struck until they give. Each swing rolls a success chance from your Mining level:
+
+  | Ore | Mining level | XP |
+  | --- | --- | --- |
+  | Rot Iron | 1 | 18 |
+  | Drowned Silver | 10 | 40 |
+  | Gleamstone | 20 | 80 |
+
+  A vein holds 2–4 ore, then regrows after 60s. There's a 1/80 chance per ore of a rune-etched gem. The best Gleamstone veins sit inside the secret caches.
+- **Relics.** Brom forges ore into **Relics**: permanent passives worn in 2 relic slots (3 at Smithing 30). Each can be tempered to tier III.
+
+  | Relic | Smithing | Effect (tier I / II / III) |
+  | --- | --- | --- |
+  | Ember | 1 | Finishers burn for +40/60/80% damage |
+  | Lodestone | 5 | Loot flies to you from 2/3/4x as far |
+  | Lamplighter's | 10 | +1 light; foes in your light take +8/12/16% |
+  | Tide | 15 | Perfect dodges release a 20/30/40 damage wave |
+  | Bellwright's | 20 | A bell blocks one hit every 24/18/12s |
+  | Gleam | 25 | Crits refund 8/12/16 stamina |
+  | Prospector's | 30 | 25/40/55% extra ore; gems 3x as common |
+  | Slayer's | 35 | +10/15/20% damage and Slayer XP on task |
+
+- **Smelting.** Smelt spare ore into Blight Shards for steady Smithing XP: 5 Rot Iron, 2 Drowned Silver or 1 Gleamstone per shard.
+
+## Gear sets
+
+Set pieces (a new rarity, shown in green) drop at fixed, published odds.
+
+**The Warden's Harvest** (Outskirts): Husks 1/100, Wick 1/12, Superiors 1/8.
+- 2 pieces: finisher-die blanks become x1.5.
+- 4 pieces: kills heal 3 and restore 8 stamina, and heavy finishers cleave nearby foes.
+
+**The Foreman's Watch** (Mines): Miners 1/90, Grimwater 1/10, Superiors 1/8.
+- 2 pieces: +4 armour, and hits can't spill your tonic.
+- 4 pieces: perfect dodges deal +50% posture, and flood water can't slow you.
+
+**Two of each:** +6% crit and +15 max stamina.
+
+## The world connects
+
+- **Mines gear opens Outskirts secrets.** Three caches refill on rest:
+  - **The Diver's Helm** lets you walk the bottom of the orchard bog to the Sunken Crypt Cache.
+  - **The Tide Bell**, rung at the Tide Stone, drains the Wheatfields bog until you rest.
+  - **A miner's pick** (Foreman's Pick or Mattock) or **Mining 20** breaks the cracked rock sealing the Old Seam in the orchard's high ground.
+- **Relight the Mines.** Six dead lamps take one Warden's Ember each. Every lamp you relight permanently pushes the dark back. Light all six for +0.5 light for good.
+- **Shortcuts.** Four levers on far banks permanently lay bridges and stairs:
+  - Wayside Bridge.
+  - Orchard Bridge.
+  - Sluice Bridge.
+  - Root Stair.
+- **The lift.** The first ride down is a full scene: rock sliding past, the bell tolling below, water rushing up. After that it's a quick ride.
+- **The mine-cart run.** Unlocked by felling Grimwater. You ride from the Mine Mouth down to the Sunken Shaft:
+  - Jump the gaps and rocks, duck under beams, and outrun the flood chasing you.
+  - Ore hangs over the gaps; gold lies on the flats.
+  - The layout is fixed, so your best time means something, and a chest waits at the end.
+  - If you're swept away, you keep what you grabbed.
+- **Lore.** Twelve lore pages across both levels, some in secret places, tell what happened the night the seam broke, and why the Rot is still going down. They're kept in the Collection Log.
+
 ## Combat (Souls-like)
 
 - Stamina governs attacks, rolls and double-jumps.
@@ -297,7 +375,7 @@ Progress is tracked automatically, and a finished contract pays out on the spot:
 
 ## Progression (OSRS-style)
 
-- **Skills:** Attack, Strength, Defence and Hitpoints use the real OSRS XP curve. Hitpoints starts at
+- **Skills:** Attack, Strength, Defence, Hitpoints, Slayer, Mining and Smithing use the real OSRS XP curve. Hitpoints starts at
   level 10, and a new character is combat level 3.
 - **Feedback:** XP drops, and level-up messages in OSRS's own words.
 - **Chat:** a chatbox carries lines like "Your Wick kill count is: 12." and

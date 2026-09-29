@@ -16,7 +16,7 @@ import { Bat, Blightling, Crow, Enemy, Husk, Miner, Pot, Sludgeling } from "./en
 import { Bubble, Grimwater } from "./entities/grimwater";
 import { drawBoard, NPC, Pet, Pickup, Purse, Shrine, Sign } from "./entities/objects";
 import { Player } from "./entities/player";
-import { drawBeacon, drawDigSite, drawSigilStone, LootChest, Watcher, type ChestKind } from "./entities/world";
+import { drawBeacon, drawDeadLamp, drawDigSite, drawLever, drawLorePage, drawSigilStone, drawTideStone, LootChest, Vein, Watcher, type ChestKind } from "./entities/world";
 import { Chat } from "./systems/chat";
 import { baseOf, displayName, makeUnique, type Item, type Slot } from "./systems/items";
 import { dailyBounty, dayKey, describe, milestonesFor, MILESTONES, recedeFor, refreshBounties, rewardText, WICK_FAST_SECONDS, HOPE_MAX, type Bounty, type BountyKind, type BountyTarget } from "./systems/bounties";
@@ -29,6 +29,13 @@ import { loadSave, newSave, wipeSave, writeSave, type PetId, type SaveData } fro
 import { SIGIL_IDS, sigilMods } from "./systems/sigils";
 import { levelForXp, SKILL_INFO, type Skill } from "./systems/skills";
 import { computeStats, type Stats } from "./systems/stats";
+import { LORE, loreById } from "./systems/lore";
+import { GEM_RATE, mineChance, ORES, relicSlots, type OreId, type RelicId } from "./systems/relics";
+import { newTask, SUPERIOR_RATE, taskName, taskPoints } from "./systems/slayer";
+import { makeCrafted } from "./systems/items";
+import { CartRun } from "./ui/cart";
+import { LiftScene } from "./ui/lift";
+import { SlayerMenu } from "./ui/slayer";
 import { BountyBoard } from "./ui/bounty";
 import { ChestReveal } from "./ui/chest";
 import { DiceMenu, drawFinFx, type FinFx } from "./ui/dice";
@@ -39,6 +46,7 @@ import { drawBanner, drawDeath, IntroScreen, PauseMenu, RestMenu, TitleScreen, t
 import { ShopMenu } from "./ui/shop";
 import { SigilMenu } from "./ui/sigils";
 import { T, type Level, type LevelId } from "./world/level";
+import { touchesTile } from "./world/physics";
 import { getLevel, LEVEL_INFO, levelOfShrine } from "./world/levels";
 import { drawMillBlades, renderProps, type PropLayer } from "./world/props";
 
@@ -78,6 +86,11 @@ export class Game {
   pickups: Pickup[] = [];
   chests: LootChest[] = [];
   watchers: Watcher[] = [];
+  veins: Vein[] = [];
+  /** An ongoing mining session at a vein. */
+  mining: { vein: Vein; t: number } | null = null;
+  /** Bellwright's Relic cooldown. */
+  private bellCd = 0;
   npcs: NPC[] = [];
   shrines: Shrine[] = [];
   signs: Sign[] = [];
@@ -169,11 +182,14 @@ export class Game {
     this.shrines = L.shrines.map((d) => new Shrine(d));
     this.signs = L.signs.map((d) => new Sign(d));
     this.watchers = L.watchers.map((d) => new Watcher(d));
+    this.veins = L.veins.map((d) => new Vein(d));
+    this.mining = null;
+    for (const sc of L.shortcuts) if (this.save.flags["sc_" + sc.id]) L.applyShortcut(sc);
     this.updateSight();
   }
 
   /** Walk into another level at one of its Hearthstones (which is kindled on arrival). */
-  private enterLevel(shrineId: string) {
+  enterLevel(shrineId: string) {
     const id = levelOfShrine(shrineId);
     this.gatherChests();
     this.overlays = [];
@@ -296,8 +312,11 @@ export class Game {
     this.bossActive = false;
     L.setFog(true);
     L.regrow();
+    for (const sc of L.shortcuts) if (this.save.flags["sc_" + sc.id]) L.applyShortcut(sc);
+    for (const v of this.veins) if (v.depleted) { v.left = rng.int(2, 4); v.respawn = 0; }
+    this.mining = null;
     for (const w of this.watchers) { w.alert = 0; w.glanced = false; }
-    this.chests = L.caches.map((c) => new LootChest(c.x, c.y, "cache", "cache", null, c.id));
+    this.chests = L.caches.map((c) => new LootChest(c.x, c.y, "cache", L.theme === "mines" ? "cache" : "deepcache", null, c.id));
     this.projectiles = [];
     this.dodged.clear();
   }
@@ -495,11 +514,14 @@ export class Game {
         }
         fin = this.finFace;
       }
-      const finMult = fin === "x2" ? 2 : fin === "x15" || fin === "skewer" ? 1.5 : 1;
+      const finMult = fin === "x2" ? 2 : fin === "x15" || fin === "skewer" || (fin === "blank" && s.setPerks.includes("warden2")) ? 1.5 : 1;
       const vuln = t.vulnMult();
-      const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * finMult * vuln * (riposte ? 2 : crit ? 1.75 : 1)));
+      const bonus = this.targetBonus(t);
+      const dmg = Math.max(1, Math.round(rng.int(s.dmg[0], s.dmg[1]) * s.dmgMult * mult * finMult * vuln * bonus * (riposte ? 2 : crit ? 1.75 : 1)));
+      if (crit && s.relics.gleam) p.stam = Math.min(s.maxStam, p.stam + [8, 12, 16][s.relics.gleam - 1]);
       t.takeHit(this, dmg, crit, p.facing, false, heavy || riposte);
       if (fin) this.applyFinisher(fin, t, dmg, id);
+      if (heavy && s.setPerks.includes("warden4") && fin !== "cleave") this.cleave(t, Math.round(dmg * 0.5), id);
       if (t instanceof Boss) t.addPosture((riposte ? 22 : 0) + (heavy ? (fin && fin !== "blank" ? 16 : 7) : 0), this);
       const hx = clamp(p.cx + p.facing * 14, t.x, t.x + t.w), hy = clamp(p.y + 8, t.y, t.y + t.h);
       this.particles.hit(hx, hy, p.facing, crit ? C.gold2 : C.fire3, crit ? 12 : 7);
@@ -519,10 +541,17 @@ export class Game {
   /** Orchard roots in the Mines: a curved blade (any scythe) cuts them; anything else bounces off. */
   private strikeRoots(box: Rect, id: number) {
     const L = this.level;
-    if (L.theme !== "mines" || this.rootSwing === id) return;
+    if (this.rootSwing === id) return;
     const c0 = Math.floor(box.x / TILE), c1 = Math.floor((box.x + box.w) / TILE);
     const r0 = Math.floor(box.y / TILE), r1 = Math.floor((box.y + box.h) / TILE);
     for (let c = c0; c <= c1; c++) for (let r = r0; r <= r1; r++) {
+      if (L.get(c, r) === T.CRACK) {
+        this.rootSwing = id;
+        const pick = ["foreman_pick", "foreman_mattock"].includes(this.save.eq.weapon?.base ?? "");
+        if (pick) this.breakCrack(c);
+        else { audio.play("clink", 3); this.toast("Cracked rock. A miner's pick, or a skilled miner (Mining 20), could break it."); }
+        return;
+      }
       if (L.get(c, r) !== T.ROOT) continue;
       this.rootSwing = id;
       if (this.stats.kind === "scythe") {
@@ -544,6 +573,7 @@ export class Game {
   /** Signature finisher-die effects (the damage multipliers are applied by the caller). */
   private applyFinisher(fin: FinFace, t: Enemy, dmg: number, id: number) {
     const p = this.player, s = this.stats;
+    if (fin !== "blank" && s.relics.ember && !t.dead) t.bleed(Math.max(1, Math.round((dmg * [0.4, 0.6, 0.8][s.relics.ember - 1]) / 5)));
     if (fin === "rend") t.bleed(Math.max(1, Math.round(dmg * 0.15)));
     else if (fin === "reap") {
       const heal = Math.max(1, Math.round(dmg * 0.3));
@@ -554,34 +584,69 @@ export class Game {
       const d2 = Math.max(1, Math.round(dmg * 0.7));
       t.takeHit(this, d2, false, p.facing);
       this.addFloat(`${d2}`, t.cx + 6, t.y - 10, C.xp);
-    } else if (fin === "cleave") {
-      const others: Enemy[] = this.enemies.filter((e) => e !== t && !e.dead && Math.abs(e.cx - t.cx) < 56 && Math.abs(e.bottom - t.bottom) < 40);
-      if (this.boss && this.boss !== t && !this.boss.dead && Math.abs(this.boss.cx - t.cx) < 56) others.push(this.boss);
-      for (const o of others) {
-        if (o.lastHitId === id) continue;
-        o.lastHitId = id;
-        const d2 = Math.max(1, Math.round(dmg * 0.6));
-        o.takeHit(this, d2, false, p.facing);
-        this.addFloat(`${d2}`, o.cx, o.y - 4, C.fire1);
-        this.particles.hit(o.cx, o.y + o.h / 2, p.facing, C.fire1, 5);
-      }
+    } else if (fin === "cleave") this.cleave(t, Math.round(dmg * 0.6), id);
+  }
+
+  /** Hit every other foe near a target (Cleave faces, the Warden's set). */
+  private cleave(t: Enemy, d: number, id: number) {
+    const p = this.player;
+    const others: Enemy[] = this.enemies.filter((e) => e !== t && !e.dead && Math.abs(e.cx - t.cx) < 56 && Math.abs(e.bottom - t.bottom) < 40);
+    if (this.boss && this.boss !== t && !this.boss.dead && Math.abs(this.boss.cx - t.cx) < 56) others.push(this.boss);
+    for (const o of others) {
+      if (o.lastHitId === id) continue;
+      o.lastHitId = id;
+      const d2 = Math.max(1, d);
+      o.takeHit(this, d2, false, p.facing);
+      this.addFloat(`${d2}`, o.cx, o.y - 4, C.fire1);
+      this.particles.hit(o.cx, o.y + o.h / 2, p.facing, C.fire1, 5);
     }
+  }
+
+  /** Is this foe (or boss) your current Slayer assignment? */
+  onTask(e: Enemy) {
+    const t = this.save.slayerTask;
+    if (!t || t.have >= t.need) return false;
+    return t.target === e.table || (t.target === "rotborn" && e.rotborn);
+  }
+
+  /** Damage multiplier from Slayer (level, helm, relic) and the Lamplighter's Relic. */
+  private targetBonus(t: Enemy) {
+    const s = this.stats;
+    let m = 1;
+    if (this.onTask(t)) {
+      m += Math.floor(s.levels.slayer / 5) / 100;
+      if (this.save.eq.helm?.base === "slayer_helm") m += 0.15;
+      if (s.relics.slayer) m += [0.1, 0.15, 0.2][s.relics.slayer - 1];
+    }
+    if (s.relics.lamplighter && Math.abs(t.cx - this.player.cx) < 70) m += [0.08, 0.12, 0.16][s.relics.lamplighter - 1];
+    return m;
   }
 
   /** Returns true if damage landed. */
   damagePlayer(raw: number, fromX: number, _o: { source?: string } = {}) {
     const p = this.player;
     if (!p.alive || p.invuln > 0 || p.iframes || p.state === "rest" || p.state === "fog") return false;
+    const rb = this.stats.relics.bellwright;
+    if (rb && this.bellCd <= 0) {
+      this.bellCd = [24, 18, 12][rb - 1];
+      p.invuln = 0.6;
+      audio.play("bell");
+      this.addFloat("BLOCKED", p.cx, p.y - 8, C.gold2);
+      this.particles.burst(p.cx, p.y + 8, 14, { speed: 80, colors: [C.gold2, C.gold3], max: 0.5, light: 4, lightColor: C.gold2 });
+      return false;
+    }
+    this.mining = null;
     const dmg = Math.max(1, Math.round(raw * this.stats.foeDmgMult * (1 - this.stats.dr)));
     const perks = this.stats.perks;
+    const steady = p.state === "drink" && this.stats.setPerks.includes("foreman2");
     p.hpTrail = Math.max(p.hpTrail, p.hp);
     p.trailDelay = 0.55;
     const taken = Math.min(dmg, Math.max(0, p.hp));
     p.hp -= dmg;
     p.invuln = 1.0; p.hurtFlash = 0.2;
     if (this.bossActive) this.fightHits++;
-    if (p.state === "drink" && !p.drinkDone) this.toast("The tonic spills from your hands!", C.bad);
-    if (!perks.includes("bulwark")) {
+    if (p.state === "drink" && !p.drinkDone && !steady) this.toast("The tonic spills from your hands!", C.bad);
+    if (!perks.includes("bulwark") && !steady) {
       p.state = "hurt"; p.st = 0;
       p.vx = (Math.sign(p.cx - fromX) || -p.facing) * 130; p.vy = -150;
     }
@@ -675,8 +740,17 @@ export class Game {
       const a = (i / 16) * Math.PI * 2;
       this.particles.spawn(p.cx, p.y + 10, { vx: Math.cos(a) * 70, vy: Math.sin(a) * 70, max: 0.4, color: C.gold3, color2: C.gold1, drag: 4, light: 4, lightColor: C.gold2 });
     }
-    if (source instanceof Boss) source.addPosture(34, this);
-    else if (!source && this.bossActive && this.boss) this.boss.addPosture(20, this);
+    const pm = s.setPerks.includes("foreman4") ? 1.5 : 1;
+    if (source instanceof Boss) source.addPosture(34 * pm, this);
+    else if (!source && this.bossActive && this.boss) this.boss.addPosture(20 * pm, this);
+    if (s.relics.tide) {
+      const d = [20, 30, 40][s.relics.tide - 1];
+      audio.play("splash");
+      for (let i = 0; i < 20; i++) this.particles.spawn(p.cx, p.bottom - 4, { vx: (i < 10 ? -1 : 1) * rng.range(60, 160), vy: -rng.range(20, 80), g: 300, max: 0.6, color: "#6ad0c0", color2: "#b8f0e0" });
+      const targets: Enemy[] = this.enemies.filter((e) => !e.dead && Math.abs(e.cx - p.cx) < 70 && Math.abs(e.bottom - p.bottom) < 40);
+      if (this.boss && this.bossActive && Math.abs(this.boss.cx - p.cx) < 70) targets.push(this.boss);
+      for (const e of targets) { e.takeHit(this, d, false, Math.sign(e.cx - p.cx) || 1); this.addFloat(`${d}`, e.cx, e.y - 4, "#6ad0c0"); if (!e.isBoss) e.vx = Math.sign(e.cx - p.cx) * 200; }
+    }
   }
 
   stamDenied() {
@@ -686,8 +760,19 @@ export class Game {
 
   /** Flood water: you wade at half speed. */
   wading() {
+    if (this.diving() && touchesTile(this.level, this.player.x, this.player.y, this.player.w, this.player.h, T.BOG, 2)) return 0.6;
+    if (this.stats.setPerks.includes("foreman4")) return 1;
     const wy = this.bossActive ? this.boss?.waterY() ?? null : null;
     return wy !== null && this.player.bottom > wy + 6 ? 0.55 : 1;
+  }
+
+  /** The Diver's Helm lets you walk the bottom of the bogs. */
+  diving() { return this.save.eq.helm?.base === "divers_helm"; }
+
+  /** Pickup magnet radius (Lodestone Relic, a fully grown pet). */
+  magnetRange() {
+    const lode = this.stats.relics.lodestone ? [2, 3, 4][this.stats.relics.lodestone - 1] : 1;
+    return 34 * Math.max(lode, this.pet && this.pet.stage >= 2 ? 2 : 1);
   }
 
   /** Rot-water burns while you stand in it (no stagger, just a steady drain). */
@@ -789,6 +874,12 @@ export class Game {
       this.addHope(2, "Rotborn slain");
     }
     this.chargeDice(1);
+    this.slayerKill(e);
+    if (e.superior) this.spawnDrops(this.level.theme === "mines" ? "superior_m" : "superior_o", e.cx, e.y + e.h / 2);
+    if (this.stats.setPerks.includes("warden4") && this.player.alive) {
+      this.player.hp = Math.min(this.stats.maxHp, this.player.hp + 3);
+      this.player.stam = Math.min(this.stats.maxStam, this.player.stam + 8);
+    }
     if (this.stats.perks.includes("bloodlust") && this.player.alive) {
       this.player.hp = Math.min(this.stats.maxHp, this.player.hp + 4);
       this.addFloat("+4", this.player.cx, this.player.y - 8, C.good);
@@ -897,7 +988,7 @@ export class Game {
         this.pickups.push(new Pickup("item", x, y, 1, d.item));
         if (d.item.rarity >= 3) {
           audio.loot(d.item.rarity);
-          this.chat.push(`Valuable drop: ${displayName(d.item)}`, RARITY[d.item.rarity].color);
+          this.chat.push(`${d.item.rarity === 6 ? "Set piece" : "Valuable drop"}: ${displayName(d.item)}`, RARITY[d.item.rarity].color);
         }
       } else if (d.type === "shard") this.pickups.push(new Pickup("shard", x, y, d.amount));
       else if (d.type === "rune") { const pk = new Pickup("rune", x, y); pk.face = d.face; this.pickups.push(pk); }
@@ -916,12 +1007,13 @@ export class Game {
         case "orb": p.hp = Math.min(this.stats.maxHp, p.hp + Math.round(this.stats.maxHp * 0.12)); break;
         case "rune": s.runes[d.face] = (s.runes[d.face] ?? 0) + 1; break;
         case "mat": s.mats[d.id] = (s.mats[d.id] ?? 0) + d.amount; break;
+        case "ore": s.ore[d.id] = (s.ore[d.id] ?? 0) + d.amount; break;
         case "map": this.addMap(); break;
         case "pet": this.gainPet(d.pet, x, y); break;
         case "item": {
           const it = d.item;
           if (it.rarity > s.bestRarity && it.rarity <= 4) s.bestRarity = it.rarity;
-          if (it.rarity === 5) {
+          if (it.rarity >= 5) {
             const first = !(s.log[it.base] > 0);
             s.log[it.base] = (s.log[it.base] ?? 0) + 1;
             if (first) this.chat.push(`New item added to your collection log: ${baseOf(it).name}`, RARITY[5].color);
@@ -990,7 +1082,7 @@ export class Game {
     }
     ch.opened = true;
     const drops = ch.drops;
-    const title = ch.kind === "boss" ? `${this.boss?.title ?? "BOSS"} SPOILS` : ch.kind === "treasure" ? "BURIED TREASURE" : ch.kind === "daily" ? "THE DAILY CHEST" : "SECRET CACHE";
+    const title = ch.table === "cart" ? "END OF THE LINE" : ch.kind === "boss" ? `${ch.table === "wick" ? "WICK" : "GRIMWATER"} SPOILS` : ch.kind === "treasure" ? "BURIED TREASURE" : ch.kind === "daily" ? "THE DAILY CHEST" : "SECRET CACHE";
     this.openOverlay(new ChestReveal(title, drops, () => {
       this.claimDrops(drops, ch.x, ch.y);
       this.checkDiary();
@@ -1029,7 +1121,7 @@ export class Game {
       audio.loot(it.rarity);
       this.chat.push(`You pick up: ${displayName(it)}`, RARITY[it.rarity].color);
       if (it.rarity > s.bestRarity && it.rarity <= 4) s.bestRarity = it.rarity;
-      if (it.rarity === 5) {
+      if (it.rarity >= 5) {
         const first = !(s.log[it.base] > 0);
         s.log[it.base] = (s.log[it.base] ?? 0) + 1;
         if (first) this.chat.push(`New item added to your collection log: ${baseOf(it).name}`, RARITY[5].color);
@@ -1096,6 +1188,120 @@ export class Game {
     if (!this.save.flags.watcherHint) { this.save.flags.watcherHint = true; this.chat.push("Time your way past the light, or find a way to look like you belong here.", C.dim); }
   }
 
+  // ===================================================================== slayer
+  assignSlayerTask() {
+    const s = this.save;
+    const prev = s.slayerTask?.target ?? null;
+    s.slayerTask = newTask(this.stats.levels.slayer, s.slayerUnlocks, s.slayerBlocked, !!s.flags.minesOpen, prev);
+    this.chat.push(`Your new task is to kill ${s.slayerTask.need} ${taskName(s.slayerTask.target)}.`, "#b9a8d0");
+    this.persist();
+  }
+
+  makeSlayerHelm() { return makeCrafted("slayer_helm"); }
+
+  giveRandomRune() {
+    const f = rng.weighted(RUNE_WEIGHTS);
+    this.save.runes[f] = (this.save.runes[f] ?? 0) + 1;
+    this.chat.push(`You receive a ${FACES[f].name} rune.`, FACES[f].color);
+  }
+
+  /** Progress the Slayer task, give XP, and maybe summon a Superior. */
+  private slayerKill(e: Enemy) {
+    const s = this.save, t = s.slayerTask;
+    if (!t || !this.onTask(e)) return;
+    t.have++;
+    let xp = e.isBoss ? e.maxHp / 2 : e.maxHp * (e.superior ? 3 : 1);
+    if (s.eq.helm?.base === "slayer_helm") xp *= 1.1;
+    if (this.stats.relics.slayer) xp *= 1 + [0.1, 0.15, 0.2][this.stats.relics.slayer - 1];
+    this.gainXp("slayer", xp);
+    this.xpDrop(xp, "skull", "#b9a8d0");
+    if (!e.superior && !e.isBoss && s.slayerUnlocks.includes("superior") && rng.oneIn(SUPERIOR_RATE) && t.have < t.need) this.spawnSuperior(e);
+    if (t.have >= t.need) {
+      s.slayerDone++;
+      const pts = taskPoints(s.slayerDone);
+      s.slayerPts += pts;
+      audio.play("levelup");
+      this.showBanner("SLAYER TASK COMPLETE", `${pts} points. Return to Old Tam.`, "#b9a8d0", false, 3.5);
+      this.chat.push(`You've completed ${s.slayerDone} task${s.slayerDone > 1 ? "s" : ""} and received ${pts} points; return to Old Tam for more.`, "#b9a8d0");
+    }
+    this.persist();
+  }
+
+  private spawnSuperior(e: Enemy) {
+    const x = e.cx, y = e.bottom;
+    const n = e instanceof Sludgeling ? new Sludgeling(x, y) : e instanceof Blightling ? new Blightling(x, y) : e instanceof Bat ? new Bat(x, y - 8) : e instanceof Crow ? new Crow(x, y - 8)
+      : e instanceof Miner ? new Miner(x, y) : e instanceof Husk ? new Husk(x, y) : null;
+    if (!n) return;
+    n.makeSuperior();
+    n.announced = true;
+    this.enemies.push(n);
+    audio.play("roar"); this.shake(3, 0.4);
+    this.particles.burst(x, y - 10, 30, { speed: 100, colors: [C.gold2, C.gold3, C.white], max: 0.8, light: 6, lightColor: C.gold2 });
+    this.chat.push(`A superior foe has appeared: a Superior ${n.label}!`, C.gold2);
+  }
+
+  // ===================================================================== mining
+  private startMining(v: Vein) {
+    const lvl = this.stats.levels.mining;
+    const o = ORES[v.def.ore];
+    if (lvl < o.level) { audio.play("deny"); this.toast(`You need a Mining level of ${o.level} to mine ${o.name}.`); return; }
+    this.mining = { vein: v, t: 0 };
+    this.player.facing = v.x > this.player.cx ? 1 : -1;
+    this.chat.push(`You swing at the rock...`, C.dim);
+  }
+
+  private updateMining(dt: number) {
+    const m = this.mining;
+    if (!m) return;
+    const p = this.player, inp = this.input;
+    if (p.state !== "normal" || !p.onGround || inp.isHeld("left") || inp.isHeld("right") || inp.pressed("jump") || inp.pressed("attack") || inp.pressed("roll") || m.vein.depleted || Math.abs(p.cx - m.vein.x) > 30) { this.mining = null; return; }
+    m.t += dt;
+    const period = Math.max(0.45, 0.8 - this.stats.levels.mining * 0.006);
+    if (m.t < period) return;
+    m.t = 0;
+    const v = m.vein, ore = v.def.ore as OreId;
+    v.shake = 0.12;
+    audio.play("dig");
+    this.particles.burst(v.x, v.y - 6, 5, { speed: 70, colors: [C.stone2, C.stone3, ORES[ore].color], g: 400, max: 0.4 });
+    if (!rng.chance(mineChance(ore, this.stats.levels.mining))) return;
+    const s = this.save;
+    const pr = this.stats.relics.prospector;
+    const n = 1 + (pr && rng.chance([0.25, 0.4, 0.55][pr - 1]) ? 1 : 0);
+    s.ore[ore] = (s.ore[ore] ?? 0) + n;
+    this.gainXp("mining", ORES[ore].xp * n);
+    this.xpDrop(ORES[ore].xp * n, "pick", "#c9962a");
+    this.addFloat(`+${n} ${ORES[ore].name.toUpperCase()}`, v.x, v.y - 20, ORES[ore].color);
+    audio.play("reveal", ore === "gleam" ? 3 : ore === "silver" ? 2 : 1);
+    if (rng.oneIn(pr ? GEM_RATE / 3 : GEM_RATE)) { this.giveRandomRune(); this.chat.push("You find a rune-etched gem in the rock!", C.gold2); audio.loot(3); }
+    v.deplete();
+    if (v.depleted) { this.mining = null; this.chat.push("The vein is spent. It'll glitter again in a minute.", C.dim); }
+    this.persist();
+  }
+
+  private breakCrack(col: number) {
+    const L = this.level;
+    for (let y = 0; y < L.h; y++) if (L.get(col, y) === T.CRACK) {
+      L.set(col, y, T.EMPTY);
+      this.particles.burst(col * TILE + 8, y * TILE + 8, 12, { speed: 100, colors: [C.stone1, C.stone2, C.stone3], g: 400, max: 0.8, size: 2 });
+    }
+    audio.play("slam"); this.shake(3, 0.3);
+    if (!this.save.flags.crackHint) { this.save.flags.crackHint = true; this.chat.push("The cracked rock gives way.", C.good); }
+  }
+
+  toggleRelic(id: RelicId) {
+    const s = this.save;
+    if (!s.relics[id]) { audio.play("deny"); this.toast("Forge it at Brom's first."); return; }
+    if (s.relicEq.includes(id)) s.relicEq = s.relicEq.filter((r) => r !== id);
+    else if (s.relicEq.length >= relicSlots(this.stats.levels.smithing)) { audio.play("deny"); this.toast("Your relic slots are full."); return; }
+    else s.relicEq.push(id);
+    audio.play("select");
+    this.onGearChanged();
+    this.persist();
+  }
+
+  /** Background of the current level, for full-screen scenes like the cart run. */
+  drawScenery(ctx: Ctx, camX: number, t: number) { this.bg.draw(ctx, camX, this.level.pxH - H, t); }
+
   // ===================================================================== interactions
   private interact() {
     const p = this.player, s = this.save, L = this.level;
@@ -1134,8 +1340,20 @@ export class Game {
       for (const ex of L.exits) {
         if (!near(ex.x, ex.y, 16)) continue;
         if (ex.needs === "beacon" && !s.flags.minesOpen) continue;
-        cands.push({ d: Math.abs(p.cx - ex.x), x: ex.x, y: ex.y - 34, text: ex.label, act: () => { audio.play("fog"); this.enterLevel(ex.to); } });
+        cands.push({ d: Math.abs(p.cx - ex.x), x: ex.x, y: ex.y - 34, text: ex.label, act: () => this.rideLift(ex.to) });
       }
+      for (const sc of L.shortcuts) if (!s.flags["sc_" + sc.id] && near(sc.x, sc.y, 14)) cands.push({ d: Math.abs(p.cx - sc.x), x: sc.x, y: sc.y - 22, text: "PULL LEVER", act: () => this.pullLever(sc.id) });
+      const ts = L.tideStone;
+      if (ts && near(ts.x, ts.y, 14)) cands.push({ d: Math.abs(p.cx - ts.x), x: ts.x, y: ts.y - 28, text: "TIDE STONE", act: () => this.tideStone() });
+      const cs = L.cartStation;
+      if (cs && near(cs.x, cs.y, 18)) cands.push({ d: Math.abs(p.cx - cs.x), x: cs.x, y: cs.y - 30, text: s.flags.grimSlain ? "RIDE THE CART" : "OLD CART", act: () => this.rideCart() });
+    }
+    for (const dl of L.deadLamps) if (!s.flags["lamp_" + dl.id] && near(dl.x, dl.y, 14)) cands.push({ d: Math.abs(p.cx - dl.x), x: dl.x, y: dl.y - 46, text: "RELIGHT (1 EMBER)", act: () => this.relight(dl.id) });
+    for (const lp of L.lorePages) if (!s.lore.includes(lp.id) && near(lp.x, lp.y, 12)) cands.push({ d: Math.abs(p.cx - lp.x), x: lp.x, y: lp.y - 20, text: "READ", act: () => this.readLore(lp.id) });
+    if (!this.mining) for (const v of this.veins) if (!v.depleted && near(v.x, v.y, 18)) cands.push({ d: Math.abs(p.cx - v.x), x: v.x, y: v.y - 20, text: `MINE ${ORES[v.def.ore].name.toUpperCase()}`, act: () => this.startMining(v) });
+    {
+      const col = Math.floor((p.cx + p.facing * 12) / TILE), row = Math.floor((p.bottom - 8) / TILE);
+      if (L.get(col, row) === T.CRACK) cands.push({ d: 10, x: col * TILE + 8, y: p.y - 10, text: this.stats.levels.mining >= 20 ? "MINE THROUGH" : "CRACKED ROCK (MINING 20)", act: () => { if (this.stats.levels.mining >= 20) this.breakCrack(col); else { audio.play("deny"); this.toast("You need Mining 20, or a proper miner's pick."); } } });
     }
     for (const ch of this.chests) if (!ch.opened && near(ch.x, ch.y, 16)) cands.push({ d: Math.abs(p.cx - ch.x), x: ch.x, y: ch.y - 24, text: ch.label, act: () => this.openChest(ch) });
     const spot = this.mapSpot();
@@ -1176,6 +1394,98 @@ export class Game {
     this.persist();
   }
 
+  /** The mill lift: a proper ride down the first time, a quick one after that. */
+  private rideLift(to: string) {
+    const down = levelOfShrine(to) === "mines";
+    const first = down && !this.save.flags.liftRidden;
+    this.save.flags.liftRidden = this.save.flags.liftRidden || down;
+    this.player.state = "rest";
+    this.openOverlay(new LiftScene(first ? 6 : 1.8, down, (g) => { g.player.state = "normal"; g.enterLevel(to); }));
+  }
+
+  private pullLever(id: string) {
+    const L = this.level, sc = L.shortcuts.find((x) => x.id === id);
+    if (!sc) return;
+    this.save.flags["sc_" + id] = true;
+    L.applyShortcut(sc);
+    audio.play("gate"); this.shake(3, 0.4);
+    this.showBanner("SHORTCUT OPENED", sc.name, C.gold2, false, 3);
+    this.persist();
+  }
+
+  private relight(id: string) {
+    const s = this.save;
+    if ((s.mats.ember ?? 0) < 1) { audio.play("deny"); this.toast("You need a Warden's Ember to relight this lamp."); return; }
+    s.mats.ember! -= 1;
+    s.flags["lamp_" + id] = true;
+    audio.play("kindle");
+    const dl = this.level.deadLamps.find((d) => d.id === id)!;
+    this.particles.burst(dl.x, dl.y - 34, 24, { speed: 70, colors: [C.fire1, C.fire2, C.fire3], max: 0.9, g: -20, light: 6, lightColor: C.fire1 });
+    const lit = this.level.deadLamps.filter((d) => s.flags["lamp_" + d.id]).length;
+    this.chat.push(`The lamp catches. The dark draws back. (${lit}/${this.level.deadLamps.length})`, C.fire2);
+    if (lit === this.level.deadLamps.length && !s.flags.allLamps) {
+      s.flags.allLamps = true;
+      this.showBanner("THE DEEP REMEMBERS THE LIGHT", "Every lamp burns again. +0.5 light, for good.", C.fire2, true, 4.5);
+      this.onGearChanged();
+    }
+    this.persist();
+  }
+
+  private readLore(id: string) {
+    const s = this.save, pg = loreById(id);
+    if (!pg) return;
+    if (!s.lore.includes(id)) s.lore.push(id);
+    audio.play("select");
+    this.openOverlay(new Dialog(pg.title, pg.text, null));
+    this.chat.push(`New page added to your Lore: ${pg.title} (${s.lore.length}/${LORE.length})`, C.paper);
+    if (s.lore.length === LORE.length && !s.flags.allLore) {
+      s.flags.allLore = true;
+      this.showBanner("THE WHOLE STORY", "The Rot is still going down...", C.paper, true, 4.5);
+      this.addHope(10, "lore");
+    }
+    this.persist();
+  }
+
+  /** The Tide Bell calls the water out of the bog (until you rest). */
+  private tideStone() {
+    const L = this.level, ts = L.tideStone!;
+    if (this.save.eq.trinket?.base !== "tide_bell") { this.toast("Old carvings: waves, and a bell. The stone is cold.", C.dim); return; }
+    let drained = 0;
+    for (let x = ts.x0; x < ts.x1; x++) for (let y = 0; y < L.h; y++) if (L.get(x, y) === T.BOG) { L.set(x, y, T.EMPTY); drained++; }
+    if (!drained) { this.toast("The water is already gone.", C.dim); return; }
+    audio.play("bell"); audio.play("splash");
+    this.shake(3, 0.6);
+    this.particles.burst((ts.x0 + ts.x1) * 8, 15 * TILE, 40, { speed: 120, colors: ["#6ad0c0", "#b8f0e0", C.blight4], g: 300, max: 1 });
+    this.chat.push("The Tide Bell rings, and the bog water pulls away like a tide going out.", "#6ad0c0");
+  }
+
+  private rideCart() {
+    const s = this.save;
+    if (!s.flags.grimSlain) { this.toast("The line runs all the way down to the Sunken Shaft. Nobody's ridden it since the flood.", C.dim); return; }
+    audio.music("grim");
+    this.openOverlay(new CartRun(s.cartBest, (g, won, time, got) => g.endCartRun(won, time, got)));
+  }
+
+  endCartRun(won: boolean, time: number, got: Record<"gold" | OreId, number>) {
+    const s = this.save;
+    const drops: Drop[] = [];
+    if (got.gold) drops.push({ type: "gold", amount: got.gold });
+    for (const o of ["iron", "silver", "gleam"] as OreId[]) if (got[o]) drops.push({ type: "ore", id: o, amount: got[o] });
+    if (won) {
+      s.cartRuns++;
+      if (!s.cartBest || time < s.cartBest) { s.cartBest = Math.round(time * 10) / 10; this.chat.push(`New best cart run: ${s.cartBest}s!`, C.gold2); }
+      this.enterLevel("mines_pool");
+      drops.push(...rollDrops("cart", rng, this.dropMods()));
+      const p = this.player;
+      this.dropChest(p.cx + 24, p.bottom, "treasure", "cart", drops);
+    } else {
+      this.claimDrops(drops, this.player.cx, this.player.y);
+      this.travelTo("mines_mouth");
+    }
+    audio.music(this.level.regionAt(this.player.cx).music);
+    this.persist();
+  }
+
   private lightBeacon() {
     const s = this.save;
     const have = s.mats.ember ?? 0;
@@ -1200,7 +1510,8 @@ export class Game {
 
   private talk(n: NPC) {
     const lines = n.lines(this);
-    this.openOverlay(new Dialog(n.name, lines, (c, x, y) => n.portrait(c, x, y), n.id === "brom" ? (g) => g.openOverlay(new ShopMenu()) : undefined));
+    const after = n.id === "brom" ? (g: Game) => g.openOverlay(new ShopMenu()) : n.id === "tam" ? (g: Game) => g.openOverlay(new SlayerMenu()) : undefined;
+    this.openOverlay(new Dialog(n.name, lines, (c, x, y) => n.portrait(c, x, y), after));
     this.checkDiary();
   }
 
@@ -1277,6 +1588,7 @@ export class Game {
     s.kills[k] = (s.kills[k] ?? 0) + 1;
     const kc = s.kills[k];
     this.count("bossKills");
+    this.slayerKill(b);
     this.chargeDice(DICE_CHARGE);
     const wick = k === "wick";
     this.bountyEvent(wick ? "wick" : "grim");
@@ -1392,6 +1704,8 @@ export class Game {
     this.pickups = this.pickups.filter((pk) => !pk.dead);
     for (const n of this.npcs) n.update(this, dt);
     for (const w of this.watchers) w.update(this, dt);
+    for (const v of this.veins) v.update(dt);
+    this.bellCd = Math.max(0, this.bellCd - dt);
     for (const ch of this.chests) ch.update(dt);
     this.pet?.update(this, dt);
     this.combat();
@@ -1399,14 +1713,7 @@ export class Game {
     this.enemies = this.enemies.filter((e) => !e.remove);
     this.separateEnemies();
 
-    // a grown pet gathers gold and shards from further away
-    if (this.pet && this.pet.stage >= 2) {
-      for (const pk of this.pickups) {
-        if (pk.kind === "item" || pk.t < 0.45) continue;
-        const dx = p.cx - pk.cx, dy = p.y + 10 - pk.y;
-        if (Math.hypot(dx, dy) < 70) { pk.x += Math.sign(dx) * 120 * dt; pk.y += Math.sign(dy) * 120 * dt; }
-      }
-    }
+    this.updateMining(dt);
 
     // reclaim a lost purse
     if (this.purse && p.alive && overlap(p.hurtbox(), this.purse.hitbox())) {
@@ -1546,6 +1853,11 @@ export class Game {
     drawDynamicTiles(ctx, L, camX, camY, t);
     drawBog(ctx, L, camX, camY, W, t);
     for (const w of this.watchers) w.draw(ctx, camX, camY, t);
+    for (const dl of L.deadLamps) drawDeadLamp(ctx, dl.x, dl.y, camX, camY, !!s.flags["lamp_" + dl.id], t);
+    for (const sc of L.shortcuts) drawLever(ctx, sc.x, sc.y, camX, camY, !!s.flags["sc_" + sc.id]);
+    if (L.tideStone) drawTideStone(ctx, L.tideStone.x, L.tideStone.y, camX, camY, s.eq.trinket?.base === "tide_bell", t);
+    for (const v of this.veins) v.draw(ctx, camX, camY, t);
+    if (playing) for (const lp of L.lorePages) if (!s.lore.includes(lp.id)) drawLorePage(ctx, lp.x, lp.y, camX, camY, t);
     const spot = playing ? this.mapSpot() : null;
     if (spot) drawDigSite(ctx, spot.x, spot.y, camX, camY, t);
     for (const pt of this.pots) pt.draw(ctx, camX, camY);
@@ -1558,6 +1870,15 @@ export class Game {
     if (playing) {
       this.pet?.draw(ctx, camX, camY);
       this.player.draw(this, ctx, camX, camY);
+      if (this.mining) {
+        // a pick swinging at the rock
+        const pl = this.player, k = this.mining.t / Math.max(0.45, 0.8 - this.stats.levels.mining * 0.006);
+        const a = -2.4 + Math.min(1, k * 1.4) * 2.2, hx = Math.round(pl.cx - camX + pl.facing * 3), hy = Math.round(pl.y + 8 - camY);
+        const ex = hx + Math.round(Math.cos(a) * 10) * pl.facing, ey = hy + Math.round(Math.sin(a) * 10);
+        ctx.strokeStyle = C.wood2; ctx.fillStyle = C.wood2;
+        for (let i = 0; i <= 10; i++) ctx.fillRect(Math.round(hx + ((ex - hx) * i) / 10), Math.round(hy + ((ey - hy) * i) / 10), 1, 1);
+        ctx.fillStyle = C.steel2; ctx.fillRect(ex - 3, ey - 1, 7, 2);
+      }
     }
     for (const pr of this.projectiles) pr.draw(ctx, camX, camY, t);
     this.boss?.drawFront(this, ctx, camX, camY);
@@ -1574,7 +1895,8 @@ export class Game {
       ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = "source-over";
     }
-    let dark = mines ? 0.5 + b * 0.14 : 0.34 + b * 0.18;
+    const litLamps = mines ? L.deadLamps.filter((d) => s.flags["lamp_" + d.id]).length : 0;
+    let dark = mines ? 0.5 + b * 0.14 - litLamps * 0.025 : 0.34 + b * 0.18;
     if (this.bossActive && this.boss?.phase === 2) dark += 0.08;
     this.lighting.render(ctx, dark, mines ? "#04060c" : "#07050f", 0.3);
     this.particles.draw(ctx, camX, camY, "glow");
@@ -1625,6 +1947,10 @@ export class Game {
     this.boss?.lights(this, camX, camY);
     for (const pr of this.projectiles) pr.lights?.(this, camX, camY);
     for (const w of this.watchers) w.lights(this, camX, camY);
+    for (const v of this.veins) v.lights(this, camX, camY);
+    for (const dl of L.deadLamps) if (s.flags["lamp_" + dl.id]) lg.add(dl.x - camX, dl.y - 34 - camY, 80 + Math.sin(t * 6 + dl.x) * 3, C.fire1, 1);
+    if (L.tideStone && s.eq.trinket?.base === "tide_bell") lg.add(L.tideStone.x - camX, L.tideStone.y - 12 - camY, 22, "#6ad0c0", 0.7);
+    for (const lp of L.lorePages) if (!s.lore.includes(lp.id)) lg.add(lp.x - camX, lp.y - 6 - camY, 12, C.paper, 0.5);
     for (const ch of this.chests) ch.lights(this, camX, camY);
     for (const pk of this.pickups) {
       if (pk.kind === "item" && pk.item) lg.add(pk.cx - camX, pk.y - camY, pk.item.rarity >= 3 ? 30 : 16, RARITY[pk.item.rarity].color, 0.7);

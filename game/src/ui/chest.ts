@@ -11,6 +11,7 @@ import { FACES, type FaceId } from "../systems/dice";
 import { baseOf, displayName } from "../systems/items";
 import type { Drop } from "../systems/loot";
 import { PETS } from "../systems/pets";
+import { ORES } from "../systems/relics";
 import { drawDie } from "./dice";
 import type { Overlay } from "./menu";
 import { ellipsize, hint, panel } from "./widgets";
@@ -30,6 +31,7 @@ export function dropInfo(d: Drop): DropInfo {
     case "rune": return { icon: "star", label: `${FACES[d.face].name.toUpperCase()} RUNE`, color: FACES[d.face].color, rank: FACES[d.face].rare ? 3 : 2, face: d.face };
     case "map": return { icon: "map", label: "TREASURE MAP", color: C.paper, rank: 2 };
     case "item": return { icon: baseOf(d.item).icon, label: displayName(d.item).toUpperCase(), color: RARITY[d.item.rarity].color, rank: d.item.rarity + 1 };
+    case "ore": return { icon: ORES[d.id].icon, label: `${d.amount > 1 ? d.amount + "x " : ""}${ORES[d.id].name.toUpperCase()}`, color: ORES[d.id].color, rank: d.id === "gleam" ? 3 : d.id === "silver" ? 2 : 1 };
     case "pet": return { icon: d.pet === "grim" ? "diver" : "pet", label: PETS[d.pet].stages[0].toUpperCase(), color: RARITY[5].color, rank: 8 };
   }
 }

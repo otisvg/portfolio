@@ -130,6 +130,23 @@ export function buildLevel2(): Level {
   L.arena = { x0: 184 * TILE, x1: 214 * TILE, fogCol: 183, fogTop: 3, fogBottom: G - 1, bossX: at(205), bossY: G * TILE };
   L.setFog(true);
 
+  // shortcuts, veins, dead lamps, lore
+  L.shortcuts.push(
+    { id: "channel_bridge", name: "Sluice Bridge", x: at(53), y: gy(53), tiles: [[43, 51, G, T.PLANK]] },
+    { id: "root_stair", name: "Root Stair", x: at(128), y: 10 * TILE, tiles: [[130, 132, 13, T.PLANK]] },
+  );
+  const vein = (id: string, tx: number, ore: "iron" | "silver" | "gleam", y?: number) => L.veins.push({ id, x: at(tx), y: y ?? gy(tx), ore });
+  vein("v1", 16, "iron"); vein("v2", 37, "iron"); vein("v3", 58, "iron", G * TILE); vein("v4", 85, "iron"); vein("v5", 106, "iron"); vein("v6", 134, "iron");
+  vein("v7", 94, "silver"); vein("v8", 124, "silver", 10 * TILE); vein("v9", 141, "silver", G * TILE); vein("v10", 167, "silver");
+  vein("v11", 67, "gleam", 5 * TILE); vein("v12", 161, "gleam", 9 * TILE);
+  for (const [id, tx] of [["l1", 20], ["l2", 54], ["l3", 89], ["l4", 117], ["l5", 150], ["l6", 177]] as [string, number][]) L.deadLamps.push({ id, x: at(tx), y: id === "l5" ? G * TILE : gy(tx) });
+  L.lorePages.push(
+    { id: "m_roster", x: at(12), y: gy(12) }, { id: "m_lamplog", x: at(72), y: 5 * TILE },
+    { id: "m_day1", x: at(100), y: gy(100) }, { id: "m_day9", x: at(124), y: G * TILE },
+    { id: "m_last", x: at(163), y: 9 * TILE }, { id: "m_pip", x: at(172), y: gy(172) },
+  );
+  L.cartStation = { x: at(32), y: gy(32) };
+
   L.digSpots.push(
     { id: "lift", x: at(15), y: gy(15), clue: "Where the lift's light first fails, beside the old bones." },
     { id: "carts", x: at(88), y: gy(88), clue: "Between the abandoned ore carts." },

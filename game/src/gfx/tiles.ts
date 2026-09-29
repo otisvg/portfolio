@@ -327,8 +327,19 @@ export function drawDynamicTiles(ctx: Ctx, L: Level, camX: number, camY: number,
   const tx0 = Math.max(0, Math.floor(camX / TILE)), tx1 = Math.min(L.w - 1, Math.floor((camX + 384) / TILE));
   for (let tx = tx0; tx <= tx1; tx++) for (let ty = 0; ty < L.h; ty++) {
     const t = L.get(tx, ty);
-    if (t !== T.SPIRIT && t !== T.ROOT && t !== T.GATE) continue;
     const x0 = tx * TILE - camX, y0 = ty * TILE - camY;
+    if (t === T.EMPTY && L.baseAt(tx, ty) === T.BOG) {
+      // a drained bog: wet mud and stranded weed
+      const top = L.baseAt(tx, ty - 1) !== T.BOG;
+      for (let x = 0; x < TILE; x++) {
+        const wx = tx * TILE + x;
+        ctx.fillStyle = "#1c1420"; ctx.fillRect(x0 + x, y0 + (top ? 6 : 0), 1, TILE - (top ? 6 : 0));
+        if (!top && hash(wx, ty, 5) > 0.7) { ctx.fillStyle = "#35203f"; ctx.fillRect(x0 + x, y0 + 12, 1, 4); }
+        if (top && hash(wx, ty, 6) > 0.85) { ctx.fillStyle = "#523060"; ctx.fillRect(x0 + x, y0 + 6, 1, 1); }
+      }
+      continue;
+    }
+    if (t !== T.SPIRIT && t !== T.ROOT && t !== T.GATE && t !== T.CRACK) continue;
     if (t === T.SPIRIT) {
       if (L.spiritSight) {
         for (let x = 0; x < TILE; x++) {
@@ -356,6 +367,14 @@ export function drawDynamicTiles(ctx: Ctx, L: Level, camX: number, camY: number,
         let c = n > 0.66 ? "#6a3a4a" : n > 0.33 ? "#4a2a3a" : "#351c2a";
         if ((x + Math.round(Math.sin(wy * 0.35 + x) * 2.2)) % 3 === 0) c = "#1c1018";
         if (hash(wx, wy, 52) > 0.985) c = C.blight4;
+        ctx.fillStyle = c; ctx.fillRect(x0 + x, y0 + y, 1, 1);
+      }
+    } else if (t === T.CRACK) {
+      for (let x = 0; x < TILE; x++) for (let y = 0; y < TILE; y++) {
+        const wx = tx * TILE + x, wy = ty * TILE + y;
+        const ry = Math.floor(wy / 5), off = (ry & 1) * 4;
+        let c = (wy % 5 === 4 || (wx + off) % 8 === 7) ? "#1a1620" : hash(Math.floor((wx + off) / 8), ry, 81) > 0.5 ? "#4a4254" : "#3a3446";
+        if (Math.abs((x - 8) - (y - 8) * 0.6 + Math.sin(wy * 0.8) * 1.5) < 0.8 || Math.abs((x - 4) + (y - 10) * 0.5) < 0.6) c = C.ink;
         ctx.fillStyle = c; ctx.fillRect(x0 + x, y0 + y, 1, 1);
       }
     } else {

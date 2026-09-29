@@ -5,7 +5,8 @@ import { disc, line, rect, type Ctx } from "../gfx/canvas";
 import { C, RARITY } from "../gfx/palette";
 import type { Game } from "../game";
 import type { Drop } from "../systems/loot";
-import type { WatcherDef } from "../world/level";
+import type { VeinDef, WatcherDef } from "../world/level";
+import { ORES } from "../systems/relics";
 
 // ======================================================================= Loot chest
 export type ChestKind = "boss" | "treasure" | "cache" | "daily";
@@ -192,4 +193,87 @@ export function drawDigSite(ctx: Ctx, wx: number, wy: number, camX: number, camY
   for (let k = -2; k <= 2; k++) { ctx.fillRect(x + k, y - 2 - k, 1, 1); ctx.fillRect(x + k, y - 2 + k, 1, 1); }
   if (Math.floor(time * 4 + x) % 6 === 0) { ctx.fillStyle = C.white; ctx.fillRect(x + rng.int(-4, 4), y - rng.int(3, 8), 1, 1); }
   ctx.globalAlpha = 1;
+}
+
+// ======================================================================= Ore vein
+/** A rock outcrop threaded with ore. Holds a few ore, then crumbles until it regrows (60s). */
+export class Vein {
+  left: number;
+  respawn = 0;
+  shake = 0;
+  constructor(public def: VeinDef) { this.left = rng.int(2, 4); }
+  get x() { return this.def.x; }
+  get y() { return this.def.y; }
+  get depleted() { return this.left <= 0; }
+  update(dt: number) {
+    this.shake = Math.max(0, this.shake - dt);
+    if (this.left <= 0) { this.respawn -= dt; if (this.respawn <= 0) this.left = rng.int(2, 4); }
+  }
+  deplete() { this.left--; if (this.left <= 0) this.respawn = 60; }
+  draw(ctx: Ctx, camX: number, camY: number, time: number) {
+    const x = Math.round(this.x - camX + (this.shake > 0 ? Math.sin(time * 80) : 0)), y = Math.round(this.y - camY);
+    if (x < -30 || x > 420) return;
+    const O = ORES[this.def.ore];
+    const shape = [4, 7, 9, 10, 10, 11, 11, 11, 10];
+    for (let k = 0; k < shape.length; k++) {
+      const hw = shape[k], yy = y - shape.length + k;
+      rect(ctx, x - hw, yy, hw * 2, 1, k === 0 ? C.stone3 : k < 3 ? C.stone2 : C.stone1);
+      rect(ctx, x - hw, yy, 1, 1, C.stone0); rect(ctx, x + hw - 1, yy, 1, 1, C.stone0);
+    }
+    rect(ctx, x - 11, y - 1, 22, 1, C.stone0);
+    if (!this.depleted) {
+      for (const [ox, oy] of [[-6, -5], [-2, -7], [3, -4], [6, -6], [0, -3], [-4, -2]]) {
+        rect(ctx, x + ox, y + oy, 2, 1, O.color);
+        if (Math.floor(time * 3 + ox) % 7 === 0) rect(ctx, x + ox, y + oy - 1, 1, 1, C.white);
+      }
+    } else for (const [ox, oy] of [[-5, -4], [2, -6], [4, -3]]) rect(ctx, x + ox, y + oy, 1, 1, C.stone0);
+  }
+  lights(g: Game, camX: number, camY: number) {
+    if (!this.depleted && this.def.ore !== "iron") g.lighting.add(this.x - camX, this.y - 6 - camY, 16, ORES[this.def.ore].color, 0.5);
+  }
+}
+
+/** A dead iron lamp in the Mines, or one you've relit with a Warden's Ember. */
+export function drawDeadLamp(ctx: Ctx, wx: number, wy: number, camX: number, camY: number, lit: boolean, time: number) {
+  const x = Math.round(wx - camX), y = Math.round(wy - camY);
+  if (x < -30 || x > 420) return;
+  rect(ctx, x - 4, y - 2, 9, 2, C.steel0);
+  rect(ctx, x, y - 30, 2, 28, C.steel0); rect(ctx, x + 1, y - 30, 1, 28, C.steel1);
+  rect(ctx, x - 4, y - 40, 10, 2, C.steel0);
+  rect(ctx, x - 3, y - 38, 8, 8, C.ink);
+  rect(ctx, x - 4, y - 30, 10, 1, C.steel0);
+  if (lit) {
+    const f = Math.sin(time * 9 + wx) > 0;
+    rect(ctx, x - 2, y - 37, 6, 6, f ? C.fire2 : C.fire1); rect(ctx, x, y - 36, 2, 4, C.fire3);
+  } else rect(ctx, x - 2, y - 37, 6, 6, "#1c1a24");
+}
+
+/** A loose page, fluttering. */
+export function drawLorePage(ctx: Ctx, wx: number, wy: number, camX: number, camY: number, time: number) {
+  const x = Math.round(wx - camX), y = Math.round(wy - camY - 6 + Math.sin(time * 2.5 + wx) * 1.5);
+  if (x < -20 || x > 404) return;
+  const tilt = Math.sin(time * 1.7 + wx) > 0 ? 1 : 0;
+  rect(ctx, x - 4, y - 5 + tilt, 8, 10, C.ink);
+  rect(ctx, x - 3, y - 4 + tilt, 6, 8, C.paper);
+  for (const ly of [-2, 0, 2]) rect(ctx, x - 2, y + ly + tilt, 4, 1, C.dirt3);
+  if (Math.floor(time * 3 + wx) % 5 === 0) rect(ctx, x + 4, y - 7, 1, 1, C.white);
+}
+
+/** A shortcut lever: up until pulled. */
+export function drawLever(ctx: Ctx, wx: number, wy: number, camX: number, camY: number, pulled: boolean) {
+  const x = Math.round(wx - camX), y = Math.round(wy - camY);
+  if (x < -20 || x > 404) return;
+  rect(ctx, x - 5, y - 4, 10, 4, C.stone1); rect(ctx, x - 5, y - 4, 10, 1, C.stone2);
+  const ang = pulled ? 0.6 : -0.6;
+  line(ctx, x, y - 4, x + Math.round(Math.sin(ang) * 10), y - 4 - Math.round(Math.cos(ang) * 10), C.wood2, 2);
+  rect(ctx, x + Math.round(Math.sin(ang) * 10) - 1, y - 5 - Math.round(Math.cos(ang) * 10), 3, 3, pulled ? C.steel1 : C.hp);
+}
+
+/** An old standing stone carved with waves: the Tide Bell answers it. */
+export function drawTideStone(ctx: Ctx, wx: number, wy: number, camX: number, camY: number, active: boolean, time: number) {
+  const x = Math.round(wx - camX), y = Math.round(wy - camY);
+  if (x < -20 || x > 404) return;
+  for (let yy = 0; yy < 20; yy++) { const hw = yy < 3 ? 2 + yy : 5; rect(ctx, x - hw, y - 20 + yy, hw * 2, 1, yy % 4 === 0 ? C.stone1 : C.stone2); }
+  const col = active ? (Math.sin(time * 4) > 0 ? "#6ad0c0" : "#b8f0e0") : "#2e4a50";
+  for (let k = 0; k < 3; k++) for (let i = -3; i <= 3; i++) rect(ctx, x + i, y - 15 + k * 5 + (Math.abs(i) % 2), 1, 1, col);
 }

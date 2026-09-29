@@ -7,6 +7,7 @@ import { C } from "../gfx/palette";
 import type { Game } from "../game";
 import { POSTURE_MAX } from "../entities/bossBase";
 import { BEACON_EMBERS } from "../systems/crafting";
+import { taskName } from "../systems/slayer";
 import { describe } from "../systems/bounties";
 import { DICE_CHARGE } from "../systems/dice";
 import { drawDie } from "./dice";
@@ -52,6 +53,12 @@ export function drawHud(g: Game, ctx: Ctx) {
     drawText(ctx, "\u2022", 6, 53, C.gold2);
     drawText(ctx, `${describe(b)}  ${b.have}/${b.need}`, 12, 53, C.dim);
   } else if (g.save.bounties.length) drawText(ctx, "Bounties done. Rest for new notices.", 6, 53, C.faint);
+  const st = g.save.slayerTask;
+  if (st && !g.banner) {
+    const done = st.have >= st.need;
+    drawIcon(ctx, "skull", 3, 57);
+    drawText(ctx, done ? "Task complete. See Old Tam." : `${taskName(st.target)}  ${st.have}/${st.need}`, 17, 61, done ? C.good : "#b9a8d0");
+  }
 
   // gold (carried) and shards, top right
   let y = 5;

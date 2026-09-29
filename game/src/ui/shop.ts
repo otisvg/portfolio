@@ -6,12 +6,24 @@ import { C, RARITY } from "../gfx/palette";
 import type { Game } from "../game";
 import { baseOf, BASES, displayName, FORGE_MAX, forgeCost, itemStats, makeCrafted, rollItem, sellValue, SLOTS, type Item } from "../systems/items";
 import { canCraft, MATS, RECIPES, type MatId, type Recipe } from "../systems/crafting";
+import { ORE_IDS, ORES, RELIC_IDS, RELIC_MAX_TIER, relicLevel, RELICS, relicSlots, SMELT, type OreId, type RelicId } from "../systems/relics";
+import { levelForXp } from "../systems/skills";
 import { FACES } from "../systems/dice";
 import { INV_SIZE } from "../systems/save";
 import { gridNav, type Overlay } from "./menu";
 import { ellipsize, hint, itemLines, panel, slotBox } from "./widgets";
 
-const TABS = ["BUY", "SELL", "FORGE", "CRAFT"];
+const TABS = ["BUY", "SELL", "FORGE", "CRAFT", "RELICS"];
+
+type RelicRow = { kind: "relic"; id: RelicId } | { kind: "smelt"; ore: OreId };
+const RELIC_ROWS: RelicRow[] = [...RELIC_IDS.map((id) => ({ kind: "relic" as const, id })), ...ORE_IDS.map((ore) => ({ kind: "smelt" as const, ore }))];
+
+function relicCost(id: RelicId, tier: number) {
+  const r = RELICS[id];
+  const ore: [OreId, number][] = (Object.entries(r.ore) as [OreId, number][]).map(([o, n]) => [o, n * tier]);
+  const mats: [MatId, number][] = (Object.entries(r.mats ?? {}) as [MatId, number][]).map(([m, n]) => [m, n * tier]);
+  return { ore, mats, gold: r.gold * tier, level: relicLevel(id, tier), xp: r.xp * tier };
+}
 
 interface Ware { name: string; icon: string; price: number | null; desc: string; buy: (g: Game) => boolean }
 
@@ -80,6 +92,35 @@ export class ShopMenu implements Overlay {
           g.persist();
         }
       }
+    } else if (this.tab === 4) {
+      this.vnav(g, RELIC_ROWS.length);
+      if (inp.pressed("confirm")) {
+        const row = RELIC_ROWS[this.sel], s = g.save;
+        const smith = levelForXp(s.xp.smithing ?? 0);
+        if (row.kind === "smelt") {
+          const sm = SMELT[row.ore];
+          if ((s.ore[row.ore] ?? 0) < sm.n) { audio.play("deny"); this.say(`You need ${sm.n} ${ORES[row.ore].name}.`); }
+          else { s.ore[row.ore]! -= sm.n; s.shards++; g.gainXp("smithing", sm.xp); audio.play("forge"); this.say("One Blight Shard, hot from the crucible."); g.persist(); }
+        } else {
+          const tier = (s.relics[row.id] ?? 0) + 1;
+          if (tier > RELIC_MAX_TIER) { audio.play("deny"); this.say("It can't hold any more power."); return; }
+          const c = relicCost(row.id, tier);
+          if (smith < c.level) { audio.play("deny"); this.say(`You need Smithing ${c.level}.`); }
+          else if (!c.ore.every(([o, n]) => (s.ore[o] ?? 0) >= n) || !c.mats.every(([m, n]) => (s.mats[m] ?? 0) >= n)) { audio.play("deny"); this.say("You're short on ore or parts."); }
+          else if (!g.canAfford(c.gold)) { audio.play("deny"); this.say("Not enough gold."); }
+          else {
+            for (const [o, n] of c.ore) s.ore[o] = (s.ore[o] ?? 0) - n;
+            for (const [m, n] of c.mats) s.mats[m] = (s.mats[m] ?? 0) - n;
+            g.spend(c.gold);
+            s.relics[row.id] = tier;
+            if (tier === 1 && s.relicEq.length < relicSlots(smith)) s.relicEq.push(row.id);
+            g.gainXp("smithing", c.xp);
+            audio.play("forge"); audio.loot(3 + tier - 1);
+            this.say(tier === 1 ? `${RELICS[row.id].name} forged! Wear it from your Relics tab.` : `${RELICS[row.id].name} tempered to tier ${"I".repeat(tier)}.`);
+            g.onGearChanged(); g.persist();
+          }
+        }
+      }
     } else if (this.tab === 3) {
       this.vnav(g, RECIPES.length);
       if (inp.pressed("confirm")) {
@@ -138,7 +179,7 @@ export class ShopMenu implements Overlay {
     panel(ctx, 6, 6, 372, 204, 0.96);
     drawText(ctx, "BROM'S SMITHY", 14, 12, C.gold2);
     TABS.forEach((t, i) => {
-      const x = 96 + i * 40, sel = i === this.tab;
+      const x = 90 + i * 34, sel = i === this.tab;
       drawText(ctx, t, x, 12, sel ? C.cream : C.faint);
       if (sel) rect(ctx, x, 19, textWidth(t), 1, C.gold2);
     });
@@ -169,6 +210,47 @@ export class ShopMenu implements Overlay {
       }
       drawText(ctx, "Gold from sales goes straight to your bank.", 14, 108, C.faint);
       hint(ctx, 370, 199, [["J", this.arm === this.sel ? "CONFIRM" : "SELL"], ["Q/E", "TABS"], ["ESC", "LEAVE"]], "right");
+    } else if (this.tab === 4) {
+      const smith = levelForXp(s.xp.smithing ?? 0);
+      drawText(ctx, `SMITHING ${smith}`, 14, 27, C.dim);
+      let ox = 90;
+      for (const o of ORE_IDS) { drawIcon(ctx, ORES[o].icon, ox, 24); ox += 14 + drawText(ctx, `${s.ore[o] ?? 0}`, ox + 13, 27, ORES[o].color) + 6; }
+      const start = Math.max(0, Math.min(this.sel - 5, RELIC_ROWS.length - 10));
+      RELIC_ROWS.slice(start, start + 10).forEach((row, k) => {
+        const i = start + k, y = 38 + k * 16, sel = i === this.sel;
+        if (sel) { rect(ctx, 12, y - 2, 238, 15, C.panelHi); rect(ctx, 12, y - 2, 1, 15, C.gold2); }
+        if (row.kind === "smelt") {
+          const sm = SMELT[row.ore];
+          drawIcon(ctx, "shard", 16, y - 1);
+          drawText(ctx, `SMELT ${sm.n} ${ORES[row.ore].name.toUpperCase()}`, 32, y + 2, sel ? C.cream : C.dim);
+          drawText(ctx, `1 SHARD  +${sm.xp}XP`, 246, y + 2, (s.ore[row.ore] ?? 0) >= sm.n ? C.blight5 : C.faint, { align: "right" });
+          return;
+        }
+        const r = RELICS[row.id], tier = s.relics[row.id] ?? 0;
+        drawIcon(ctx, "relic", 16, y - 1);
+        drawText(ctx, r.name.toUpperCase(), 32, y + 2, tier ? r.color : sel ? C.cream : C.dim);
+        drawText(ctx, tier ? "I".repeat(tier) : "-", 150, y + 2, C.gold2);
+        if (tier >= RELIC_MAX_TIER) drawText(ctx, "MAX", 246, y + 2, C.gold2, { align: "right" });
+        else { const c = relicCost(row.id, tier + 1); drawText(ctx, `LV ${c.level}  ${c.gold}G`, 246, y + 2, smith >= c.level ? C.gold1 : C.bad, { align: "right" }); }
+      });
+      panel(ctx, 256, 28, 116, 164, 0.9);
+      const row = RELIC_ROWS[this.sel];
+      if (row.kind === "relic") {
+        const r = RELICS[row.id], tier = s.relics[row.id] ?? 0, next = Math.min(RELIC_MAX_TIER, tier + 1);
+        drawText(ctx, r.name.toUpperCase(), 261, 33, r.color);
+        drawText(ctx, tier ? `TIER ${"I".repeat(tier)}${s.relicEq.includes(row.id) ? "  WORN" : ""}` : "NOT FORGED", 261, 42, C.dim);
+        let y = 53;
+        for (const l of wrap(r.effect(next), 106)) { drawText(ctx, l, 261, y, C.cream); y += 8; }
+        y += 4;
+        if (tier < RELIC_MAX_TIER) {
+          const c = relicCost(row.id, next);
+          drawText(ctx, tier ? `TEMPER TO ${"I".repeat(next)}:` : "FORGE:", 261, y, C.dim); y += 10;
+          for (const [o, n] of c.ore) { drawIcon(ctx, ORES[o].icon, 260, y - 3); drawText(ctx, `${s.ore[o] ?? 0}/${n}`, 274, y, (s.ore[o] ?? 0) >= n ? C.cream : C.bad); y += 12; }
+          for (const [m, n] of c.mats) { drawIcon(ctx, MATS[m].icon, 260, y - 3); drawText(ctx, `${s.mats[m] ?? 0}/${n}`, 274, y, (s.mats[m] ?? 0) >= n ? C.cream : C.bad); y += 12; }
+          drawText(ctx, `SMITHING ${c.level}  +${c.xp} XP`, 261, y, smith >= c.level ? C.dim : C.bad);
+        }
+      } else wrap("Brom melts spare ore down and pulls a Blight Shard out of the slag. Steady Smithing XP.", 106).forEach((l, i) => drawText(ctx, l, 261, 34 + i * 8, C.cream));
+      hint(ctx, 370, 199, [["J", "FORGE"], ["Q/E", "TABS"], ["ESC", "LEAVE"]], "right");
     } else if (this.tab === 3) {
       RECIPES.forEach((rc, i) => {
         const y = 28 + i * 23, sel = i === this.sel;
@@ -225,6 +307,7 @@ export class ShopMenu implements Overlay {
       hint(ctx, 370, 199, [["J", "TEMPER"], ["Q/E", "TABS"], ["ESC", "LEAVE"]], "right");
     }
     if (this.msgT > 0) {
+      rect(ctx, 10, 196, 364, 10, C.panel);
       ctx.globalAlpha = Math.min(1, this.msgT * 2);
       drawText(ctx, this.msg, 14, 199, C.cream);
       ctx.globalAlpha = 1;

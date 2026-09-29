@@ -48,4 +48,5 @@ export const RARITY = [
   { name: "Epic", color: "#bd72ff" },
   { name: "Legendary", color: "#ff9f2e" },
   { name: "Unique", color: "#f5d76e" },
+  { name: "Set", color: "#3ad6a0" },
 ] as const;
