@@ -1,14 +1,15 @@
 {
-  "fetchedAt": "2026-10-10T08:11:33.564Z",
-  "blocked": false,
-  "searchComplete": true,
-  "errors": [],
+  "fetchedAt": "2026-10-11T08:25:21.961Z",
+  "blocked": true,
+  "searchComplete": false,
+  "errors": [
+    "blocked (429) on \"Senior Frontend Engineer\" / Dubai, United Arab Emirates"
+  ],
   "count": 453,
-  "seenThisRun": 157,
-  "adsRead": 40,
+  "seenThisRun": 10,
+  "adsRead": 0,
   "statusCounts": {
-    "new": 31,
-    "active": 114,
+    "active": 145,
     "gone": 279,
     "filtered": 29
   },
@@ -25,7 +26,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4478015368/",
       "firstSeen": "2026-10-10T08:11:33.564Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "description": "Job Description\n\nBuilding the Future of Open Finance\n\nPayward - the parent company behind Kraken, NinjaTrader, Breakout, xStocks, Payward Services and CF Benchmarks - has spent the last 15 years building one of the most modern and globally accessible financial infrastructure platforms in the industry, built to advance an open, global financial system.\n\nBefore you apply, we encourage you to explore our culture page to understand what drives us and how we work.\n\nThe team\n\nFounded in 2011, Kraken is one of the world’s longest-standing crypto platforms, trusted by over 10 million individuals and institutions globally. We offer spot trading, margin, futures, staking, and OTC services for both individual investors and institutional clients.\n\nThe Consumer Mobile team builds the Kraken app, the interface millions of people use to interact with their money. We work primarily in React Native to make complex financial experiences intuitive, fast, and trustworthy. Our product-minded engineers work closely with Product and Design to understand client problems, challenge assumptions, shape solutions, and measure whether what we ship improves the experience.\n\nWe are expanding into Asia and building a new app specifically for Asian users. This requires genuine experience with the region’s distinct user expectations, design language, and technical constraints compared with Western markets.\n\nThe opportunity\n\n\nBuild and own high-quality React Native features end to end, from ambiguous client problems and solution design through implementation, launch, measurement, and iteration\nPartner closely with Product and Design to shape thoughtful, responsive, and trustworthy financial experiences, including product discovery, trading, and simplified client journeys\nWork with APIs and dynamic or real-time data, making strong decisions on state management, rendering, performance, architecture, and reliability\nRaise the product-engineering bar through technical discussions, code reviews, collaboration, strong product ownership, and a willingness to move between product and technical challenges\nHelp build Kraken’s new app for Asian markets. Act as the team’s subject-matter guide on regional UX and design expectations, practical approaches to firewall and connectivity restrictions, and appropriate vendors and tooling such as telemetry solutions\n\n\nWhat You Bring\n\n\nStrong React Native experience, including shipping meaningful production applications and making sound architectural and implementation decisions in a modern mobile codebase\nA product-building mindset and strong product judgment. You start with the client problem, challenge or simplify requirements when needed, and turn loosely defined problems into measurable product outcomes\nEnd-to-end feature ownership, with the ability to use metrics, experimentation, client behavior, and feedback to assess and improve what you ship\nExperience building responsive, data-rich applications using APIs and dynamic or real-time data, alongside close collaboration with Product and Design in written and verbal English\nVersatility and thoughtful AI use. You are comfortable wearing multiple hats and use tools such as Cursor, Copilot, or Claude to work faster while retaining responsibility for engineering judgment and quality\nProven experience building and shipping consumer mobile apps for Asian markets. You understand the region’s UX and design conventions, its technical limitations, and how to navigate launch challenges including firewall and connectivity restrictions. You can clearly explain how you have solved these problems before\n\n\nNice to haves\n\n\nExperience in fintech, trading, crypto, payments, or another financial technology environment, with an understanding of trading, investing, or financial products\nExperience with real-time or streaming data, and improving mobile application performance, responsiveness, and reliability across a range of devices\nExperience across both mobile and web, or in a startup or small-to-medium-sized technology company where engineers work closely with Product and Design\nNative mobile experience in Swift or Kotlin, including sound judgment about when to work below the React Native layer\nChinese language proficiency, such as Mandarin, or another Asian language\n\n\nUnless a specific application deadline is stated in the job posting, applications are accepted on an ongoing basis.\n\nPlease note, applicants are permitted to redact or remove information on their resume that identifies age, date of birth, or dates of attendance at or graduation from an educational institution.\n\nWe consider qualified applicants with criminal histories for employment on our team, assessing candidates in a manner consistent with the requirements of the San Francisco Fair Chance Ordinance.\n\nOur commitment\n\nPayward is powered by people from around the world and we celebrate the diverse talents, backgrounds, contributions, and unique perspectives that everyone brings to the table. We hire based on merit, seeking out people with the right abilities, knowledge, and skills for the job. We encourage you to apply for roles where you don't fully meet the listed requirements, especially if you're passionate or knowledgeable about crypto.\n\nWe may ask candidates to complete job-related skills or work-style assessments as part of our hiring process. These assessments evaluate competencies relevant to the role and are applied consistently across candidates for similar positions. Results are considered alongside experience and interviews, and are not the sole basis for any employment decision.\n\nAs an equal opportunity employer, we don't tolerate discrimination or harassment of any kind, whether based on race, ethnicity, age, gender identity, citizenship, religion, sexual orientation, disability, pregnancy, veteran status, or any other protected characteristic as outlined by federal, state, or local laws.\n\nStay connected\n\nFollow us on Twitter\n\nLearn on the Kraken Blog\n\nConnect on LinkedIn\n\nCandidate Privacy Notice\n\nJob Details\n\nRole Level: Not Applicable Work Type: Full-Time Country: United Arab Emirates City: Dubai Company Website: https://kraken.com Job Function: Information Technology (IT) Company Industry/\n\nSector: Other\n\nWhat We Offer\n\nAbout The Company\n\nSearching, interviewing and hiring are all part of the professional life. The TALENTMATE Portal idea is to fill and help professionals doing one of them by bringing together the requisites under One Roof. Whether you're hunting for your Next Job Opportunity or Looking for Potential Employers, we're here to lend you a Helping Hand.\n\nReport\n\nDisclaimer: talentmate.com is only a platform to bring jobseekers & employers together. Applicants are advised to research the bonafides of the prospective employer independently. We do NOT endorse any requests for money payments and strictly advice against sharing personal or bank related information. We also recommend you visit Security Advice for more information. If you suspect any fraud or malpractice, email us at abuse@talentmate.com.",
       "postedAgo": "8 hours ago",
@@ -38,7 +39,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477881378",
@@ -67,7 +68,7 @@
         "Industries": "Financial Services"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477816503",
@@ -94,7 +95,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477815122",
@@ -121,7 +122,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477696835",
@@ -149,7 +150,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477691064",
@@ -164,7 +165,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4477691064/",
       "firstSeen": "2026-10-10T08:11:33.564Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "description": "About the Company: xCube is a Fintech company based in the UAE, dedicated to enhancing the competitiveness of Capital Markets in the UAE by introducing the latest financial technologies and innovations to the region.\n\nWith its origins as a market maker, xCube has since expanded its scope, utilizing its expertise in Capital Markets to provide a brokerage platform that leverages cutting-edge technologies.\n\n\n\n\nAbout the Role: We are looking for a Software Engineer who takes features from problem to production. You may be specialized in frontend, mobile or backend, but you are comfortable working across the stack. For smaller, less complex features you deliver front to back yourself; for complex work, you partner with or hand over to the relevant specialist. You blend product thinking with engineering craft: you understand the investor we are building for, work closely with Product and Design early on to make sure ideas hold up technically, and then build them.\n\n\n\n\nYou are AI-native. AI tools and agents are part of how you explore, design, build, test and ship every day, and you apply sound judgement to what they produce. You do not wait for a fully specified ticket. When details are missing, you go and find the answers: in the code, the data, the exchange and regulatory rules, or by asking the right person, and you come back with a recommendation, not just a question.\n\n\n\n\nKey Responsibilities\n\nFeature Ownership: Own the delivery of features from build through release and post-launch performance, across UI, API and data. You are accountable for the outcome, not just the code.\nEarly Product and Design Collaboration: Work closely with Product and Design during discovery and scoping, without owning it. Pressure-test ideas and concepts, anticipate technical challenges and constraints early, and suggest simpler alternatives so we can adjust and save time before build starts. Contribute to acceptance criteria and success metrics.\nCross-Stack Delivery: Bring real depth in your specialism (frontend, mobile or backend) and work across the rest of the stack where needed. Deliver smaller features front to back on your own, across our iOS, Android and web apps and the APIs and data behind them. For complex features, collaborate with or hand over to the relevant expert while staying close to the outcome.\nSelf-Directed Problem Solving: Resolve ambiguity independently. Investigate, read code and documentation, query data and test assumptions to settle the details of a feature, including market, order and regulatory edge cases.\nAI-Native Engineering: Use AI assistants and agents as your default way of working: to understand unfamiliar code, investigate problems, prototype, build, test, debug and document. Review AI-generated output critically and own its quality.\nQuality and Reliability: Write automated tests, instrument your features with logging and monitoring, and own the health of what you ship in production.\nSecurity and Compliance: Apply secure development practices, protect client data and build with regulatory requirements (SCA, DFM, ADX) in mind.\nRaising the Bar: Share effective AI workflows and patterns with the team, document decisions and contribute through thoughtful code review.\n\n\n\n\nWhat Success Looks Like\n\nFeatures ship end to end with minimal hand-offs and clear impact on client experience or business metrics.\nProduct and Engineering trust you to take an ambiguous problem and return with a working, well-reasoned solution.\nThe team ships faster because of the tools, prompts and practices you introduce.\n\n\n\n\nQualifications\n\nBachelor's degree in Computer Science, Software Engineering or a related field; advanced degree is a plus.\n5+ years of software development experience, with a track record of owning and shipping features or products end to end.\nSpecializing in frontend, mobile or backend is welcome. What matters is deep expertise in at least one area, plus practical experience working across the stack and the willingness to do so for smaller features.\n\n\n\n\nTechnical Skills\n\nDemonstrated daily use of AI coding tools (e.g. Claude Code, Cursor, GitHub Copilot) to accelerate development and solve problems.\nExpertise in at least one of the areas below, with working knowledge of the others:\nFrontend and mobile: React and TypeScript, or native mobile experience is a plus.\nBackend: C# and .NET Core, REST APIs, microservices and distributed systems.\nData: SQL Server or Oracle, and NoSQL (Redis, Elasticsearch).\nCI/CD and cloud: Azure DevOps (Boards, Repos, Pipelines) and cloud solutions.\nUnderstanding of secure application development and sound testing practices.\n\n\n\n\nPreferred\n\nExperience in FinTech, trading, brokerage or capital markets.\nExperience with real-time data (WebSocket, streaming) and observability tooling (e.g. Elastic/Kibana).\nArabic language skills or experience building bilingual (Arabic/English) products.\n\nPersonal Attributes\n\nStrong ownership and bias for action; takes initiative without waiting to be asked.\nCurious and resourceful; finds answers independently and knows when to escalate.\nComfortable with ambiguity and able to make and explain trade-offs.\nKnows when a problem needs a specialist and brings them in early.\nSound judgement in evaluating and validating AI-generated work.\nExcellent verbal and written communication; collaborates well with Product, Design, QA and Engineering.",
       "postedAgo": "19 hours ago",
@@ -177,7 +178,7 @@
         "Industries": "Financial Services"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477669171",
@@ -205,7 +206,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477655878",
@@ -233,7 +234,7 @@
         "Industries": "Banking"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477649610",
@@ -260,7 +261,7 @@
         "Industries": "Business Consulting and Services, IT Services and IT Consulting, and Professional Training and Coaching"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4477639703",
@@ -473,7 +474,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4476982242",
@@ -558,7 +559,7 @@
         "Industries": "Financial Services"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4476788725",
@@ -736,7 +737,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4476508002",
@@ -926,7 +927,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4476288609",
@@ -953,7 +954,7 @@
         "Industries": "Business Consulting and Services"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4476267935",
@@ -980,7 +981,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4476250856",
@@ -1224,7 +1225,7 @@
         "Industries": "IT Services and IT Consulting and Business Consulting and Services"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475883539",
@@ -1305,7 +1306,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475791304",
@@ -1359,7 +1360,7 @@
         "Industries": "Banking"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475787804",
@@ -1386,7 +1387,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475780732",
@@ -1723,7 +1724,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4475291345/",
       "firstSeen": "2026-10-10T08:11:33.564Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "description": "Job Requirements\n\nTeam and mission: AI Platform building and rolling out RAKBANK's Agentic SDLC platform (the Fabric), and using it to deliver real banking features. This role does both: builds the platform and proves it in production delivery.\n\nSeniority: Senior (10+ years), of which a minimum of 4-5 years writing and\n\nrunning production code Pluses: experience working with a bank or another regulated financial institution.\n\nInterpersonal and stakeholder skills: Strong communicator who can move between audiences: fellow engineers and architects, and non-technical stakeholders in business, product, operations, risk, compliance and audit. Influences without authority builds credibility, wins over sceptics of AI-assisted delivery, and drives change in engineering habits across squads. Strong collaborator: constructive in code review, generous with knowledge, comfortable with disagreement, and able to explain trade-offs in plain language to squads or other stakeholders.\n\nNice to have: React Native, Apache Camel K, Flowable BPM, UAE banking domain knowledge, CBUAE security awareness. Experience introducing a developer platform or new engineering\n\npractice at scale, and public technical writing or speaking.\n\nAI tooling (must-have): Claude Code or GitHub Copilot used daily, spec-based development, AI-generated tests, skill-file authoring, prompt engineering, and MCP tool use within the Fabric.Reviews agent output critically and knows where human judgement must stay in the loop.\n\nFrontend: React (mandatory), TypeScript, component design, responsive UI, Figma-to-code, accessibility and cross-browser behaviour.\n\nBackend: Java 17+ / Spring Boot 3.x (mandatory), NodeJS (express, next.js etc), Python, microservices, DB design and modelling for backends, REST and event-driven APIs, OAuth2 / OIDC, PostgreSQL, Kafka / IBM MQ.\n\nDevOps: Own their service pipeline: GitHub Actions, Docker, Kubernetes / OpenShift, GitOps, automated testing, observability and on-call ownership of what they ship.\n\nClaude Code or GitHub Copilot used daily, spec-based development, AI-generated tests, skill-file authoring, prompt\n\nengineering, and MCP tool use within the Fabric. Reviews agent output critically and knows where human judgement must stay in the loop.\n\nHands-on experience with Spec-Driven Development: writing a precise, reviewable specification before code, treating the spec as the source of truth, and generating implementation and tests from it.\n\nWork Experience\n\n7-10Years",
       "postedAgo": "5 hours ago",
@@ -1736,7 +1737,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475287312",
@@ -1764,7 +1765,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475276768",
@@ -1780,7 +1781,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4475276768/",
       "firstSeen": "2026-10-10T08:11:33.564Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "description": "Education\n\n\nDegree, Post graduate in Computer Science or related field (or equivalent industry experience) Experience\nMinimum 5 years of coding experience in ReactJS (TypeScript), HTML, CSS-Pre-processors, or CSS-in-JS in creating Enterprise Applications with high performance for Responsive Web Applications.\nMinimum 5 years of coding experience in NodeJS, JavaScript & TypeScript and NoSQL Databases.\nDeveloping and implementing highly responsive user interface components using React concepts. (self-contained, reusable, and testable modules and components)\nArchitecting and automating the build process for production, using task runners or scripts\nKnowledge of Data Structures for TypeScript.\nMonitoring and improving front-end performance.\nBanking or Retail domains knowledge is good to have.\nHands on experience in performance tuning, debugging, monitoring. Technical Skills\nExcellent knowledge developing scalable and highly available Restful APIs using NodeJS technologies\nWell versed with CI/CD principles, and actively involved in solving, troubleshooting issues in distributed services ecosystem\nUnderstanding of containerization, experienced in Dockers, Kubernetes.\nExposed to API gateway integrations like 3Scale.\nUnderstanding of Single-Sign-on or token-based authentication (Rest, JWT, OAuth)\nPossess expert knowledge of task/message queues include but not limited to: AWS, Microsoft Azure, Pushpin and Kafka.\nPractical experience with GraphQL is good to have.\nWriting tested, idiomatic, and documented JavaScript, HTML and CSS\nExperiencing in Developing responsive web-based UI\nHave experience on Styled Components, Tailwind CSS, Material UI and other CSS-in-JS techniques\nThorough understanding of the responsibilities of the platform, database, API, caching layer, proxies, and other web services used in the system\nWriting non-blocking code, and resorting to advanced techniques such as multi-threa\"",
       "postedAgo": "5 hours ago",
@@ -1793,7 +1794,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475228780",
@@ -1808,7 +1809,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4475228780/",
       "firstSeen": "2026-10-10T08:11:33.564Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "description": "𝗖𝗼𝗺𝗽𝗮𝗻𝘆 𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻 \n\n\n\n\nSuadeo is a French software company founded in 2004, focused on providing a Self BI Platform that empowers non-IT users to manage and analyze their data autonomously. Its flagship product, Suadeo Designer®, combines data governance and data visualization to support multidimensional analysis, dashboard and report creation, and strategic decision-making. The platform is designed for real-time data governance, full data lineage and traceability, robust security, and a Big Data–oriented architecture. Suadeo offers access to a wide range of BI tools, including dashboards, reports, data catalogs, and ETL, with seamless integration into existing information systems. Headquartered in Ivry-sur-Seine, France, the company has a presence in Switzerland and Dubai, serving public-sector and diverse private-sector clients in France and internationally.\n\n\n\n\n𝗥𝗼𝗹𝗲 𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻 \n\n\n\n\nAbout the role\n\nYou'll build and maintain modern front-ends in React + TypeScript across a variety of projects and plugins. It's a React-first, front-end-focused role where performance, security, reusable components and great UX matter, because applications run at scale and often handle large datasets.\n\n\n\n\nWhat you'll do\n\nBuild responsive, high-performance web applications in React.js + TypeScript\nEngineer for speed at scale — virtualization of large lists/tables, memoization, code-splitting, lazy loading and bundle budgets, tracking Core Web Vitals and p95, not just averages\nCreate reusable, well-structured UI components and share patterns across products\nTurn UI/UX designs into high-quality, accessible interfaces\nIntegrate with platform REST APIs, authentication and real-time updates\nBuild responsive and PWA (installable, offline-capable) experiences\nOptimise for performance at scale — virtualization, memoization, code-splitting\nShip multilingual UIs (EN / FR / DE/ ES …) and keep tests green (Vitest / React Testing Library)\nCollaborate with backend, QA, design and product; take part in code reviews\n\n\n\n\nWhat you'll bring\n\n5 years front-end experience with strong, hands-on React.js (hooks, component architecture, state, render behaviour)\nProven production React apps and deep React ecosystem (routing, forms, custom hooks, reusable component libraries)\nReact state management — Context/Hooks plus Redux Toolkit or Zustand, and TanStack Query\nTypeScript, strong HTML5 / CSS3, responsive design\nREST API integration and solid front-end performance skills\nGit / GitLab and modern tooling (Vite)\n\n\n\n\nNice to have\n\nPWA and React Native — the role may extend to a companion mobile app\nExposure to .NET / C# (our plugin backends are .NET) — a plus, not required\nSignalR / WebSockets, TanStack Table, data-viz / maps (MapLibre, charts), i18n, accessibility (WCAG), testing (Cypress / Playwright)",
       "postedAgo": "17 hours ago",
@@ -1821,7 +1822,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475216709",
@@ -1848,7 +1849,7 @@
         "Industries": "Professional Services"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475207038",
@@ -1862,7 +1863,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4475207038/",
       "firstSeen": "2026-10-09T08:36:35.235Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
@@ -1918,7 +1919,7 @@
         "Industries": "Technology, Information and Media and Computer Games"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4475192140",
@@ -2070,7 +2071,7 @@
         "Industries": "Technology, Information and Media"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4474875889",
@@ -2718,7 +2719,7 @@
         "Industries": "Construction, Software Development, and IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4474056851",
@@ -2751,7 +2752,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4474052931/",
       "firstSeen": "2026-10-07T08:15:29.789Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-10-10T08:11:33.564Z",
@@ -2974,7 +2975,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4473776587/",
       "firstSeen": "2026-10-01T08:27:21.783Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "description": "We are looking for an experienced Full Stack / Platform Engineer to join a major technology programme in Dubai.\n\n\n\n\nThis is a hands-on engineering role suited to someone who can work across the full application lifecycle — building modern user interfaces, backend services and APIs, through to data, security, deployment and production support.\n\nYou’ll be involved in both rapid development of new solutions and taking those products through to secure, scalable production environments.\n\n\n\n\nResponsibilities:\n\n\n\n\nDevelop modern web applications using React, Next.js and TypeScript\nBuild scalable backend services using Node.js\nDesign and work with relational databases, particularly PostgreSQL\nDevelop and integrate secure REST APIs\nDeliver features from initial concept/prototype through to production\nImplement authentication, SSO and access-control solutions\nBuild real-time functionality using WebSockets\nContainerise and deploy applications using Docker\nWork with and maintain CI/CD pipelines\nCollaborate with product, design and business teams on new solutions\nImprove application security, scalability, reliability and performance\nIntegration of AI/LLM services or multiple AI model providers\n\n\n\n\nRequirements:\n\n\n\n\n6+ years' software engineering / full-stack development experience\nStrong React / Next.js / TypeScript experience\nStrong backend development experience with Node.js\nHands-on PostgreSQL / SQL experience\nStrong understanding of REST APIs and modern application architecture\nExperience deploying and supporting production applications\nDocker and CI/CD experience\nUnderstanding of authentication and authorization including SSO, OAuth2/OIDC and RBAC\n\n\n\n\nAdvantageous Experience\n\nExperience in any of the following would be beneficial:\n\nSAML SSO integrations\nRBAC / ABAC\nMicrosoft Entra ID, Okta or similar identity platforms\nWebSockets and real-time applications\nOpenAPI / Swagger\nPrisma, Drizzle or similar ORM frameworks\nPWA / Service Workers\nB2B SaaS or enterprise platforms\nBanking, fintech, financial services or other regulated environments",
       "postedAgo": "19 hours ago",
@@ -7613,7 +7614,7 @@
       "firstSeen": "2026-10-10T08:11:33.564Z",
       "lastSeen": "2026-10-10T08:11:33.564Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4468371385",
@@ -8591,7 +8592,7 @@
       "firstSeen": "2026-10-10T08:11:33.564Z",
       "lastSeen": "2026-10-10T08:11:33.564Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4466692151",
@@ -9336,7 +9337,7 @@
       "firstSeen": "2026-10-10T08:11:33.564Z",
       "lastSeen": "2026-10-10T08:11:33.564Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4463591887",
@@ -9352,7 +9353,7 @@
       "firstSeen": "2026-10-10T08:11:33.564Z",
       "lastSeen": "2026-10-10T08:11:33.564Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4463550510",
@@ -10099,7 +10100,7 @@
         "Lead Engineer JavaScript | United Arab Emirates"
       ],
       "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-09-28T06:53:03.446Z",
@@ -11082,7 +11083,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4434547106/",
       "firstSeen": "2026-10-01T08:27:21.783Z",
-      "lastSeen": "2026-10-10T08:11:33.564Z",
+      "lastSeen": "2026-10-11T08:25:21.961Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-10-04T07:53:13.985Z",
