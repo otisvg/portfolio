@@ -1,15 +1,17 @@
 {
-  "fetchedAt": "2026-11-01T02:13:05.410Z",
-  "blocked": false,
-  "searchComplete": true,
-  "errors": [],
-  "count": 689,
-  "seenThisRun": 157,
-  "adsRead": 20,
+  "fetchedAt": "2026-11-02T02:13:01.821Z",
+  "blocked": true,
+  "searchComplete": false,
+  "errors": [
+    "blocked (429) on \"Senior Full Stack Engineer\" / United Arab Emirates"
+  ],
+  "count": 675,
+  "seenThisRun": 20,
+  "adsRead": 0,
   "statusCounts": {
-    "new": 6,
-    "active": 134,
-    "gone": 502,
+    "active": 140,
+    "gone": 486,
+    "new": 2,
     "filtered": 47
   },
   "jobs": [
@@ -38,7 +40,7 @@
         "Industries": "Maritime Transportation and Transportation, Logistics, Supply Chain and Storage"
       },
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4485652517",
@@ -203,6 +205,22 @@
       "status": "gone"
     },
     {
+      "id": "4485198046",
+      "title": "Forward Deployed Engineer, Enterprise - Dubai 🇦🇪",
+      "company": "Murphy AI",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-01",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4485198046/",
+      "firstSeen": "2026-11-02T02:13:01.821Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
       "id": "4485140849",
       "title": "Salesforce Consultant",
       "company": "HireAlpha",
@@ -227,7 +245,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4484991640",
@@ -952,6 +970,22 @@
       "status": "active"
     },
     {
+      "id": "4483991459",
+      "title": "Wordpress Developer",
+      "company": "AAAGENCY DMCC",
+      "location": "Dubai, United Arab Emirates",
+      "posted": "2026-11-01",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4483991459/",
+      "firstSeen": "2026-11-02T02:13:01.821Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
       "id": "4483943828",
       "title": "Senior Full Stack Developer",
       "company": "ToBeIT",
@@ -976,7 +1010,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4483928608",
@@ -991,7 +1025,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4483928608/",
       "firstSeen": "2026-11-01T02:13:05.410Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "Job Duties & Responsibilities:\n\n\n\n\nDesign and develop scalable FinTech / financial software from concept to production.\nBuild responsive and user-friendly applications using Vite, React, TypeScript, and Tailwind CSS.\nDevelop backend functionality using Supabase, including Postgres, Authentication, and Row-Level Security (RLS).\nDesign secure database structures, relationships, queries, and business logic using PostgreSQL.\nImplement secure authentication, authorization, role-based access, and data protection.\nDevelop REST APIs and third-party integrations with financial and business systems.\nWork closely with management to understand financial workflows and convert business requirements into practical software solutions.\nEnsure application security, accuracy, performance, and scalability.\nTest, troubleshoot, debug, and continuously improve the platform.\nMaintain clean, scalable, and well-documented code and contribute to system architecture and deployment.\n\n\n\n\nJob Qualifications:\n\n4+ years of Full Stack Development experience, preferably with experience building financial or business software.\nStrong hands-on experience with React.js, TypeScript, Vite, and Tailwind CSS.\nStrong experience with Supabase, including Postgres, Auth, and Row-Level Security (RLS).\nStrong knowledge of PostgreSQL and relational database design.\nExperience with REST APIs and third-party integrations.\nGood understanding of application security, authentication, authorization, and data protection.\nExperience with Git and modern software development practices.",
       "postedAgo": "14 hours ago",
@@ -1004,7 +1038,7 @@
         "Industries": "Holding Companies"
       },
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4483886221",
@@ -1432,7 +1466,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4483568416/",
       "firstSeen": "2026-10-29T02:14:25.432Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "We are currently seeking a Salesforce Developer who will be responsible for delivering Salesforce solutions, including configuration, customization, and full lifecycle project implementation. This role will require you to optimize business processes through Salesforce technology. The ideal candidate will have strong development experience and functional\n\nknowledge, with a proven ability to translate business requirements into scalable technical solutions.\n\n\n\n\nOur client, based in Dubai is a government-related entity. This position is a contract role with an initial duration of 12 months and is renewable.\n\n\n\n\nKey Responsibilities:\n\nDesign, prototype, and configure Salesforce solutions; manage system configuration and user setup.\nProvide technical and functional expertise to internal teams throughout project lifecycles.\nDocument system configuration changes, data mappings, and business process flows.\nGuide development teams in implementing custom logic and present solution demos to stakeholders.\nLead and contribute to testing, training, deployment, and post-go-live support planning.\nFacilitate workshops to gather, define, and document business and technical requirements.\nMaintain relevant Salesforce certifications to advise on best practices in platform usage and process optimization.\n\n\n\n\nKnowledge, Skills & Experience:\n\nMinimum 4 years of hands-on Salesforce development experience (Apex, Visualforce, Triggers, Unit Testing).\nAt least 2 years of experience with Lightning Components and LWC is a must.\n2+ years of experience with enterprise-level packaged applications (Salesforce, SAP, Microsoft Dynamics, Siebel, etc.).\nProven track record in delivering end-to-end Salesforce project implementations.\nStrong understanding of scalable solution design and Salesforce system configuration.\nActive Salesforce certifications (e.g., Administrator, Platform Developer, Consultant certifications) is an advantage.",
       "postedAgo": "2 days ago",
@@ -1932,7 +1966,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4483025274/",
       "firstSeen": "2026-10-30T02:14:21.984Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": "title matches \"Java\"",
       "status": "filtered"
     },
@@ -1988,7 +2022,7 @@
         "Industries": "Technology, Information and Media"
       },
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4483002324",
@@ -2047,7 +2081,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4482976903/",
       "firstSeen": "2026-10-27T02:20:47.141Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-10-28T02:14:18.608Z",
@@ -2187,7 +2221,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4482854798/",
       "firstSeen": "2026-10-31T02:12:14.444Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
@@ -2788,7 +2822,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4481935851/",
       "firstSeen": "2026-10-25T02:19:50.751Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "Overview\n\nITP Media Group is a leading international media company with a diverse portfolio of consumer and trade publications, digital platforms, live events, influencer marketing, and creative communications solutions.\n\nRole Overview\n\nWe are looking for a talented freelance WordPress Developer to refresh and re-skin an existing website. The project will focus on updating fonts, styling, and website content while retaining the current site structure and overall layout.\n\nKey Responsibilities\n\n\nUpdate website fonts, typography, and styling to achieve a refreshed and consistent look and feel.\nUpdate and amend existing website content as required.\nApply visual enhancements while maintaining the existing website structure and layout.\nEnsure the website remains responsive and displays correctly across desktop, tablet, and mobile devices.\nMaintain existing website functionality throughout the update process.\nTest the updated website to ensure all pages, links, and features are working correctly.\nWork with the relevant stakeholders to implement feedback and final adjustments.\nComplete the project within the agreed timeline.\n\n\nRequirements\n\n\nProven experience developing and customising WordPress websites.\nStrong understanding of WordPress themes, website styling, and content management.\nExperience with CSS and front-end website customisation.\nGood understanding of responsive web design and cross-device compatibility.\nStrong attention to detail and an eye for visual consistency.\nAbility to work independently and deliver projects within agreed deadlines.\nA portfolio of previous WordPress projects is preferred.\n\n\nKey Competencies\n\n\nWordPress development and customisation\nWebsite styling and typography\nAttention to detail\nVisual consistency and design awareness\nTime management and organisation\nCommunication and collaboration",
       "postedAgo": "1 day ago",
@@ -2818,7 +2852,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4481921243/",
       "firstSeen": "2026-10-25T02:19:50.751Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "About Us:\n\nIntellect Design Arena Ltd is a global leader in enterprise-grade financial technology, providing cloud-native, composable, and intelligent platforms to progressive financial institutions worldwide. Operating extensively across the Middle East with an established and rapidly growing presence in the region's premier financial hubs, we empower leading Islamic, regional, and tier-one institutions\n\nDriven by design thinking and first principles, our flagship architectures—including eMACH.ai, Purple Fabric, and iTurmeric—enable rapid modular adoption and intelligent, high-efficiency workflows tailored to the evolving digital and regulatory needs of Middle Eastern banking. At Intellect, we blend deep domain expertise with cutting-edge tech to drive digital transformation, operational efficiency, and sustainable growth for the future of regional finance. Join us to build the next generation of global fintech\n\n\n\n\nRole: Tech Lead – Fullstack (Angular, Spring Boot & Cloud)\n\nLocation: Dubai\n\nExperience: 10+ Years\n\nDomain: Banking\n\n\n\n\nKey Summary:\n\nWe are looking for a hands-on Tech Lead – Fullstack Developer with strong expertise in Angular and Spring Boot to join our engineering team.\n\n\n\n\nIn this role, you will lead fullstack development, manage cloud deployments on OpenShift and Azure, ensure robust application security, and leverage modern AI-assisted development tools (Claude, Cursor) to drive productivity and innovation.\n\n\n\n\nKey Responsibilities\n\nTechnical Leadership: Lead fullstack design, microservices architecture, and API design while conducting code reviews, sprint planning, and mentoring engineers.\nHands-on Development: Build scalable, high-performance web applications using Angular (Frontend) and Spring Boot (Backend).\nCloud & DevOps: Deploy, orchestrate, and manage applications on OpenShift (Kubernetes) and Azure Cloud using CI/CD pipelines.\nDatabase Management: Design and optimize schemas, queries, and data models across Oracle and PostgreSQL databases.\nAI Integration: Leverage modern AI tools (Cursor, Claude) to accelerate code generation, automate unit test writing, and streamline technical documentation.\nSecurity & Quality Assurance: Drive application security and compliance by conducting performance testing, security testing, and automated code scans (Fortify, Veracode, Trivy, Xray).\n\n\n\n\nKey Requirements & Qualifications\n\nCore Tech Stack: Angular, Spring Boot, Microservices, RESTful APIs, Oracle, PostgreSQL.\nCloud & Infrastructure: Hands-on experience with Azure Cloud, OpenShift, Docker, and Kubernetes.\nDomain Expertise: Experience in the Banking / Financial Services domain.\nDevOps & CI/CD: Proficiency in CI/CD platforms (Jenkins, Azure DevOps, GitLab CI) and version control (Git/GitHub/Bitbucket).\nSecurity & Testing Tools: Experience with Fortify, Veracode, Trivy, Xray, and performance testing frameworks.\nAI-Assisted Engineering: Hands-on experience or strong familiarity using AI tools like Claude or Cursor for prompt-driven development and code quality.\nSoft Skills: Excellent problem-solving, stakeholder communication, team mentorship, and Agile/Scrum execution skills.",
       "postedAgo": "1 day ago",
@@ -3015,7 +3049,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4481648973/",
       "firstSeen": "2026-10-25T02:19:50.751Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "We are looking for 2 AI-First Website Content & Sitecore Specialists for an exciting opportunity with a leading organisation in Dubai.\n\n\n\n\n📍 Location: Dubai, UAE\n\n💼 Employment: Full-Time\n\n🎯 Experience: 3–6 years preferred\n\n\n\n\nWhat We're Looking For:\n\nWe need creative, hands-on digital professionals who combine website development knowledge, Sitecore CMS expertise and an AI-first mindset.\n\n\n\n\nYou should be comfortable using tools like ChatGPT, Claude and Gemini to accelerate website creation, but also have the technical knowledge to independently build, modify, customise and troubleshoot webpages.\n\n\n\n\nEssential Skills – All Required:\n\n✅ Sitecore CMS: Hands-on experience creating, managing and publishing webpages using Sitecore templates and components.\n\n✅ Website Creation: Ability to independently build and manage webpages from business requirements through to publication.\n\n✅ HTML, CSS & Responsive Design: Practical understanding of webpage structure, layouts, customisation and mobile responsiveness.\n\n✅ Generative AI: Regular hands-on use of ChatGPT, Claude, Gemini or similar tools for content creation, optimisation and website workflows.\n\n✅ Content Writing: Strong English writing, editing, proofreading and digital content management skills.\n\n✅ SEO & Content Optimisation: Knowledge of on-page SEO, metadata, keywords, internal linking and content structure.\n\n✅ Quality Assurance: Ability to validate AI-generated outputs, troubleshoot basic webpage issues and ensure content accuracy.\n\n✅ Stakeholder Management: Ability to manage multiple website requests, deadlines and business requirements independently.\n\n\n\n\nGood to Have:\n\n⭐ Sitecore XP / XM Cloud\n\n⭐ Banking or Financial Services experience\n\n⭐ Adobe Analytics / Google Analytics\n\n⭐ Adobe Target or website experimentation tools\n\n⭐ GEO / LLM optimisation, structured data and JSON-LD\n\n⭐ AI image generation tools and WCAG accessibility standards\n\n⭐ Arabic content writing or localisation\n\n\n\n\n💡 What Makes You Stand Out?\n\nWe're particularly interested in candidates who are AI enthusiasts, creative problem-solvers and independent webpage builders.\n\n\n\n\nSomeone who doesn't blindly rely on AI-generated results but knows how to validate, improve, customise and deliver a fully functional, high-quality webpage.\n\nIf you enjoy experimenting with new AI tools, bringing creative ideas to life and taking complete ownership of website delivery, we'd love to hear from you!",
       "postedAgo": "1 day ago",
@@ -4194,7 +4228,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4480656222/",
       "firstSeen": "2026-10-25T02:19:50.751Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": "title matches \"Java\"",
       "status": "filtered"
     },
@@ -6531,7 +6565,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4478243888/",
       "firstSeen": "2026-10-21T07:11:51.115Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-10-22T07:14:07.505Z",
@@ -9220,7 +9254,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4475573651/",
       "firstSeen": "2026-10-06T08:40:39.461Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "Role Overview:\n\nWe are looking for a Native Arabic-speaking Web Developer to manage and support the Arabic digital experience across our e-commerce platforms. The role requires hands-on experience in website development, campaign enablement, landing page creation, multilingual content management, and technical integrations while ensuring alignment between Arabic and English website experiences.\n\nThe ideal candidate should have strong technical capabilities across web technologies, website administration, hosting environments, and marketing execution support.\n\nKey Responsibilities:\n\nWebsite & Platform Management\n\n\nManage and maintain Arabic website pages ensuring alignment with English website updates.\nDevelop, update, and deploy campaign pages, landing pages, promotional microsites, and seasonal content.\nEnsure website functionality, responsiveness, and multilingual consistency.\nPerform testing across browsers, devices, and operating systems.\nSupport UX improvements and website optimization initiatives.\n\n\nDevelopment & Technical Responsibilities\n\n\nDevelop and maintain web components using:\nHTML5\nCSS3 / Bootstrap\nJavaScript (JS)\nPHP / PSP technologies\nPython\nSupport API integrations and automation workflows.\nTroubleshoot website issues, bugs, and deployment challenges.\nManage CMS and e-commerce environments.\n\n\nMarketing & Campaign Support\n\n\nSupport campaign execution across website and digital channels.\nCreate and optimize landing pages for promotions and campaigns.\nEnable website assets for omnichannel marketing initiatives.\nSupport personalized experiences and marketing automation activities.\n\n\nHosting & Administration\n\n\nManage hosting environments and deployment activities.\nWork with hosting and server environments including:\nWHM / cPanel\nDomain configurations\nEmail configurations\nMonitor website stability and uptime.\n\n\nRequired Qualifications\n\nMandatory Requirements\n\n✔ Native Arabic Speaker (Reading, Writing & Communication)\n\n✔ Bachelor’s degree in Computer Science, IT, Software Engineering, or related field\n\n✔ 2 - 5 years experience in website development / web administration\n\n✔ Experience managing Arabic websites and multilingual content environments\n\nTechnical Skills (Must Have)\n\n\nHTML5\nCSS3 / Bootstrap\nJavaScript (JS)\nPHP / PSP\nPython\nResponsive web development\nCMS management\nLanding page development\nWordPress\nShopify\nJoomla\nSEO optimization\nWHM / cPanel hosting management\nMarketing automation platforms\nUX optimization\nEmail and web push campaign execution\nAPI integration experience\nServer administration knowledge\nPhotoshop / banner editing experience\nConversion optimization exposure\n\n\n________________________________________\n\nPreferred Candidate Profile\n\n\nExperience working with e-commerce websites.\nStrong understanding of campaign operations and marketing workflows.\nAbility to manage multiple website requests simultaneously.\nStrong ownership mindset with ability to work closely with marketing and business stakeholders.\nExperience handling Arabic and English website synchronization.",
       "postedAgo": "19 hours ago",
@@ -10201,7 +10235,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4474557154/",
       "firstSeen": "2026-10-02T08:02:54.331Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": "title matches \"Graduate\"",
       "status": "filtered"
     },
@@ -10565,7 +10599,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4474187222/",
       "firstSeen": "2026-10-28T02:14:18.608Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "About the job\n\nAt Laine, we’re building the next generation of legal tooling—a cutting-edge AI product that turns complex drafting into a fast, guided, and secure experience. We blend thoughtful product design with modern engineering to help people and licensed lawyers work smarter, not harder. If you’re excited by high-impact problems, a crisp product vision, and shipping real features used in the wild, you’ll feel at home here.\n\n\n\n\nRole Overview\n\nWe’re looking for a product-minded, versatile Principal Software Engineer to design, build, and scale our AI-assisted legal drafting platform. This is a full-time, hybrid role based in our Dubai office, with administrative visa support. It requires relocation. You will take true fullstack ownership—spanning frontend interfaces, backend services, and AI integrations—using a modern TypeScript stack to ship delightful, secure features from end to end.\n\n\n\n\nWhat You’ll Do\n\nAct as a product-minded engineer, influencing both the technical architecture and the product roadmap with pragmatic, user-first thinking.\nTake fullstack ownership of features, developing end-to-end user experiences from the React frontend down to the Node.js backend.\nIntegrate LLMs and external AI services into robust, secure, and highly usable core features.\nImprove performance, scalability, observability, and security across the platform.\nWrite clean, well-tested code; contribute to design docs and lead code reviews.\nPartner closely with product and design teams to understand the \"why\" behind the features you build.\n\n\n\n\nWhat We’re Looking For\n\nA strong product mindset—you care just as much about solving the user's problem as you do about the technical implementation.\nSolid software engineering fundamentals and a track record of shipping production systems.\nDeep expertise in TypeScript across the entire stack (Node.js and React/Next.js).\nHands-on experience integrating AI/LLMs into production workflows.\nStrong understanding of API design and database modeling (SQL/NoSQL).\nExperience with cloud platforms (GCP) and comfort with monitoring and debugging in production.\nExcellent communication and collaboration skills to thrive in a hybrid environment.\nFluent in using AI as core to your development workflow.\nFluency in English.\n\n\n\n\n\n\n\nNice to Have\n\nExperience in LegalTech, FinTech, or other compliance-sensitive domains.\nHands-on experience with prompt engineering, RAG, or AI agents.\nSecurity-minded development (authn/z, secrets, least privilege).\nEvent-driven design and queues/streams.\nBachelors in CS/Engineering or equivalent practical experience.\n\n\n\n\nHow We Work\n\nHybrid work model centered around our Dubai hub, collaborating with teammates across several timezones\nLightweight, pragmatic Agile; high ownership; strong product culture.\n\n\n\n\nBenefits & Growth\n\nAdministrative relocation support for your UAE visa processing.\nHybrid work environment with flexible working hours in Dubai.\nJoin an early-stage start-up and have a direct impact on the product's trajectory.\nSupport for continuous learning and professional development.\n\n\n\n\nApply\n\nWe welcome applicants from all backgrounds and are an equal-opportunity employer. By applying, you confirm that you have read and accepted our Candidate Privacy Policy at laine.ai.",
       "postedAgo": "14 hours ago",
@@ -10833,33 +10867,6 @@
         "Seniority level": "Not Applicable",
         "Employment type": "Full-time",
         "Industries": "Software Development"
-      },
-      "detailsFetchedAt": "2026-10-01T08:27:21.783Z",
-      "status": "gone"
-    },
-    {
-      "id": "4473910703",
-      "title": "Senior Full Stack Engineer (React + Node.js + CRM) - Remote - Latin America",
-      "company": "FullStack",
-      "location": "Cuenca, Azuay, Ecuador",
-      "posted": "2026-09-30",
-      "salary": "",
-      "queries": [
-        "Senior Full Stack Engineer TypeScript | Worldwide | remote"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4473910703/",
-      "firstSeen": "2026-10-01T08:27:21.783Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "About FullStack\n\nFullStack is your AI-native engineering partner, built to turn AI capability into certainty. Most companies can demo AI; few can get it to production and prove what it produced. We close that gap with three capabilities, AI built into your products from the start, elite vetted talent who apply it, and transparent execution that shows value every step of the way. With now over 600 customers in North America, FullStack is one integrated partner for all your AI engineering needs. With FullStack, you move forward with confidence.\n\nWe’re Most Proud Of\n\n\nOffering life-changing career opportunities to talented software professionals across the Americas.\nBuilding highly-skilled software development teams for hundreds of the world’s greatest companies.\nHaving delivered hundreds of successful custom software solutions, which have positively impacted the lives and careers of millions of users.\nOur 4.1-star rating on GlassDoor.\nOur client Net Promoter Score of 68, twice the industry average.\n\n\nThe Opportunity\n\nJoin our talent network and connect with U.S. clients for flexible, project-based development work as a Senior Full Stack Engineer (React + Node.js + CRM).\n\n\nYou will integrate directly into our client's team and work alongside their existing designers and engineers on a daily basis.\n\n\nWhat We're Looking For\n\n\n5+ years of professional software engineering experience.\n3+ years of experience in technical leadership influencing architecture, engineering direction, and mentoring peers.\nAdvanced English is required.\nSuccessful completion of a four-year college degree is required.\nExpertise in full-stack JavaScript/TypeScript application development using React and Node.js.\nHands-on experience with modern frontend frameworks and server-side rendering solutions (e.g., Next.js).\nDemonstrated experience developing reliable backend APIs, service-to-service integrations, and business logic.\nProven experience with AWS cloud-native services (such as Lambda, API Gateway, S3, or CloudWatch).\nPractical experience and functional knowledge working with CRMs (specifically Salesforce), including logic extraction, migrations, and ongoing maintenance.\nTrack record of integrating third-party marketing tools, tracking systems, or experimentation platforms (e.g., HubSpot, GA, Statsig, Optimizely).\nSolid understanding of system performance optimization, testing strategies (Jest, Cypress, Playwright), and observability tools (New Relic, Sentry, Datadog).\nComfortable working across multiple disciplines (Product, Design, and Marketing) to build scalable, component-based internal design systems.\nAbility to work through new and difficult issues and contribute to libraries as needed.\nAbility to create and maintain continuous integration and delivery of applications.\nForensic attention to detail.\nA positive mindset and a can-do attitude.\nExperience working on Agile/Scrum teams.\nMeaningful experience working on large, complex systems.\nAbility to take extreme ownership over your work. Every day is a challenge to ensure you are performing to the expectations you and your team have agreed upon.\nAbility to identify with the goals of FullStack's clients and dedicate yourself to delivering on the commitments you and your team make to them.\n\n\nNice To Have\n\nWe’re Seeking Engineers Who Are AI-enthusiastic In Their Workflow. Professional Experience Or Personal Project Work With The Following Is a Significant Plus\n\n\nCursor, Windsurf, or Google Antigravity.\nClaude Code, Gemini CLI, Codex, or Copilot CLI.\n\n\nWork Authorization Requirements\n\n\nApplicants must be currently authorized to work in the country of this job posting on a full-time basis.\nFullStack will not sponsor applicants for work visas now or in the future.\n\n\nWhat We Offer\n\n\nCompetitive pay.\n100% remote work.\nThe ability to work with leading startups and Fortune 500 companies.\nContinuing education opportunities.\nOpportunity to grow and expand your career.\n\n\nOur talent network is committed to fostering a diverse, inclusive, and accessible environment where IT professionals can find opportunities that match their skills. We welcome individuals of all races, religions, genders, sexual orientations, national origins, abilities, and experiences. Our focus is on connecting talent with projects based on qualifications, ensuring a fair and transparent process that values diverse perspectives and global collaboration.\n\nLearn more about our Applicants Privacy Notice.",
-      "postedAgo": "15 hours ago",
-      "applicants": "Be among the first 25 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Full-time",
-        "Industries": "IT Services and IT Consulting, Computer and Network Security, and Information Services"
       },
       "detailsFetchedAt": "2026-10-01T08:27:21.783Z",
       "status": "gone"
@@ -11589,60 +11596,6 @@
       "status": "gone"
     },
     {
-      "id": "4473118430",
-      "title": "Sr. Full stack engineer - Product",
-      "company": "BeTIC Technology",
-      "location": "Valencian Community, Spain",
-      "posted": "2026-10-02",
-      "salary": "",
-      "queries": [
-        "Senior Full Stack Engineer | Europe, Middle East and Africa | remote"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4473118430/",
-      "firstSeen": "2026-10-02T08:02:54.331Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "Senior Full Stack Engineer (React / Node.js) — Product & Startup 🚀\n\n\n\n\nUbicación: Valencia (Presencial)\n\n\n\n\nModalidad: Jornada completa\n\n\n\n\nExperiencia requerida: +4 años\n\n\n\n\nTech Stack: React · TypeScript · Node.js · PostgreSQL · Cloud / Serverless\n\n\n\n\nBuscamos un/a Senior Full Stack Engineer con visión de producto para sumarse a una startup tecnológica en plena fase de expansión en Valencia.\n\n\n\n\nNo buscamos un perfil puramente ejecutor. Queremos a un/a desarrollador/a con mindset de producto, criterio técnico y autonomía, capaz de entender los problemas del usuario y del negocio para traducirlos en soluciones técnicas sólidas y escalables. Trabajarás en un entorno dinámico, con baja burocracia y un alto nivel de propiedad sobre la plataforma.\n\n\n\n\nTu impacto y responsabilidades\n\nDesarrollo End-to-End: Liderar el diseño, construcción y despliegue de nuevas funcionalidades desde la fase inicial de definición hasta su puesta en producción.\n\n\n\n\nArquitectura y Escalabilidad: Tomar decisiones clave sobre la evolución del stack tecnológico, arquitectura backend/frontend e infraestructura.\n\n\n\n\nEstrategia de Producto: Colaborar directamente con los equipos de Producto y Negocio para priorizar iniciativas y diseñar la hoja de ruta de la plataforma.\n\n\n\n\nCalidad y Rendimiento: Identificar cuellos de botella, refactorizar código y proponer mejoras técnicas con impacto directo en la experiencia de usuario.\n\n\n\n\nOwnership: Asumir la responsabilidad directa sobre módulos y verticales críticas de la aplicación.\n\n\n\n\n¿Qué perfil buscamos?\n\nRequisitos principales:\n\n\n\n\nExperiencia demostrable (+4 años): Trayectoria sólida en desarrollo de software, creando y manteniendo productos digitales reales en entornos de producción.\n\n\n\n\nDominio del Stack: Experiencia práctica avanzada con React, TypeScript y Node.js.\n\n\n\n\nGestión de Datos: Buen manejo de bases de datos relacionales, con foco en PostgreSQL.\n\n\n\n\nVersatilidad Full Stack: Capacidad fluida para transicionar entre la lógica de negocio en backend y la interfaz en frontend.\n\n\n\n\nOrientación a Negocio: Interés genuino por comprender las métricas de producto, el contexto del mercado y el impacto real de cada funcionalidad desarrollada.\n\n\n\n\nValoraremos especialmente:\n\n\n\n\nExperiencia previa en startups, empresas SaaS o equipos de producto reducidos donde hayas asumido responsabilidades transversales.\n\n\n\n\nConocimientos o experiencia práctica en entornos Cloud y arquitecturas Serverless.\n\n\n\n\nLo que ofrece el proyecto\n\nImpacto Directo: Capacidad real de influir en el diseño, la cultura técnica y la visión de producto desde una etapa temprana.\n\n\n\n\nCultura de Autonomía: Un entorno de trabajo donde se fomenta la toma de decisiones, la iniciativa y la experimentación sin trabas administrativas.\n\n\n\n\nReto Técnico: Un proyecto con margen para proponer nuevas tecnologías y metodologías de trabajo.\n\n\n\n\nProyección: Oportunidad de crecer a nivel profesional a medida que la compañía y el equipo tecnológico escalen.\n\n\n\n\nCondiciones de la propuesta\n\nRégimen Retributivo: Salario competitivo acorde a experiencia + variable anual vinculado a hitos estratégicos.\n\n\n\n\nJornada: Completa.\n\n\n\n\nModalidad: Presencial en las oficinas de Valencia.\n\n\n\n\nTipo de Contrato: Indefinido.",
-      "postedAgo": "21 minutes ago",
-      "applicants": "Be among the first 25 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Full-time",
-        "Industries": "IT Services and IT Consulting"
-      },
-      "detailsFetchedAt": "2026-10-02T08:02:54.331Z",
-      "status": "gone"
-    },
-    {
-      "id": "4473100557",
-      "title": "Technical Manage",
-      "company": "Bay Area Creator Economy",
-      "location": "United Arab Emirates",
-      "posted": "2026-10-02",
-      "salary": "",
-      "queries": [
-        "Frontend Engineer | Abu Dhabi, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4473100557/",
-      "firstSeen": "2026-10-02T08:02:54.331Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "Role Description The Technical Manager is a part-time, remote role responsible for overseeing and supporting the technical operations that enable the community’s digital presence and programming. This role involves providing technical support for online platforms and tools, coordinating and improving workflows for content distribution and event promotion, and collaborating with team members to ensure stable and secure systems. The Technical Manager will manage small technical projects from planning through execution, contribute to research and development of new tools or integrations, and analyze platform performance data to recommend improvements. This role will work closely with the founding team and other contributors to maintain a smooth experience for community members and partners.\n\nQualifications\n\nCandidates should possess strong analytical skills to interpret data, monitor performance, and inform technical decisions.\nCandidates should possess team management and project management skills to coordinate tasks, prioritize work, and deliver initiatives on schedule.\nCandidates should possess technical support capabilities to troubleshoot issues, maintain online platforms, and assist internal stakeholders.\nCandidates should possess research and development (R&D) skills to evaluate tools, test new solutions, and support technical innovation for the community.\nExperience with web-based platforms, community or content tools (e.g., newsletters, event platforms, social media dashboards) is beneficial.\nStrong communication skills, reliability in a remote environment, and the ability to collaborate across time zones are important.\nBackground in technology, engineering, IT, or related fields, or equivalent practical experience, is preferred.",
-      "postedAgo": "3 hours ago",
-      "applicants": "Be among the first 25 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Part-time",
-        "Industries": "Events Services"
-      },
-      "detailsFetchedAt": "2026-10-02T08:02:54.331Z",
-      "status": "gone"
-    },
-    {
       "id": "4473099921",
       "title": "Senior Java Fullstack Developer with React",
       "company": "Societe Generale Global Solution Centre Romania",
@@ -12291,33 +12244,6 @@
       "status": "gone"
     },
     {
-      "id": "4472037870",
-      "title": "Senior Fullstack Software Engineer - TypeScript/React/Node.js (f/m/d)",
-      "company": "valuemize",
-      "location": "Munich, Bavaria, Germany",
-      "posted": "2026-09-25",
-      "salary": "",
-      "queries": [
-        "Senior Full Stack Engineer TypeScript | Worldwide | remote"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4472037870/",
-      "firstSeen": "2026-10-01T08:27:21.783Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "📍 Location: Munich\n\n🗣️ Native in German\n\n💼 Type: Full-time\n\n⏰ Start: As soon as possible\n\n\n\n\n👋 Join valuemize\n\nvaluemize is redefining how Europe’s manufacturing industry designs, builds, and prices physical products.\n\nWe’re creating a new software category between ERP and PLM - Lifecycle Cost Intelligence - to help industrial companies make smarter, faster, and more profitable product decisions.\n\n\n\n\nEvery year, manufacturers lose billions because 80% of product costs are decided before production starts — and teams still rely on disconnected spreadsheets.\n\n\n\n\nWith fresh funding we are now looking for the best talent to build the system that fixes that.\n\n\n\n\nOur platform connects engineering, cost, and sourcing data in one collaborative space — enabling hardware teams to simulate and optimize product costs in real time.\n\n\n\n\n🧠 About the Role\n\nAs a Senior Software Engineer at valuemize, you’ll work at the heart of our product, designing and implementing core systems that make cost and product data actionable for engineers and business users alike.\n\n\n\n\nYou’ll join our growing development team and collaborate closely with our Co-Founder & CTO Dominik, who brings 13+ years of engineering leadership experience: From leading teams at SAP to building large-scale payment systems.\n\nThis is a high-impact role for someone who wants to shape a category-defining SaaS product from its earliest stages.\n\n\n\n\nThis is a SENIOR role, please only apply if you have more than 5+ years of full time experience in shipping high quality code with E2E ownership in fast paced environments. \n\n\n\n\n⚙️ Our Tech Stack\n\nFrontend: React / Next.js (Full-Stack App)\nBackend: Node.js / TypeScript / SQL / Postgres / Prisma ORM\nInfrastructure: Kubernetes, Docker, CI/CD\n\n\n\n\n✅ What You’ll Do\n\nBuild and scale the valuemize platform end-to-end with a modern full-stack architecture\nDesign and implement reliable, maintainable software systems for production\nCollaborate with product, data, and customer teams to translate complex manufacturing needs into intuitive software features\nDevelop APIs, data pipelines, and integration layers connecting ERP and PLM data\nExperiment with AI/ML components for cost prediction and data analysis\nContribute to technical strategy, code reviews, and best practices\nTake ownership of entire subsystems and help shape engineering culture\n\n\n\n\n🎯 Who You Are\n\n5+ years of full time experience in software development (preferably SaaS/AI, startup, or other fast paced env.)\nStrong experience with TypeScript / Node.js / Next.js or similar modern stacks\nSolid understanding of software architecture, cloud infrastructure and scalability\nYou have a quality mindset and understand the importance of test automation\nCurious about AI/ML and applying it in real products\nComfortable with high pace and ambiguity, you enjoy shipping fast & improving continuously\nYou think like an engineer and a product builder: balancing clean code with customer impact\n\n\n\n\n💪 What You’ll Get\n\nImpact: Build core systems in a product used by world-class hardware teams\nOwnership: Work with high autonomy and see your code directly impact customers\nMentorship: Learn from and collaborate with senior engineers and founders\nGrowth: Shape the early technical direction of a fast-scaling SaaS startup\nCulture: Low-ego, high-trust team that values craftsmanship and execution\nLocation: Join us in Munich’s startup hub at Werk 1 (hybrid optional)\nEquity: Real ownership in the company you’re helping build\n\n\n\n\n🧭 Why valuemize\n\nWe’re not building another AI/SaaS tool, we’re building the cost intelligence layer that will define how Europe manages margins in physical products.\n\nIf you want to work on meaningful software, combine engineering excellence with real-world impact, and be part of a founding-stage team - this is your opportunity.\n\n\n\n\n🌍 Location: Munich\n\n⏰ Start: Immediate\n\n💰 Package: Competitive compensation + equity\n\n\n\n\n✉️ Excited? Let’s Build.\n\nSend us a short message about why you want to join valuemize and what excites you about building intelligent software for manufacturing.\n\n\n\n\n→ Apply by email: talent@valuemize.io or directly here on LinkedIn\n\n\n\n\nWe’d love to build this with you.",
-      "postedAgo": "5 days ago",
-      "applicants": "134 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Full-time",
-        "Industries": "Software Development"
-      },
-      "detailsFetchedAt": "2026-10-01T08:27:21.783Z",
-      "status": "gone"
-    },
-    {
       "id": "4472015794",
       "title": "Senior React.js Developer",
       "company": "Tata Consultancy Services",
@@ -12397,33 +12323,6 @@
         "Employment type": "Full-time",
         "Industries": "Computer Hardware Manufacturing"
       }
-    },
-    {
-      "id": "4471935635",
-      "title": "Senior Software Engineer (TypeScript, Node.js, React)",
-      "company": "Exadel",
-      "location": "Brazil",
-      "posted": "2026-09-29",
-      "salary": "",
-      "queries": [
-        "Senior Full Stack Engineer TypeScript | Worldwide | remote"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4471935635/",
-      "firstSeen": "2026-10-01T08:27:21.783Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "Why Join Exadel\n\nWe’re an AI-first global tech company with 25+ years of engineering leadership, 2,000+ team members, and 500+ active projects powering Fortune 500 clients, including HBO, Microsoft, Google, and Starbucks.\n\nFrom AI platforms to digital transformation, we partner with enterprise leaders to build what’s next.\n\nWhat powers it all? Our people are ambitious, collaborative, and constantly evolving.\n\nAbout The Client\n\nA leading educational technology company specializing in cloud-based learning management and student lifecycle solutions. The organization develops a comprehensive learning ecosystem widely adopted across K-12, higher education, and corporate sectors. By integrating advanced analytics and AI-driven credentialing tools, the platform streamlines course administration and helps millions of global users bridge the gap between education and workforce opportunities.\n\nWhat You’ll Do\n\n\nDesign, develop, and maintain web application components using TypeScript and Node.js.\nDevelop and maintain user interfaces using React.\nBuild reliable and maintainable application features for an analytics project.\nDevelop and maintain automated end-to-end tests using Playwright.\nWork with Docker for application containerization.\nWork with Terraform for infrastructure as code.\nImplement and maintain session persistence using DynamoDB.\nDeploy and support applications in AWS environments.\nCollaborate with engineering and cross-functional teams to design and implement technical solutions.\nTroubleshoot application and deployment issues and contribute to improving application reliability.\nContribute to code quality, testing, maintainability, and modern software engineering practices.\nLeverage modern development tools and practices to improve engineering productivity and solution quality.\n\n\nWhat You Bring\n\n\nProfessional experience building web applications.\nStrong hands-on experience with TypeScript.\nExperience with Node.js.\nExperience developing user interfaces with React.\nExperience with automated end-to-end testing, preferably using Playwright.\nExperience with Docker and application containerization.\nExperience with AWS and cloud-based application deployment.\nExperience with Terraform or infrastructure as code.\nExperience working with DynamoDB or other NoSQL databases.\nStrong problem-solving and troubleshooting skills.\nGood communication skills and the ability to collaborate effectively with engineering and cross-functional teams.\n\n\nNice to have\n\n\nExperience with Looker.\nExperience with Snowflake.\nExperience working on analytics applications or projects.\nExperience with modern cloud-native application architectures.\nFamiliarity with additional AWS services and cloud infrastructure practices.\n\n\nEnglish level\n\nAdvanced English proficiency\n\nWork Type: Remote\n\nLegal & Hiring Information\n\n\nExadel is proud to be an Equal Opportunity Employer committed to inclusion across minority, gender identity, sexual orientation, disability, age, and more\nReasonable accommodations are available to enable individuals with disabilities to perform essential functions\nPlease note: this job description is not exhaustive. Duties and responsibilities may evolve based on business needs\nCompensation details are shared with candidates at the early stage of the recruitment process.\nThe offer is not binding until a signed contract is in place.\n\n\nYour Benefits at Exadel\n\nExadel benefits vary by location and contract type. Your recruiter will fill you in on the details.\n\n\nInternational projects\nIn-office, hybrid, or remote flexibility\nMedical healthcare\nRecognition program\nOngoing learning & reimbursement\nWell-being program\nTeam events & local benefits\nSports compensation\nReferral bonuses\nTop-tier equipment provision\n\n\nExadel Culture\n\nWe lead with trust, respect, and purpose. We believe in open dialogue, creative freedom, and mentorship that helps you grow, lead, and make a real difference. Ours is a culture where ideas are challenged, voices are heard, and your impact matters.",
-      "postedAgo": "1 day ago",
-      "applicants": "124 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Industries": "Software Development"
-      },
-      "detailsFetchedAt": "2026-10-01T08:27:21.783Z",
-      "status": "gone"
     },
     {
       "id": "4471935633",
@@ -13183,36 +13082,6 @@
       "status": "gone"
     },
     {
-      "id": "4470865157",
-      "title": "Platform Engineer (Geospatial) - Dubai",
-      "company": "AirTech",
-      "location": "Dubai, Dubai, United Arab Emirates",
-      "posted": "2026-09-29",
-      "salary": "",
-      "queries": [
-        "Senior Frontend Engineer | Dubai, United Arab Emirates",
-        "React TypeScript | United Arab Emirates",
-        "Lead Engineer JavaScript | United Arab Emirates",
-        "Full Stack Developer Node.js | Dubai, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4470865157/",
-      "firstSeen": "2026-09-29T07:59:29.672Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "status": "gone",
-      "detailsFetchedAt": "2026-10-01T08:27:21.783Z",
-      "description": "We're hiring: Platform Engineer (Geospatial) - Dubai\n\n\n\n\nAirscope Tech has been delivering drone surveys and construction site monitoring across the UAE. Our AirTech Portal puts orthophotos, 3D models, 360° panoramas, timelapse and live PTZ camera feeds in front of some of the region's largest developers - it is live, it carries paying clients, and it is central to how they see their projects.\n\n\n\n\nWe are looking for an engineer to take ownership of the platform: keep it running, keep it secure, and keep it moving forward.\n\n\n\n\nWhat you'll own\n\n- A production React / Node.js / PostgreSQL + PostGIS platform\n\n- Releases and infrastructure - Docker on Linux, Cloudflare (R2, Workers, Pages), staging to production\n\n- The geospatial pipeline - Python / GDAL processing for orthophotos, elevation models and map tiles\n\n- Onboarding client sites, including coordinate systems and datums\n\n- Security and reliability - authentication, access control, backups, monitoring\n\n- Working with our survey team and specialist contractors on processing and new features\n\n\n\n\nWhat we need\n\n- Solid full-stack JavaScript experience, with work shipped to production\n\n- PostgreSQL, ideally with PostGIS\n\n- Comfortable working with Linux servers and Docker deployments\n\n- GIS fundamentals - coordinate systems, projections, raster data - or a strong willingness to learn them\n\n- Good security habits - session/JWT auth, access control, handling secrets properly\n\n- Web mapping or 3D on the web (Leaflet, MapLibre, CesiumJS or Three.js)\n\n- Confident using AI coding tools (Claude Code, Cursor or similar) day to day\n\n- Able to pick up a well-documented but complex codebase and grow into owning it\n\n\n\n\nGreat if you also have\n\n- Photogrammetry experience, particularly Agisoft Metashape\n\n- 3D formats - 3D Tiles, point clouds, Gaussian splats, 360° panoramas\n\n- Video streaming or IP camera integration (RTSP, WebRTC)\n\n- CI/CD setup and observability\n\n- Drone, surveying or construction industry background\n\n- Arabic\n\n\n\n\nWhat we offer\n\n- Real ownership of a live product with a clear roadmap\n\n- A small team where your work is in front of clients every week\n\n- Hands-on exposure to drone survey, 3D and geospatial technology\n\n\n\n\nBased in Dubai, full-time. Candidates relocating to the UAE are welcome.\n\n\n\n\nTo apply, send your CV and a short note on something you've built and shipped to [email].\n\n\n\n\n#hiring #dubaijobs #geospatial #GIS #platformengineering #fullstack #drones #construction",
-      "postedAgo": "2 days ago",
-      "applicants": "Over 200 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Entry level",
-        "Employment type": "Full-time",
-        "Industries": "Surveying and Mapping Services"
-      }
-    },
-    {
       "id": "4470857217",
       "title": "Senior Engineer, FullStack, Retail Media/AdTech Solutions (m/f/d)",
       "company": "Redcare Pharmacy",
@@ -13310,33 +13179,6 @@
       "lastSeen": "2026-10-09T08:36:35.235Z",
       "filterReason": "title matches \"Intern\"",
       "status": "filtered"
-    },
-    {
-      "id": "4470663522",
-      "title": "Senior Software Engineer",
-      "company": "Huge",
-      "location": "Colombia",
-      "posted": "2026-09-23",
-      "salary": "",
-      "queries": [
-        "Senior Full Stack Engineer TypeScript | Worldwide | remote"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4470663522/",
-      "firstSeen": "2026-10-02T08:02:54.331Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "Location: This position is remote within Colombia.\n\nAbout Technology.\n\nTechnology at Huge is powered by a global practice of creative technologists—spanning Engineers, QA specialists, Business Analysts, Data Scientists, and ML Architects—we look beyond standard patterns to build resilient, enterprise-grade systems. We combine deep engineering rigor with innovation at the edge of agentic AI, modern data stacks, and cloud infrastructure. We don't wait for industry standards to set themselves; we engineer the intelligent systems that turn audacious strategic vision into production-ready reality.\n\nThe role.\n\nHuge is looking for a Senior Full Stack Developer to join our Technology practice in Colombia. In this role, you will lead the integration and content modeling for Contentstack SaaS platforms while engineering high-performance frontend applications with Next.js, Azure, and modern edge architectures. Working alongside product, UX, and strategy leadership, you will lead a spec-driven development cycle, leverage AI tools (such as Claude Code) for development efficiency, architect edge-rendered web applications, drive scripted and AI-assisted content migrations, and build composable digital experiences utilizing Contentstack, Coveo, Bynder, and Freshpaint for enterprise clients.\n\nWhat you'll be doing.\n\n\nDesign, structure, and implement flexible content models in Contentstack, integrating headless APIs with modern web applications and cloud services on Azure.\nArchitect and deploy high-performance applications utilizing Next.js, Next.js Middleware, TypeScript, and Vercel Edge Functions or Azure for request routing, personalization, and edge performance optimization.\nDrive a spec-driven development cycle and leverage AI tools (e.g., Claude Code, AI assistants) to accelerate feature delivery, code quality, and workflow efficiency.\nLead automated content migration initiatives using custom scripting and AI-assisted workflows to seamlessly transition enterprise content into Contentstack.\nIntegrate composable ecosystem platforms including Coveo (search), Bynder (DAM), and Freshpaint (privacy-first data platform).\nDevelop accessible, W3C-compliant web applications and backend microservices using JavaScript/TypeScript, React, Node.js, and modern CSS/design-system libraries.\nPartner with UX, Product, and QA teams to evaluate feature feasibility, refine requirements from Figma designs, and enforce accessibility (WCAG/ARIA) and Core Web Vitals standards.\nApply software design patterns, maintain clear spec documentation, participate in code reviews, and mentor junior engineers within an agile, globally distributed environment.\n\n\nWhat we'd like to see.\n\n\n5+ years of software engineering experience in agile environments, delivering large-scale web applications for enterprise clients.\nProven hands-on experience with Contentstack integration, headless API architectures, and enterprise content modeling.\nStrong mastery of Next.js, TypeScript/JavaScript (ES202x), Next.js Middleware, and cloud/edge infrastructure (Azure, Vercel Edge Functions).\nHands-on comfort using AI tools for development (e.g., Claude Code, GitHub Copilot, or similar tools) within a spec-driven development workflow.\nFamiliarity with or experience integrating composable tech stack tools like Coveo, Bynder, and Freshpaint.\nExperience executing complex content migrations through custom scripting and AI-assisted migration automation tooling.\nDeep experience designing and consuming RESTful and GraphQL APIs, backend services (Node.js, Python, or Go), and database design (SQL/NoSQL).\nStrong knowledge of composable architecture, Storybook, design tokens, and modern CSS solutions (TailwindCSS, Sass).\nIn-depth understanding of WCAG/ARIA standards, Lighthouse audits, and Core Web Vitals optimization.\nFamiliarity with automated build/deploy pipelines (GitHub Actions, Azure DevOps, Jenkins), edge CDNs (Vercel, Cloudflare), and cloud services (Azure focus).\nBachelor’s degree in Computer Science or equivalent technical experience, with advanced English proficiency (C1+) for global collaboration.\nNice to have: Experience working with clients or solutions in the Healthcare industry.\n\n\nIf the selected candidate holds a degree in Engineering or a related profession, they must present their professional license. To verify your degree requires this license, please visit www.copnia.gov.co and https://www.consejoprofesional.org.co/.\n\nAbout Huge.\n\nHuge is an independent, human-first AI-native design and technology company. We make things that matter by bringing AI, people, design and technology together as one system. With more than 1,000 design and technology experts working in hub cities around the world, including Bogotá, Chicago, Ho Chi Minh City, London, Los Angeles, Medellín, New York, San Francisco, and Washington, DC, we partner with some of the world’s most ambitious brands, including Google, NBCU, PepsiCo, Vail Resorts, Atlantic Health, and Candescent. Learn more at hugeinc.com.\n\nHuge is committed to creating an inclusive employee experience for all. Regardless of race, gender, religion, sexual orientation, age, disability, or if you’re parenting the next generation of innovators, we firmly believe that our work is at its best when everyone feels free to be their most authentic self.\n\nHuge is an equal opportunity employer (EOE). We strongly support diversity in the workforce. We are committed to an inclusive, barrier-free recruitment and selection process and work environment. If you are contacted for a job opportunity, please advise us of any accommodation needed to ensure you have access to a fair and equitable process. Any information received relating to accommodation will be addressed confidentially.\n\nWorkers shall not be required to pay employers’ or agents’ recruitment fees or other related fees for their employment. If any such fees are found to have been paid by workers, such fees shall be repaid to the worker.",
-      "postedAgo": "1 week ago",
-      "applicants": "86 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Industries": "Design Services, Technology, Information and Internet, and Advertising Services"
-      },
-      "detailsFetchedAt": "2026-10-02T08:02:54.331Z",
-      "status": "gone"
     },
     {
       "id": "4470652279",
@@ -13501,36 +13343,6 @@
         "Employment type": "Full-time",
         "Industries": "Retail"
       }
-    },
-    {
-      "id": "4470302960",
-      "title": "Forward Deployed Engineer (Full-Stack, AI-Native), Senior-Level",
-      "company": "Globant",
-      "location": "United Arab Emirates",
-      "posted": "2026-09-25",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4470302960/",
-      "description": "At Globant, we are working to make the world a better place, one step at a time. We enhance business development and enterprise solutions to prepare them for a digital future. With a diverse and talented team present in more than 30 countries, we are strategic partners to leading global companies in their business process transformation.\n\nWe are seeking a Forward Deployed Engineer (Full-Stack, AI-Native) who shares our passion for innovation and high-velocity engineering. Operating embedded alongside product teams in an AI-agentic delivery workflow, you will bridge technical decision-making with hands-on full-stack development making key architectural choices, validating AI-generated code, and shipping resilient .NET, React, and integrated solutions directly to production.\n\n\nRole Summary\n\n\n\nThis role owns end-to-end delivery on a highly transactional booking platform serving 8 markets in 2 languages. You take features from technical solutioning to production across the full stack: React/TypeScript frontends, the .NET services and BFF, and the booking, payments and loyalty integrations underneath.\n\nYou work embedded with the Product team inside an agentic delivery workflow. By the time a feature reaches you, requirements and designs have already been analysed against the current codebase by AI agents, and you get a mapped impact and a set of implementation options with pros and cons. Your job is to challenge that analysis, make the final technical decision, and implement it across the stack yourself.\n\nThe role is hands-on and autonomous. You're expected to get productive quickly in an existing codebase, decide within your scope without waiting to be unblocked, and escalate only the decisions that really need it. Agentic coding tools (Claude Code, Codex, Copilot) are the default way of working. What we value most is judgement about when to trust, verify or rewrite what they produce.\n\n\nCore Responsibilities\n\n\n\nEnd-to-end technical solutioning\n\n\nReview agent-generated impact analysis and solution options for each feature, validate them against the real codebase, and make the final technical decision with clear reasoning.\nOwn the solution design across frontend, BFF, backend services and integrations, including the trade-offs on performance, risk and delivery time.\nWork directly with Product, Design and client stakeholders to clarify requirements, flag technical constraints early, and shape scope.\n\n\n\nFull-stack development\n\n\nBuild and ship features across React/TypeScript frontends and .NET services and BFF.\nOwn integration contracts for booking, payments and loyalty, including failure handling, idempotency and retry behaviour on transactions.\nWork with CMS-driven content (Strapi) and across web and mobile client surfaces.\n\n\n\nAI-native delivery\n\n\nUse agentic coding tools as the default mode for implementation, refactoring, test generation and codebase exploration.\nKeep context artifacts current (repo conventions, agent instruction files, prompts and scripts) so the whole team and the agents work from the same foundation.\nHelp define the team's rules for AI-assisted work: what agents do, what they don't, and what must be human-verified before merge.\n\n\n\nQuality and production ownership\n\n\nReview PRs, human- and AI-authored, watching for hallucinated APIs, deprecated calls, hidden complexity on hot paths, and tests that assert nothing.\nTake part in RCA on production failures and turn findings into fixes, logging and guardrails.\nAct as a technical counterpart to the Technical Director, Product and QA, making decisions within your scope rather than escalating by default.\nTooling & Stack\nFrontend: React\nTypeScript\nFlutter (mobile surface)\nBackend: C# / .NET 8+\nASP.NET Core\nREST APIs / BFF pattern\nRedis\nAI & agentic workflow: Claude Code\nOpenAI Codex\nGitHub Copilot\nMCP servers\nagent instruction files\nPlatform: Azure\nDocker\nGitHub Actions\nArgoCD\nNew Relic\nIntegrations: Checkout.com (payments, 3DS)\nStrapi CMS\nExperience & Skills\n\n\n\nMust have\n\n\n7+ years in software engineering, with strong production experience in both C#/.NET backend and React/TypeScript frontend, and still writing production code daily.\nA track record of taking features end to end, from technical design to production, in an existing codebase.\nDaily use of agentic coding tools on production code, with concrete examples of what changed in your delivery: scope, cycle time, test coverage, or refactors you wouldn't otherwise have attempted.\nThe ability to evaluate AI-proposed solutions critically and make sound technical decisions autonomously, knowing when to decide and when to escalate.\nA strong code review practice, including a clear personal method for catching AI-generated defects.\nExperience integrating third-party transactional APIs (payments, PSPs, booking or ticketing engines) where partial failure has commercial consequences.\nExperience in fast-paced delivery with short cycles, feature flags and frequent releases.\nComfort working directly with client-side product and business stakeholders, in English.\n\n\n\nStrongly preferred\n\n\nSet or documented AI-assisted development standards for a team (review policy, agent instructions, prompt or context libraries).\nHigh-volume transactional or booking platforms, and multi-market or multi-currency systems.\nAzure, distributed tracing, and production debugging with New Relic or similar.\nFlutter or mobile experience, and CMS-driven content.\n\n\n\nThis job can be filled in Dubai, United Arab Emirates Onsite\n\nCreate with us digital products that people love. We will bring businesses and consumers together through AI technology and creativity, driving digital transformation to impact the world positively.\n\nWe may use AI and machine learning technologies in our recruitment process. Compensation is determined based on skills, qualifications, experience, and location. In addition to competitive salaries, we offer a comprehensive benefits package. Learn more about our commitment to diversity and inclusion and Globant’s Benefits.",
-      "postedAgo": "2 days ago",
-      "applicants": "140 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Job function": "Engineering and Information Technology",
-        "Industries": "IT Services and IT Consulting"
-      },
-      "queries": [
-        "Senior Full Stack Engineer | United Arab Emirates",
-        "Lead Engineer JavaScript | United Arab Emirates",
-        "Frontend Engineer | Abu Dhabi, United Arab Emirates"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "detailsFetchedAt": "2026-09-28T06:30:55.239Z",
-      "filterReason": null,
-      "status": "gone"
     },
     {
       "id": "4470263978",
@@ -13977,34 +13789,6 @@
       "status": "gone"
     },
     {
-      "id": "4469465115",
-      "title": "Sharepoint Consultant (m/f/d)",
-      "company": "Halian | Managed Services, Recruitment Agency & Contract Staffing",
-      "location": "Dubai, Dubai, United Arab Emirates",
-      "posted": "2026-10-02",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4469465115/",
-      "queries": [
-        "Senior Frontend Engineer | Dubai, United Arab Emirates"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "detailsFetchedAt": "2026-09-28T06:46:14.629Z",
-      "filterReason": null,
-      "description": "Our Client:\n\nOur client is a well-established and diversified business group with a strong presence across the Middle East. With a history spanning several decades, they have built a reputation for operational excellence, innovation, and delivering high-quality products and services across multiple sectors.\n\nAs part of their ongoing digital transformation journey, they are investing in modern workplace technologies and enterprise collaboration platforms to enhance business efficiency, automation, and employee experience.\n\nThey are currently hiring for a SharePoint Online Developer (Power Platform & Administration) to join their technology team. This role is ideal for someone who enjoys combining development, administration, and business process automation to deliver impactful solutions across a large and dynamic organization.\n\nYou will be responsible for designing, developing, and maintaining SharePoint Online and Power Platform solutions while ensuring governance, security, and performance across the Microsoft 365 environment.\n\nYour Responsibilities:\n\nSharePoint Online Development\n\n\nDesign and develop SharePoint Online sites, including Team Sites and Communication Sites.\nCustomize SharePoint solutions using SPFx, JavaScript, TypeScript, HTML, and CSS.\nCreate and manage SharePoint lists, libraries, content types, and metadata.\nBuild custom web parts and extensions to support business requirements.\nIntegrate SharePoint Online with Microsoft 365 applications and services.\n\n\nPower Apps Development\n\n\nDevelop and maintain Canvas and Model-Driven applications.\nDesign intuitive user interfaces and responsive application layouts.\nConnect applications to SharePoint, Dataverse, and external data sources.\nImplement business logic using Power Fx.\nOptimize application performance, usability, and adoption.\n\n\nPower Automate & Administration\n\n\nDesign and implement automated workflows and business process automations.\nAutomate approvals, notifications, and data synchronization processes.\nIntegrate solutions with SharePoint, Outlook, Microsoft Teams, and third-party platforms.\nManage SharePoint Online administration, permissions, governance, and access controls.\nMonitor storage, licensing, usage, and platform performance.\nTroubleshoot issues across SharePoint, Power Apps, and Power Automate environments.\nDeliver ongoing enhancements, maintenance, and continuous improvements.\n\n\nYour Qualifications:\n\n\n6-8 years of experience working with SharePoint Online and Microsoft 365 technologies.\nStrong hands-on experience with SharePoint Online development and administration.\nProven expertise with Power Apps and Power Automate.\nStrong knowledge of SPFx (SharePoint Framework) development.\nExperience with JavaScript, TypeScript, HTML, and CSS.\nUnderstanding of REST APIs and Microsoft Graph API integrations.\nFamiliarity with Dataverse and Microsoft 365 administration.\nStrong troubleshooting, problem-solving, and analytical skills.\nExcellent communication and stakeholder management abilities.\nExperience delivering scalable business solutions within enterprise environments.\n\n\nHalian Group:\n\nWith over 20 years of experience, we have come to understand that innovation is the only way to provide agile, practical solutions that transform businesses and careers.\n\nOur resourcing and smart services help you realize tomorrow’s potential. Discover the amazing things possible when you bring the right people and the right technologies together.\n\nSharepoint Consultant in Dubai, United Arab Emirates",
-      "postedAgo": "4 days ago",
-      "applicants": "123 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Job function": "Engineering and Information Technology",
-        "Industries": "Staffing and Recruiting"
-      },
-      "status": "gone"
-    },
-    {
       "id": "4469396211",
       "title": "Staff Quality Assurance Engineer",
       "company": "ai71",
@@ -14074,34 +13858,6 @@
         "Employment type": "Full-time",
         "Job function": "Consulting",
         "Industries": "Software Development and IT Services and IT Consulting"
-      },
-      "status": "gone"
-    },
-    {
-      "id": "4469296858",
-      "title": "Senior Full-Stack Software Developer",
-      "company": "ArcelorMittal Long Carbon LATAM",
-      "location": "Kirchberg, Luxembourg, Luxembourg",
-      "posted": "2026-09-19",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4469296858/",
-      "queries": [
-        "Senior Full Stack Engineer | Europe, Middle East and Africa | remote"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "detailsFetchedAt": "2026-09-28T06:46:14.629Z",
-      "filterReason": null,
-      "description": "Descrição do Cargo\n\nAbout ArcelorMittal Global Solutions AI Team\n\nThe ArcelorMittal Global Solutions AI Team is a transversal Artificial Intelligence capability enabling business divisions to create measurable value through responsible, production-grade AI and data solutions. We support the full lifecycle of AI initiatives across Finance, HR, Supply Chain, Logistics, Manufacturing, and Operations, while owning technical delivery, quality, and risk controls.\n\nOur portfolio includes document automation, forecasting, optimization, computer vision, predictive maintenance, AI-powered assistants, and GenAI-driven enterprise applications.\n\nRole Summary\n\nAs a Senior Full-Stack Software Developer, you will play a dual role combining hands-on software engineering with technical leadership. In the initial phase, you will design and build cloud-based backend and frontend software solutions yourself. As the team grows, you will progressively lead and mentor other developers, oversee development activities, and ensure high standards of engineering quality across the team.\n\nThis role is critical to establishing robust software foundations, scalable architectures, and strong development practices within the AMGS AI Team.\n\nKey Responsibilities\n\nHands-on Engineering (Initial Phase)\n\n\nDesign and implement cloud-native software solutions supporting AI and data use cases\nDevelop backend services, APIs, and frontend application components\nEnsure solutions are secure, scalable, maintainable, and production-ready\nCollaborate closely with AI, data, and cloud engineers during delivery\n\n\nTechnical Leadership (As Team Grows)\n\n\nLead and guide software developers in solution design and implementation\nReview code and provide constructive feedback\nDefine and enforce development standards, best practices, and coding guidelines\nOversee technical quality, maintainability, and reliability of delivered software\nSupport planning, estimation, and technical decision-making\n\n\nCross-Functional Collaboration\n\n\nWork closely with business analysts, product owners, and architects\nTranslate solution requirements into sound technical designs\nEnsure alignment between software design and cloud / AI platform constraints\n\n\nRequired Skills & Experience\n\nCore Technical Skills\n\n\nStrong experience in full-stack software development (backend and frontend), preferably in cloud-based environments\nSolid programming skills across backend and frontend technologies (e.g. Python, JavaScript/TypeScript)\nExperience designing and building APIs and backend services\nGood understanding of cloud-native architectures and deployment models\nExperience with version control, testing, and CI/CD practices\n\n\nLeadership & Ownership\n\n\nAbility to work independently and own solutions end-to-end\nExperience mentoring or guiding other developers (formal or informal)\nStrong sense of accountability for code quality and delivery outcomes\nComfortable making technical decisions and trade-offs\n\n\nProfessional Experience\n\n\nProven experience as a software developer in production environments\nExperience working in cross-functional teams\nExposure to enterprise or complex system landscapes\n\n\nNice to Have\n\n\nExperience building software that supports AI or data platforms\nFamiliarity with cloud platforms (e.g. Azure, AWS)\nExperience introducing or improving engineering standards\nExposure to agile delivery frameworks\n\n\nWhat We Look For In This Role\n\n\nA strong hands-on engineer who enjoys building real systems\nA future technical leader who wants to grow a high-quality development team\nSomeone who balances pragmatism with long-term maintainability\nA collaborator who can bridge technical and non-technical stakeholders\n\n\nWhat This Role Is Not\n\n\nA purely managerial or people-only role\nA hands-off architect position\nA short-term individual contributor without leadership ambition\n\n\nIf you enjoy building end-to-end cloud-based software (backend and frontend) from the ground up, shaping engineering practices, and gradually leading a growing team, this role offers a unique opportunity to have real impact within AMGS AI.\n\nSobre Nós\n\nArcelorMittal is the world's leading steel and mining company, with a presence in 60 countries and primary steelmaking facilities in 15 countries. Our material is part of the fabric of life. What we produce makes a difference – to individuals, communities, businesses and society. At ArcelorMittal, the safety, health, and wellbeing of our employees are our top priorities. We believe that every accident is avoidable, and it is essential for every employee, from the shop floor to the management committee, to hold this belief.\n\nOur purpose is to produce ever smarter steels that have a positive benefit for people and planet. Steels made using innovative processes which use less energy, emit significantly less carbon and reduce costs. Steels that are cleaner, stronger and reusable. Steels for electric vehicles and renewable energy infrastructure that will support societies as they transform through this century. With steel at our core, our inventive people and an entrepreneurial culture at heart, we will support the world in making that change. This is what we believe it takes to be the steel company of the future.",
-      "postedAgo": "1 week ago",
-      "applicants": "80 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Job function": "Engineering and Information Technology",
-        "Industries": "Mining"
       },
       "status": "gone"
     },
@@ -14657,34 +14413,6 @@
       "status": "gone"
     },
     {
-      "id": "4468009932",
-      "title": "Senior Full-Stack Engineer, Consumer Fintech",
-      "company": "MaxIT Consulting - Max Corporate Group",
-      "location": "Madrid, Community of Madrid, Spain",
-      "posted": "2026-09-18",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4468009932/",
-      "queries": [
-        "Senior Full Stack Engineer | Europe, Middle East and Africa | remote"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "detailsFetchedAt": "2026-09-28T06:46:14.629Z",
-      "filterReason": null,
-      "description": "Spain | Remote | Senior Engineering Opportunity\n\nMaxIT Consulting – Max Corporate Group is looking for a Senior Full-Stack Engineer, Consumer Fintech to join a fast-growing New York fintech company building banking and payment products for US prediction markets and regulated gaming.\n\nThe company develops consumer-facing financial products covering account funding, cards, onboarding, identity verification, KYC, and real-time balances on top of its own payments and settlement infrastructure.\n\nIts platform has already processed more than USD 2 billion and continues to scale rapidly across both product and engineering.\n\nAbout The Role\n\nThis is a senior product-engineering position for someone who has already shipped consumer financial applications end to end.\n\nYou will own complete product experiences, from customer-facing flows through backend services and production operation. Relevant experience includes digital banking, payments, trading, cards, onboarding, KYC, and other regulated consumer-finance products.\n\nThe client has not defined a mandatory technology stack for the search. The priority is identifying strong senior engineers with genuine financial-services product experience rather than optimizing for a particular programming language or frontend framework.\n\nKey Responsibilities\n\n\nBuild and operate consumer-facing financial products end to end.\nDevelop onboarding, account-opening, identity-verification, and KYC workflows.\nBuild customer experiences around cards, payments, balances, funding, and financial transactions.\nDevelop backend services supporting consumer financial products.\nOwn features from product and technical design through deployment and production operation.\nWork closely with product stakeholders to translate complex financial workflows into simple user experiences.\nEnsure reliability, security, and correctness across regulated financial processes.\nOperate independently within a small, distributed engineering team.\nContribute to architecture and product decisions as the platform scales.\n\n\n\nRequired Qualifications\n\n\n5+ years of professional full-stack software engineering experience.\nDemonstrated experience shipping consumer products end to end.\nProfessional experience as an employee of a neobank, payments company, trading platform, brokerage, or comparable financial product company.\nHands-on production experience with onboarding, KYC, card, account, or related financial workflows.\nAbility to work effectively across frontend and backend systems.\nStrong product mindset and high degree of technical ownership.\nExperience taking features from initial design through deployment and ongoing production operation.\nComfort working autonomously within a remote engineering organization.\nCurrent residence in Spain.\nExisting authorization to work in Spain.\n\n\n\nParticularly Relevant Experience\n\n\nDigital banks and neobanks.\nConsumer payment applications.\nCard issuing and card-management products.\nTrading or brokerage platforms.\nKYC and identity-verification flows.\nAccount funding and withdrawal experiences.\nReal-time balances and transaction histories.\nHigh-growth consumer fintech products.\n\n\n\nIdeal Candidate Profile\n\nThe strongest candidate combines senior software-engineering depth with genuine product ownership.\n\nYou should be comfortable moving across the stack, understanding the customer journey, making implementation decisions, and remaining responsible for the feature after it reaches production.\n\nThe search is specifically focused on engineers who have worked inside financial product companies. Financial-services exposure acquired exclusively through consulting or IT-services client projects is not considered equivalent for this position.\n\nWork Arrangement\n\nThis opportunity is fully remote within Spain.\n\nCandidates must currently be based in Spain and already have authorization to work in the country.\n\nApplication\n\nIf your background aligns with this opportunity, please submit your application through this same channel.\n\nPlease include:\n\n\nYour updated CV or resume.\nYour gross annual compensation expectations in EUR.\nA brief description of the consumer fintech, onboarding, KYC, payments, card, or digital-banking products you have personally shipped into production.",
-      "postedAgo": "1 week ago",
-      "applicants": "25 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Job function": "Engineering and Information Technology",
-        "Industries": "Information Technology & Services"
-      },
-      "status": "gone"
-    },
-    {
       "id": "4467882254",
       "title": "Senior Software Engineer - Frontend",
       "company": "Five9",
@@ -14920,7 +14648,7 @@
         "Lead Engineer JavaScript | United Arab Emirates"
       ],
       "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-09-28T06:53:03.446Z",
@@ -15035,7 +14763,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-01T02:13:05.410Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4466318389",
@@ -15704,33 +15432,6 @@
       }
     },
     {
-      "id": "4461879154",
-      "title": "Senior Full-Stack Product Engineer",
-      "company": "Salt",
-      "location": "Abu Dhabi, Abu Dhabi Emirate, United Arab Emirates",
-      "posted": "2026-10-01",
-      "salary": "",
-      "queries": [
-        "Frontend Engineer | Abu Dhabi, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4461879154/",
-      "firstSeen": "2026-10-02T08:02:54.331Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "description": "Location: Abu Dhabi, UAE\n\nEmployment: 12-months initial (contract to perm)\n\n\n\n\nWe are seeking experienced full-stack engineers to build modern enterprise products that replace fragmented email, spreadsheet and form-based workflows.\n\n\n\n\nThis is not a frontend-only position. You should be comfortable owning the user experience while understanding backend APIs, data models, security and production operations.\n\n\n\n\nWhat You Will Own\n\n\n\n\n* Build modern production web applications.\n\n* Translate complex enterprise workflows into simple user experiences.\n\n* Develop requester, approver, operations and administration interfaces.\n\n* Build dashboards, work queues, workflow views and multi-step interactions.\n\n* Integrate frontend applications with backend APIs and enterprise systems.\n\n* Implement secure role-based application behavior.\n\n* Design robust frontend state management for complex asynchronous workflows.\n\n* Work closely with product/design teams to prototype and refine user journeys.\n\n* Influence API and data-model design.\n\n* Develop reusable components rather than one-off interfaces.\n\n* Write unit, integration and end-to-end tests.\n\n* Participate in production support and performance improvement.\n\n\n\n\nRequired Experience\n\n\n\n\n* 6+ years of professional software-engineering experience.\n\n* Strong React and TypeScript experience, or equivalent depth in another modern framework.\n\n* Solid backend/API development capability.\n\n* Experience shipping complete production applications.\n\n* Complex frontend state management and asynchronous interactions.\n\n* Relational database fundamentals.\n\n* Authentication, authorization and secure application design.\n\n* Cloud-native development and CI/CD.\n\n* Strong product judgment.\n\n\n\n\nStrong Advantage\n\n\n\n\n* Enterprise workflow applications.\n\n* Approval/work-queue interfaces.\n\n* Conversational or AI-assisted products.\n\n* ERP/SAP integrations.\n\n* Azure.\n\n* Regulated or large-enterprise environments.\n\n* Accessibility and internationalization.",
-      "postedAgo": "23 hours ago",
-      "applicants": "Over 200 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Contract",
-        "Industries": "Professional Services"
-      },
-      "detailsFetchedAt": "2026-10-02T08:02:54.331Z",
-      "status": "gone"
-    },
-    {
       "id": "4461760362",
       "title": "Enterprise Account Executive",
       "company": "Kong",
@@ -15815,22 +15516,6 @@
       }
     },
     {
-      "id": "4461343282",
-      "title": "Sr Software Engineer (4+ yrs in Reactjs, Nextjs, Cloud)",
-      "company": "Gartner",
-      "location": "Chennai, Tamil Nadu, India",
-      "posted": "2026-10-01",
-      "salary": "",
-      "queries": [
-        "Senior Frontend Engineer React | Worldwide | remote"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4461343282/",
-      "firstSeen": "2026-10-02T08:02:54.331Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "status": "gone"
-    },
-    {
       "id": "4461149027",
       "title": "Senior Full-Stack Engineer - Robotics Platform (F/M/D)",
       "company": "Animore",
@@ -15883,37 +15568,6 @@
       },
       "detailsFetchedAt": "2026-10-03T07:43:41.056Z",
       "status": "gone"
-    },
-    {
-      "id": "4461085612",
-      "title": "Software Engineer - Full Stack",
-      "company": "Property Finder",
-      "location": "Dubai, Dubai, United Arab Emirates",
-      "posted": "2026-10-02",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4461085612/",
-      "queries": [
-        "Next.js | United Arab Emirates",
-        "Full Stack Developer Node.js | Dubai, United Arab Emirates",
-        "Lead Engineer JavaScript | United Arab Emirates",
-        "React TypeScript | United Arab Emirates"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "status": "gone",
-      "detailsFetchedAt": "2026-09-28T06:53:03.446Z",
-      "description": "Property Finder is the leading property portal in the Middle East and North Africa (MENA) region, dedicated to shaping an inclusive future for real estate while spearheading the region’s growing tech ecosystem. At its core is a clear and powerful purpose: To change living for good in the region.\n\nFounded on the value of great ambitions, Property Finder connects millions of property seekers with thousands of real estate professionals every day. The platform offers a seamless and enriching experience, empowering both buyers and renters to make informed decisions. Since its inception in 2007, Property Finder has evolved into a trusted partner for developers, brokers, and home seekers. As a lighthouse tech company, it continues to create an environment where people can thrive and contribute meaningfully to the transformation of real estate in MENA.\n\nAbout This Role\n\nWe're looking for a Software Engineer to join the team building PF Scout, Property Finder's conversational property-search experience. Scout sits at the intersection of search, AI, and the core property marketplace. You'll work across the stack on experiences that help millions of property seekers turn natural-language intent into relevant homes, recommendations, and actions. This is a hands-on full-stack role. You'll own meaningful product and technical problems end to end — from the user experience and APIs through data retrieval, search, LLM integrations, observability, and production operations. You'll be joining a team working on problems where product quality depends not only on correctness, but also on latency, relevance, reliability, and cost at scale.\n\nWhat You'll Do\n\n\nBuild and ship end-to-end features for PF Scout across TypeScript/Node.js backend services and React-based frontend experiences.\nOwn features from design through production: implementation, testing, deployment, observability, and iteration based on real user behaviour.\nWork on search and data-intensive problems involving retrieval, ranking, aggregation, caching, and large property datasets.\nBuild and evolve AI-powered product experiences involving LLMs, tool calling, streaming, conversational state, and fallbacks.\nWork closely with product managers, designers, data teams, and other engineers to turn ambiguous customer problems into simple, reliable solutions.\n\n\nWhat We're Looking For\n\nRequired technical skills:\n\n\n4+ years of software engineering experience, with meaningful experience building production, consumer-facing applications.\nStrong proficiency in TypeScript, particularly Node.js backend development using frameworks such as Express.js, NestJS, or similar.\nExperience building modern frontend applications using React, Next.js, or a comparable React-based stack.\nHands-on experience with at least one search, analytics, or data-intensive system such as OpenSearch/Elasticsearch, ClickHouse, PostgreSQL, Redis, or similar, including debugging and improving query performance.\nExperience owning software in production — understanding how your services behave, diagnosing issues, and improving reliability and performance.\nGood understanding of software engineering fundamentals including testing, maintainability, code quality, and pragmatic system design.\n\n\nNice To Have\n\n\nExperience building LLM-backed applications, including tool/function calling, streaming, structured outputs, multi-turn state, context management, or caching.\nExperience with model platforms or providers such as AWS Bedrock, Google Vertex AI/Gemini, OpenAI, or similar.\nProduction experience with AWS and cloud-native applications, including technologies such as ECS/EKS, Lambda, SQS/SNS, CloudFront, RDS, or ElastiCache.\nExperience working on marketplaces, search products, recommendation systems, or other high-scale consumer applications.\n\n\nHow You Work\n\n\nYou take ownership beyond your ticket — you notice problems, propose solutions, and follow through.\nYou communicate technical trade-offs clearly to both engineers and non-technical stakeholders, and back your arguments with data.\nYou hold a high bar in code review and design review, and you make the engineers around you better.\nYou're pragmatic: you know when to build for scale and when to ship the simple thing, and you can quantify the cost of both.\n\n\nWhat Success Looks Like\n\nWithin your first couple of months, you'll independently own and ship a meaningful Scout capability end to end — from the customer experience through backend orchestration and search or AI integration — and use production data to improve it after launch.\n\nOur promise to talent\n\nAt Property Finder, we believe talent thrives in an environment where you can be your best self. Where you are empowered to create, elevate, grow, and care. Our team is made up of the best and brightest, united by a shared ambition to change living for good in the region. We attract top talent who want to make an impact. We firmly believe that when our people grow, we all succeed.\n\nProperty Finder Guiding Principles\n\n\nThink Future First\nData Beats Opinions, Speed Beats Perfection\nOptimise for Impact\nAct Like An Owner\nThe Biggest Risk is Taking no Risk at All\n\n\nFind Us At\n\nTwitter\n\nFacebook\n\nInstagram\n\nLinkedin\n\nGlassdoor",
-      "postedAgo": "2 days ago",
-      "applicants": "Over 200 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Not Applicable",
-        "Employment type": "Full-time",
-        "Job function": "Engineering and Information Technology",
-        "Industries": "Software Development"
-      }
     },
     {
       "id": "4460721670",
@@ -16199,7 +15853,7 @@
         "Lead Engineer JavaScript | United Arab Emirates"
       ],
       "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-09-28T06:53:03.446Z",
@@ -16302,33 +15956,6 @@
         "Employment type": "Full-time",
         "Job function": "Engineering and Information Technology",
         "Industries": "Software Development"
-      }
-    },
-    {
-      "id": "4456582743",
-      "title": "Data Analyst (On-site in Dubai)",
-      "company": "Puffy",
-      "location": "Dubai, United Arab Emirates",
-      "posted": "2026-09-18",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4456582743/",
-      "queries": [
-        "Shopify Developer | United Arab Emirates"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "status": "gone",
-      "detailsFetchedAt": "2026-09-28T06:53:03.446Z",
-      "description": "Own the experimentation engine behind a $1Billion+ e-commerce brand's growth decisions.\n\n\n\n\nCompensation: Up to AED 25,000/month (tax-free) + monthly performance bonus of up to 10% of base\n\nLocation: Dubai, UAE (On-site) with relocation assistance and visa support\n\nGrowth path from here is Senior Data Analyst → Analytics Engineer. What takes 4-5 years elsewhere happens in 1-2 here.\n\n\n\n\nWe've been AI-first since December 2023: Every analysis ships with an LLM validation link, and agentic workflows are in the analysis pipeline, not a pilot. You'd be building on a foundation, not evangelising one.\n\n\n\n\nRole Overview:\n\nPuffy, a market-leading, nine-figure D2C brand and Top 5 US mattress brand with over $1Billion in sales, is hiring a Data Analyst (On-site in Dubai) to own the full experimentation program, from hypothesis to business recommendation, with ownership over test design, statistical analysis, data pipelines, and cross-functional delivery, reporting directly to the Analytics Manager.\n\n\n\n\nThis role exists to convert raw platform and site data into tested, statistically validated recommendations that marketing, UX, and development act on the same week, building the experimentation infrastructure and analytical rigor that let growth decisions run on evidence rather than intuition.\n\n\n\n\nThe Problems You'll Own:\n\nPrimary: Turn every experiment into a decision, not a readout: We run A/B tests across the e-commerce platform but the gap is in what happens after the data comes in. You take test results and turn them into clear, statistically solid recommendations: what worked, what didn't, why, and what to do next. You need to be able to go deep at the segment, device, and source level to find what top-line reporting misses.\nSecondary: Build the self-serve data infrastructure so experimentation scales: Our experiment data comes from first-party clickstream we built ourselves, millions of events a day joined against Shopify orders, ad platforms, and our own customer data in BigQuery. Bot traffic, identity stitching, and attribution gaps can quietly flip a result. You write the SQL and dbt models behind your own analyses, check the data before trusting it, and flag what's broken rather than reporting a number you can't stand behind.\n\n\n\n\nThe Career Accelerator:\n\nThis is not a role where you inherit a reporting setup and maintain it.\n\n\n\n\nThe scope is scarce: very few Data Analysts get simultaneous ownership over hypothesis generation, test design, statistical analysis, pipeline architecture, and business recommendation, with direct access to leadership and no reporting queue in between.\nYour first 12 months: build and own data pipelines across Shopify, GA4, Google Ads, and BigQuery from scratch. Design and run A/B tests end-to-end across a high-volume e-commerce platform. Orchestrate agentic AI workflows to accelerate analysis at scale. Map user journeys across devices, segments, and traffic sources to surface the non-obvious conversion drivers. Contribute to a structured hypothesis pipeline with clear test briefs and upfront success criteria. Shape the future of experimentation at Puffy, where data-driven testing is the engine behind every growth decision.\n\n\n\n\nWhat Is In It For You:\n\nThis isn't just another analytics role. This is your chance to become a true industry architect.\n\n\n\n\n1. Own the Full Experimentation Cycle, Not Just the Dashboard\n\nYou own hypothesis generation, test design, statistical analysis, and the business recommendation that follows.\n\n\n\n\nYou build your own pipelines across Shopify, GA4, Google Ads, and BigQuery. No waiting in a queue for data, no presenting metrics without a point of view. You design the test, run the analysis, and deliver a recommendation clear enough that marketing, UX, and development can act on it the same week.\nYou report to the Analytics Manager, but the experimentation output is yours to drive. Within 12 months, you'll have more hands-on testing reps than analysts accumulate in three years elsewhere.\n\n\n\n\n2. Join a High-Performance Organization and Partner with the 1%:\n\n🏆 Puffy: Top 5 Mattress Brand in US with Over $1Billion USD in Sales\n🌍 Great Place to Work Certified\n💡 Work directly with Forbes Council Member CEO. Your vision is the company's vision.\n\nGain firsthand exposure to strategic decisions and high-velocity execution that drives a global brand\n\n\n\n\n3. Experience a World-Class Lifestyle\n\nDubai offers a tax-free salary, world-class infrastructure, year-round sunshine, and a global lifestyle that most professionals only experience later in their careers. Your entire compensation package lands in your account, no deductions, no surprises.\n\n\n\n\n4. Become the Person Who Knows Why Things Convert\n\nIn most companies, analysts report numbers. Here, you're the person who tells the business what to change and why. When a test wins or loses, your analysis is the reason leadership moves. You'll build the instinct to separate signal from noise across segments, devices, and traffic sources, and the communication skills to make non-technical stakeholders act on what you find. Puffy has been AI-First since December 2023, so you'll build that judgment with an AI-native toolbox behind you rather than a reporting queue in front of you.\n\n\n\n\nWhat You'll Need:\n\n3+ years in data analysis, experimentation, or CRO within e-commerce, D2C, or any high-traffic transactional website (fintech, marketplaces, SaaS, banking)\nStrong SQL: complex joins, window functions, CTEs across large datasets without relying on pre-built dashboards\nWorking Python (or R) for data manipulation, statistical analysis, and automation\nProven A/B testing experience: hypothesis design through statistical analysis to business recommendation; solid grasp of sample sizing, significance thresholds, and common pitfalls\nHands-on GA4 experience: event-based tracking, custom explorations, and the ability to tie GA4 data to other sources\nExperience integrating ad platform data (Google Ads, Meta) with site analytics to see the full acquisition-to-conversion funnel\nAbility to independently connect to and pull from multiple data sources (APIs, warehouses, flat files) without engineering support\nSharp analytical communication: complex findings distilled into concise recommendations for non-technical stakeholders\nProactive and curious: you spot testing opportunities and chase root causes before anyone asks\n\n\n\n\nGood-to-Have:\n\nExperience with BigQuery or AWS data warehousing, including scheduled queries and data modeling\nFamiliarity with session replay and heatmap tools (FullStory, Hotjar) for qualitative behavioral analysis\nBackground in Looker, Tableau, or similar dashboarding tools\n\n\n\n\nThe Puffy DNA:\n\nWe're restless, perpetually hungry, and fast-paced, driven by an unwavering belief that we can outperform any competitor, regardless of their size.\n\n\n\n\nBe the Owner: We don't hire employees; we welcome owners. You're accountable for results, not activity.\nExecute with Urgency: We thrive in high-stakes environments by making thoughtful decisions quickly and acting decisively.\nDemand Excellence: We solve the hard problems that others can't, pushing the boundaries of our craft.\nBe AI-First: Daily multi-turn AI conversations challenge your assumptions.\nGo All-In: When the mission demands it, we rally as one team to cross the finish line.\n\n\n\n\n✨ Your Total Compensation & Benefits\n\n\n\n\n💰 Compensation:\n\nUp to AED 25,000/month (tax-free) + monthly performance bonus of up to 10% of base\nAnnual salary review every January Tax-free income\nAnnual return flight allowance to your home country\nParking allowance (up to AED 7,800 annually)\n\n\n\n\n🏥 Health & Protection:\n\nPremium worldwide health coverage (AED 1 Million limit)\nLife insurance & Personal Accident Insurance (24x monthly salary)\n\n\n\n\n🌴 Time Off:\n\n22 working days annual leave + UAE public holidays\n\n\n\n\n🌍 Relocation Support (International Hires):\n\nUAE work visa sponsorship\nInternational flights & airport transfers\n14-day 4-star hotel a",
-      "postedAgo": "1 week ago",
-      "applicants": "Over 200 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Full-time",
-        "Industries": "Retail"
       }
     },
     {
@@ -16717,22 +16344,6 @@
         "Employment type": "Full-time",
         "Industries": "Software Development"
       }
-    },
-    {
-      "id": "4448088872",
-      "title": "Senior Software Engineer - Agency Enablement Team",
-      "company": "Teads",
-      "location": "Montpellier, Occitanie, France",
-      "posted": "2026-09-18",
-      "salary": "",
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4448088872/",
-      "queries": [
-        "Senior Full Stack Engineer TypeScript | Worldwide | remote"
-      ],
-      "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-10-02T08:02:54.331Z",
-      "filterReason": null,
-      "status": "gone"
     },
     {
       "id": "4446136251",
@@ -17236,7 +16847,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4434547106/",
       "firstSeen": "2026-10-01T08:27:21.783Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-10-04T07:53:13.985Z",
@@ -17348,7 +16959,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4429652459/",
       "firstSeen": "2026-10-05T08:32:03.147Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "Together we make the difference\n\nWe are a leading provider of innovative and high-performance solutions for airport logistics. Our portfolio includes products and solutions for baggage and cargo handling, high-end software for the digitalization of logistics processes as well as an extensive range of maintenance and services. Major customers include renowned airports and airlines around the globe.\n\nAs a Senior Software Developer, you will join a team building innovative cloud-based solutions for baggage handling and airport logistics. Our solutions are developed on OpenAir, Vanderlande’s common platform, and leverage the Aviation Data Hub to deliver data-driven services for the biggest airports in the world. You will combine technical leadership, hands-on coding, and architecture design to create scalable, secure, and future-ready cloud applications.\n\nWhat are my responsibilities?\n\nPlatform Development\n\n\nArchitect and implement cloud-native applications using Node.js for backend and Vue.js for frontend.\nIntegrate services with OpenAir and the Aviation Data Hub for real-time data exchange and analytics.\nEnsure modularity, scalability, and interoperability across Vanderlande’s digital aviation ecosystem.\n\n\nTechnical Leadership\n\n\nDefine software architecture and best practices for cloud-based aviation logistics solutions.\nAct as design authority, align with other stakeholders and guide technical decisions for the team.\n\n\nInnovation & Integration\n\n\nBuild services enabling predictive analytics, real-time monitoring, and optimization of baggage handling systems.\nCollaborate with different stakeholders in the airport to digitalize and optimize processes.\n\n\nQuality & Compliance\n\n\nEnsure adherence to aviation safety and cybersecurity standards.\nDrive CI/CD pipelines, automated testing, and DevOps practices for AWS/Azure deployments.\n\n\nTeam Leadership\n\n\nMentor developers, conduct code reviews, and foster a culture of innovation and continuous improvement.\n\n\nWhat do I need to qualify for the role?\n\n\n8+ years in software engineering, with leadership experience.\nStrong expertise in Node.js, Vue.js or a similar framework and cloud platforms (AWS or Azure).\nExperience with microservices, API-first design, test-driven software development, and containerization (Docker/Kubernetes).\nKnowledge of data platforms, data streaming architectures, and IoT integration.\nFamiliarity with aviation domain or logistics systems is a plus.\nTechnological knowledge about software/concepts like Kafka, rabbitmq, redis, elasticseach, mongodb, postgres or oauth/JWT is a plus.\n\n\nPreferred\n\n\nBachelor’s or Master’s in Computer Science, Software Engineering, or related field.\nExperience with data-driven services, analytics, and platform engineering.\nUnderstanding of Vanderlande’s automation solutions and airport operations.\nExperience applying AI tools and technologies to enhance software development processes.\n\n\nWe are committed to fostering an inclusive workplace and encourage all qualified candidates to apply.",
       "postedAgo": "18 hours ago",
@@ -17500,7 +17111,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4418825092/",
       "firstSeen": "2026-10-04T07:53:13.985Z",
-      "lastSeen": "2026-11-01T02:13:05.410Z",
+      "lastSeen": "2026-11-02T02:13:01.821Z",
       "filterReason": null,
       "description": "Who are we?\n\nCohere is the leading security-first enterprise AI company. We build cutting-edge foundation AI models and end-to-end products that are designed to solve real-world business problems.\n\nWe’re training and deploying frontier models for enterprises who are building AI systems. We believe that our work is instrumental to the widespread adoption of AI and we are looking for folks that want to be part of that.\n\nWe obsess over what we build. Each one of us is responsible for contributing to increasing the capabilities of our models and the value they drive for our customers. Cohere is a team of researchers, engineers, designers, and more, who are all passionate about their craft.\n\nWe are a global technology company headquartered in Toronto with key offices in London, New York City, San Francisco, Montreal, Paris, Berlin and Seoul. Join us!\n\nAbout North\n\nNorth is Cohere's cutting-edge AI workspace platform, designed to revolutionize the way enterprises utilize AI. It offers a secure and customizable environment, allowing companies to deploy AI while maintaining control over sensitive data. North integrates seamlessly with existing workflows, providing a trusted platform that connects AI agents with workplace tools and applications.\n\nWhy This Role?\n\nThis role offers a unique opportunity to shape how enterprises harness the power of AI in real-world applications. As a bridge between our core North product and our clients’ engineering teams, you’ll be at the forefront of solving complex problems and securely integrating AI into critical sectors such as finance, healthcare, and telecommunications.\n\nWe’re looking for Software Engineers with Applied AI experience who can own the design, build, and deployment of agentic workflows powered by Large Language Models (LLMs), from early prototypes to production-grade AI agents, to deliver concrete business value in enterprise workflows. You’ll work closely with customers on real-world business problems, often building first-of-their-kind agent workflows that integrate LLMs with tools, APIs, and data sources. While our pace is startup-fast, the bar is enterprise-high: agents must be reliable, observable, safe, and auditable from day one.\n\nNote: between 20 - 40% travel anticipated\n\nIn This Role, You Will\n\n\nWork closely with our enterprise customers to translate high-value, ambiguous business problems into well-framed agentic workflows with clear success criteria and evaluation methodologies\nLead the design, build, and delivery of LLM-powered agents that reason, plan, and act across tools, APIs, and sensitive enterprise data sources, with enterprise-grade reliability and performance\nBuild and ship features for North, our AI workspace platform, working across the full product lifecycle from conceptualisation through production\nTake ownership of scoping and shaping use cases end-to-end, flexing into whatever technical area the problem demands (including frontend) to drive the most effective solution\nContribute to shared frameworks and patterns that enable consistent, high-quality delivery across customers and teams\nDrive clarity in ambiguous situations, build alignment, and raise engineering quality across the organization\nTravel up to 20–40% to work on-site with customers and partners\n\n\nYou May Be a Good Fit If\n\n\nYou have hands-on experience building and deploying production-grade software in Python; you write clean, testable, observable, scalable code\nYou've built and deployed highly performant RAG and agentic applications, including agents that plan and execute multi-step tasks using patterns like ReAct or Plan-and-Execute\nYou're deeply familiar with the LLM stack: frontier models, vector databases, and orchestration frameworks\nYou have a proven ability to build robust evaluation frameworks, moving well beyond trial and error, to measure agent accuracy, safety, and latency\nYou’re experienced working directly with customers and can lead technical discussions with enterprise stakeholders, translating ambiguous business needs into concrete technical specs\nYou have experience owning the full scope of a use case end-to-end\nYou thrive in fast-paced and ambiguous environments and can execute well even when priorities are shifting\n\n\nIt's a Bonus If You Have\n\n\nExperience setting architectural standards for AI and agentic systems across distributed teams\nExperience flexing into unfamiliar technical areas, such as frontend, when the problem calls for it\nExposure to regulated or sensitive industry environments (finance, healthcare, telecoms)\nExperience with enterprise security, compliance, or auditability requirements for AI systems\n\n\nWe are open to candidates currently based in the Middle East or who are open to travelling or relocating.\n\nFull-Time Employees At Cohere Enjoy These Perks\n\n\nA weekly lunch stipend of $75/£75 or equivalent in your local currency for lunch.\nFull health and dental benefits, including a separate budget for mental health.\nRRSP matching, 401K, Pension Scheme.\n100% Parental Leave top-up for up to 6 months, for either parent.\nAnnual enrichment benefits:\n\n\nArts & culture, fitness/wellness, quality time, and a workspace improvement credit.\n\nEducation & learning stipend for conferences, courses, and coaching.\n\n\n6 weeks of paid vacation (30 working days!)\nBudget for traveling to other offices if you are remote, plus an annual company offsite.\n\n\nHow And Where We Work\n\n\nCohere is remote-friendly, but we also have offices in Toronto, London, New York City, San Francisco, Montreal, Paris, Berlin and Seoul with more opening soon.\nFor those in the office: a daily lunch program, plenty of snacks, and regular community and social events.\nFor those not near an office: a co-working benefit so you can work alongside others in your city.\nEveryone receives a $500 home office stipend to set up your workspace properly.\n\n\nIf any of the above doesn’t line up exactly with your experience, we still encourage you to apply.\n\nWe strive to create an inclusive work environment for all; we welcome applicants from all backgrounds and are committed to providing equal opportunities. Should you require any accommodations during the recruitment process, please submit an Accommodations Request Form, and we will work together to meet your needs.\n\nWe may use AI-enabled tools to screen and assess applicants against the criteria for this position. This helps our recruiters identify potentially qualified candidates, but it doesn't limit the applications our recruiters may review or consider.\n\nBeware of Scams: Cohere will never ask for payment or third-party services (e.g., CV writing) as part of our hiring process. All legitimate roles are listed on the Cohere careers page and LinkedIn only, with all communications from Cohere employees coming from an @cohere.com or @cw.cohere email alias. If jobs are viewed on other sites then please verify these through our official careers page.",
       "postedAgo": "16 hours ago",
