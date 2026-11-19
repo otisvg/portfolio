@@ -1,16 +1,18 @@
 {
-  "fetchedAt": "2026-11-18T02:13:01.040Z",
-  "blocked": false,
-  "searchComplete": true,
-  "errors": [],
-  "count": 670,
-  "seenThisRun": 152,
-  "adsRead": 37,
+  "fetchedAt": "2026-11-19T02:12:52.835Z",
+  "blocked": true,
+  "searchComplete": false,
+  "errors": [
+    "blocked (429) on \"Senior Frontend Engineer\" / Dubai, United Arab Emirates"
+  ],
+  "count": 669,
+  "seenThisRun": 10,
+  "adsRead": 0,
   "statusCounts": {
-    "new": 35,
-    "filtered": 55,
-    "active": 97,
-    "gone": 483
+    "active": 132,
+    "filtered": 54,
+    "new": 1,
+    "gone": 482
   },
   "jobs": [
     {
@@ -38,7 +40,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491597664",
@@ -66,7 +68,7 @@
         "Industries": "Professional Training and Coaching"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491591932",
@@ -93,7 +95,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491565684",
@@ -120,7 +122,7 @@
         "Industries": "Information Technology & Services"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491549522",
@@ -147,7 +149,7 @@
         "Industries": "Technology, Information and Internet"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491539259",
@@ -176,7 +178,7 @@
         "Industries": "Financial Services"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491446448",
@@ -203,7 +205,7 @@
         "Industries": "Machinery Manufacturing"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491280391",
@@ -247,7 +249,7 @@
         "Industries": "Engineering Services"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491111023",
@@ -274,7 +276,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491101947",
@@ -301,7 +303,7 @@
         "Industries": "Staffing and Recruiting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4491078917",
@@ -331,6 +333,22 @@
       "status": "active"
     },
     {
+      "id": "4491037147",
+      "title": "Senior Technical Software Engineer Frontend Engineering",
+      "company": "TALENTMATE",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-13",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4491037147/",
+      "firstSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
       "id": "4490981366",
       "title": "Software Benchmark Engineer (Remote)",
       "company": "Joblet-AI",
@@ -355,7 +373,7 @@
         "Industries": "Staffing and Recruiting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490979365",
@@ -382,7 +400,7 @@
         "Industries": "Outsourcing and Offshoring Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490963145",
@@ -409,7 +427,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490934688",
@@ -436,7 +454,7 @@
         "Industries": "Financial Services"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490901474",
@@ -560,7 +578,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490641846",
@@ -603,7 +621,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490467375",
@@ -618,7 +636,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490467375/",
       "firstSeen": "2026-11-18T02:13:01.040Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "description": "JOB PURPOSE\n\n\nWe're looking for a mid-level Front-End Engineer who can move fluidly between web and mobile development. You'll build and maintain applications using React, React Native, and Angular, work with headless CMS platforms and GraphQL APIs, and write clean, type-safe code with TypeScript. Exposure to design tools like Figma, Adobe XD, and experience working within a design system will be a strong advantage. You will work closely with our product, design, and QA teams to deliver scalable, high-quality applications for web and mobile platforms.\n\n\nRESPONSIBILITIES AND DUTIES\nDevelop, maintain, and optimize responsive web applications using React.js/or Angular and Next.js\nBuild and deploy cross-platform mobile applications using React Native and Expo\nDesign and implement RESTful APIs and backend services using Node.js and Express.js.\nIntegrate front-end applications with headless CMS platforms (WordPress).\nCollaborate with designers to create user-friendly interfaces with clean and maintainable code.\nOptimize application performance for maximum speed, scalability, and efficiency.\nTranslate Figma/XD designs into pixel-accurate, responsive UI components.\nIntegrate third-party APIs, authentication systems, and cloud services.\nContribute to and maintain a shared design system/component library across web and mobile.\nParticipate in code reviews, unit testing, and continuous integration/deployment (CI/CD) processes.\nStay updated on emerging technologies and best practices to continuously improve the product.\nKNOWLEDGE, SKILLS AND EXPERIENCE\n3+ years of experience in front-end development with React.js.\nHands-on experience with React Native for mobile app development.\nWorking experience with Angular (recent or prior projects).\nExperience with Next.js for server-side rendering and static site generation.\nSolid understanding of Node.js, Express.js, and REST API design.\nProficiency in JavaScript (ES6+) and familiarity with TypeScript.\nExperience with state management tools like Redux, Zustand, or Context API.\nKnowledge of responsive design, CSS frameworks (Tailwind, Material UI, etc.).\nUnderstanding Git workflows and version control best practices.\nFamiliarity with cloud platforms like AWS, Firebase, or Supabase.\nGood understanding of deployment processes for web and mobile apps.\nAbility to work across both web and mobile front-end codebases as required by project needs.\nExperience with GraphQL (Apollo/Relay).\nFamiliarity with Docker and containerized environments.\nExperience with automated testing tools (Jest, Cypress, Detox).\nKnowledge of CI/CD tools like GitHub Actions, Jenkins, or Bitbucket Pipelines.\nUnderstanding of mobile app publishing for iOS App Store and Google Play Store.\nExposure to WebSockets, real-time data handling, and push notifications.\n\n\nSoft Skills\n\n\nStrong problem-solving and analytical skills.\nAbility to work independently and in a team environment.\nExcellent communication and documentation skills.\nEagerness to learn and adapt to new tools and technologies.\nCOMMUNICATIONS AND WORKING RELATIONSHIPS\n\n\nThe job holder interacts with all Departments within NNHS and other service providers. He/ She must ensure seamless communication between all departments for the smooth operations and to achieve the organizational objective. He/ She must be able to foster strong internal & external communication standards.\n\n\nOPERATING ENVIRONMENT\n\n\nHe/she works in an air-conditioned environment and spends most of the day at desk. The Jobholder’s working hours are flexible as per weekly schedule within the boundaries of the UAE labor law. The job holder is not exposed to any obvious hazards.\n\nStatements in this Job Description are intended to reflect, in general, the duties and responsibilities of the position, but they\n\nare not to be interpreted as totally inclusive. NAS Neuron Heath Services LLC is an equal opportunity employer.\n\nAbout The Cigna Group\n\nDoing something meaningful starts with a simple decision, a commitment to changing lives. At The Cigna Group, we’re dedicated to improving the health and vitality of those we serve. Through our divisions Cigna Healthcare and Evernorth Health Services, we are committed to enhancing the lives of our clients, customers and patients. Join us in driving growth and improving lives.\n\nQualified applicants will be considered without regard to race, color, age, disability, sex, childbirth (including pregnancy) or related medical conditions including but not limited to lactation, sexual orientation, gender identity or expression, veteran or military status, religion, national origin, ancestry, marital or familial status, genetic information, status with regard to public assistance, citizenship status or any other characteristic protected by applicable equal employment opportunity laws.\n\nIf you require reasonable accommodation in completing the online application process, please email: SeeYourselfEMEA@cigna.com for support. Do not email SeeYourselfEMEA@cigna.com for an update on your application or to provide your resume as you will not receive a response.",
       "postedAgo": "1 day ago",
@@ -631,7 +649,7 @@
         "Industries": "Hospitals and Health Care"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490460069",
@@ -658,7 +676,7 @@
         "Industries": "Airlines and Aviation"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490451494",
@@ -685,7 +703,7 @@
         "Industries": "Airlines and Aviation"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490424675",
@@ -712,7 +730,7 @@
         "Industries": "Technology, Information and Internet"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490420780",
@@ -739,7 +757,7 @@
         "Industries": "Higher Education"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490419231",
@@ -766,7 +784,7 @@
         "Industries": "Retail"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490409281",
@@ -969,7 +987,7 @@
         "Industries": "Staffing and Recruiting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490197481",
@@ -996,7 +1014,7 @@
         "Industries": "Software Development"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490196508",
@@ -1023,7 +1041,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490103223",
@@ -1050,7 +1068,7 @@
         "Industries": "Financial Services"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4489989674",
@@ -1371,7 +1389,7 @@
         "Industries": "Education"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4489784818",
@@ -1398,7 +1416,7 @@
         "Industries": "Education"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4489727100",
@@ -1426,7 +1444,7 @@
         "Industries": "Holding Companies"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4489720499",
@@ -1486,7 +1504,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4489642434/",
       "firstSeen": "2026-11-12T02:12:25.968Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "description": "Canonical is a leading provider of open source software and operating systems to the global enterprise and technology markets. Our platform, Ubuntu, is very widely used in breakthrough enterprise initiatives such as public cloud, data science, AI, engineering innovation, and IoT. Our customers include the world's leading public cloud and silicon providers, and industry leaders in many sectors. The company is a pioneer of global distributed collaboration, with 1200+ colleagues in 75+ countries and very few office-based roles. Teams meet two to four times yearly in person, in interesting locations around the world, to align on strategy and execution.\n\nThe company is founder-led, profitable, and growing.\n\nThe role\n\nWe build internal systems to the same standard as our public products: specified, tested, reviewed and observable. We want engineers who enjoy that rigour and take full ownership of what they ship.\n\nWhat You Will Do\n\n\nDesign and deliver systems and platforms, including intuitive UIs\nBuild Go services and APIs that connect many data sources\nDesign data models and architecture for connected systems\nTurn data into clear dashboards and visualisations\nBuild LLM-powered features into everyday workflows\nWrite specs, estimate work and deliver to agreed criteria\nSet a high bar in code review, testing and documentation\nPartner with non-technical colleagues to turn needs into tools\nMentor engineers and improve how the team works\n\n\nWho You Are\n\nYou have deep expertise in at least two of:\n\n\nBack-end services in Go\nModern front-end engineering [React/Svelte/TypeScript]\nData engineering and analytics\nData visualisation\nApplied LLM/ML in production workflows\n\n\nYou Also\n\n\nTreat testing, security, performance and accessibility as part of the job\nHandle sensitive people data with care\nWrite clearly and work well in a distributed team\nOwn your work from first spec to production\n\n\nNice to have: Python, Go, React, Svelte, PostgreSQL, Kubernetes, a history of building tools for HR, finance or operations.\n\nThe ideal candidate will use their passion for experimentation and analytics to build tomorrow’s tech organisation. This team will help us gain insights into the business and our talent pool, and use those insights to improve the experience of working at Canonical.\n\nAs a Workplace Engineer at Canonical, you need an analytical, data-driven mind and a passion to connect and make sense of interesting data from APIs. We focus heavily on the collection of metrics, optimising processes, and ways of working across Canonical. You need to demonstrate leadership, excellence, and consistency and will mentor others in the team.\n\nWhat We Offer Colleagues\n\nWe consider geographical location, experience, and performance in shaping compensation worldwide. We revisit compensation annually (and more often for graduates and associates) to ensure we recognize outstanding performance. In addition to base pay, we offer a performance-driven annual bonus or commission. We provide all team members with additional benefits which reflect our values and ideals. We balance our programs to meet local needs and ensure fairness globally.\n\n\nDistributed work environment with twice-yearly team sprints in person\nPersonal learning and development budget of USD 2,000 per year\nAnnual compensation review\nRecognition rewards\nAnnual holiday leave\nMaternity and paternity leave\nTeam Member Assistance Program & Wellness Platform\nOpportunity to travel to new locations to meet colleagues\nPriority Pass and travel upgrades for long-haul company events\n\n\nAbout Canonical\n\nCanonical is a pioneering tech firm at the forefront of the global move to open source. As the company that publishes Ubuntu, one of the most important open-source projects and the platform for AI, IoT, and the cloud, we are changing the world of software. We recruit on a global basis and set a very high standard for people joining the company. We expect excellence; in order to succeed, we need to be the best at what we do. Most colleagues at Canonical have worked from home since our inception in 2004. Working here is a step into the future and will challenge you to think differently, work smarter, learn new skills, and raise your game.\n\nCanonical is an equal opportunity employer\n\nWe are proud to foster a workplace free from discrimination. Diversity of experience, perspectives, and background create a better work environment and better products. Whatever your identity, we will give your application fair consideration.",
       "postedAgo": "1 day ago",
@@ -1607,7 +1625,7 @@
         "Industries": "Telecommunications"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4489560912",
@@ -1857,7 +1875,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4489316550/",
       "firstSeen": "2026-11-15T02:12:43.163Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "description": "Job Title\n\nFront-End Developer (Angular / React)\n\nJob Scope\n\nWe are looking for a talented Front-End Developer with strong experience in AngularJS, Angular, or ReactJS to build and enhance web applications. The ideal candidate has a solid understanding of modern JavaScript frameworks, UI/UX implementation, and front-end best practices. This role involves collaborating with back-end teams, designing responsive interfaces, and delivering high-quality user experiences.\n\nMain Duties And Responsibilities\n\n\nDevelop, enhance, and maintain front-end features using AngularJS, Angular, or ReactJS.\nBuild responsive, high-performance web applications optimized for all devices.\nCollaborate closely with back-end developers and UI/UX designers to translate requirements into functional interfaces.\nWrite clean, efficient, and reusable code following industry standards.\nIntegrate APIs and ensure seamless front-end/back-end communication.\nTroubleshoot and debug code to resolve performance or usability issues.\nParticipate in code reviews to maintain code quality and consistency.\nOptimize applications for maximum speed and scalability.\nEnsure cross-browser compatibility and adherence to accessibility standards.\nMaintain documentation of front-end components and technical designs.\n\n\n\nPosition Requirements\n\n\nStrong experience with AngularJS, Angular, or ReactJS (at least one framework required).\nProficiency in HTML5, CSS3, JavaScript (ES6+), TypeScript.\nExperience with REST API integration.\nFamiliarity with responsive design and mobile-first development.\nKnowledge of version control systems (e.g., Git).\nUnderstanding of UI/UX principles and front-end architecture.\nStrong problem-solving and debugging skills.\n\n\n\nEducation\n\nBachelor’s degree in Computer Science or equivalent\n\nExperience\n\n\nExperience with state management libraries (Redux, NgRx, MobX, etc.).\nFamiliarity with modern build tools: Webpack, Vite, Gulp, npm, etc.\nKnowledge of unit testing frameworks (Jasmine, Jest, Karma).\nExperience with Agile/Scrum methodologies.\nUnderstanding of CI/CD workflows.",
       "postedAgo": "19 hours ago",
@@ -2000,7 +2018,7 @@
         "Industries": "Internet Marketplace Platforms"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4489076240",
@@ -2205,7 +2223,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4488902387/",
       "firstSeen": "2026-11-14T02:12:59.358Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "description": "Job Purpose\n\nAt Emirates, we believe in connecting the world, to and through, our global hub in Dubai; and in constantly innovating to ensure our customers ‘Fly Better’. Join us in Cosmopolitan Dubai as a Senior Technical Software Engineer – Frontend Development and make your mark on the aviation world!\n\nThe Senior Technical Software Engineer – Frontend Development is a fully participating member of an agile feature team who will help shape and scale modern frontend engineering across the organisation. You’ll bring deep expertise in React, Next.js and TypeScript, with a strong track record of building scalable design systems, accessible component libraries and shared engineering frameworks. From performance, security and automated testing to CI/CD and frontend governance, you’ll champion engineering quality while helping teams adopt modern practices, including AI-assisted development and Figma-to-code workflows.\n\nIn This Role, You Will\n\n\nCollaborate with the team to deliver technical design, development and deployment of complex solutions within relevant product. Carry out effective technical design reviews to ensure that the right architecture patterns are used by the team.\nDrive the adoption of Engineering practices , implement development process automation, lean software development, built-in-quality, test driven development, agile practices, and timely root cause analysis and blameless incident post-mortems.\nPartner with cross-functional teams to determine viability of solutions. Evaluate current problems, future requirements and existing solutions in medium to large projects to enable high level design and drive proof-of-concepts and implement prototypes to validate ideas.\nInvestigate, debug and fix complex issues involving corner cases and rare conditions. Support continuous improvement by investigating alternatives and new technologies and presenting these for architectural review.\nContribute to sprint/work design and planning by providing subject matter expertise on business domain and relevant technologies and actively contribute to technology specific community of practices.\nManage and mentor Software Engineers to allow for skill/knowledge development through advice, coaching, and training opportunities. Responsible for their technical deliveries and adherence to design and coding standards and practices.\nEnsure optimal use of enterprise application platforms, tools and libraries in line with the approved technology architecture.\nResponsible for corrective, adaptive, preventative and perfective maintenance of products in collaboration with other capabilities for the relevant product.\n\n\nQualification\n\nTo be considered for the role you must meet the below requirements:\n\n\nDegree in a relevant field such as Computer Science, Computer Engineering or Software Engineering.\nMinimum of 5+ years of experience in Information Technology.\n\n\nKnowledge And Skills\n\n\nHands-on expertise in React (18/19), Next.js (App Router, Server Components), and TypeScript\nProven track record of architecting scalable design systems, accessible UI component libraries (Storybook, Radix, Tailwind)\nStrong breadth across the modern web stack—including monorepo tooling (Turborepo, pnpm), client-side security (OAuth 2.0/OIDC, CSP), performance tuning, and CI/CD pipelines—with an emphasis on building shared npm packages, design tokens, and CLI scaffolding tools consumed across enterprise teams.\nExperience of developing advanced/Complex technology Software solutions for large, complex organisations in a multi-functional environment.\nSolid experience in data modelling, systems design and expert coder in the technology listed in the skills category\nExperience in providing production support for business solutions using ITIL framework\nExpert in Technology technical evaluation, vendor selection and technology vendor management using data driven models\nImplementation of contemporary engineering practices like lean software development, test driven development, continuous integration and continuous deployment\nEstablishing and managing leveraging technology platforms for DevOps, Code Management, Testing, Continuous Integration and Continuous Deployment for ensuring robust and reliable code base is always maintained.\n\n\nLeadership: No\n\nSalary & benefits\n\nJoin us in Dubai and enjoy an attractive tax-free salary and travel benefits that are exclusive to our industry, including discounts on flights and hotel stays around the world. Find out what it’s like to live and work in our fast-paced, cosmopolitan home city in the Dubai Lifestyle section of our website www.emirates.com/careers.",
       "postedAgo": "20 hours ago",
@@ -2339,7 +2357,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4488772327/",
       "firstSeen": "2026-11-09T02:13:04.769Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-13T02:11:06.029Z",
@@ -2379,7 +2397,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4488766906",
@@ -2406,7 +2424,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4488765943",
@@ -2902,7 +2920,7 @@
         "Industries": "Real Estate"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4488278985",
@@ -3618,7 +3636,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4487496003/",
       "firstSeen": "2026-11-12T02:12:25.968Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-13T02:11:06.029Z",
@@ -4386,7 +4404,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4486646190/",
       "firstSeen": "2026-11-08T02:12:52.470Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-14T02:12:59.358Z",
@@ -4630,7 +4648,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4486365687/",
       "firstSeen": "2026-11-05T02:13:17.213Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "description": "Job Description\n\n\nDesign, develop, and maintain high-quality, responsive, and scalable enterprise websites using React.js, Next.js, TypeScript, and modern frontend technologies, ensuring performance, accessibility, security, and an exceptional user experience across devices.\nDevelop and integrate HCL Digital Experience (HCL DX / HCL TX) CMS capabilities, including content models, authoring workflows, reusable components, templates, and content delivery integrations to support enterprise digital platforms.\nImplement headless CMS architectures by integrating HCL TX content APIs and REST services with React/Next.js frontends, enabling flexible content delivery, omnichannel experiences, and scalable digital platform solutions.\nDevelop and maintain reusable frontend components, shared UI libraries, design systems, and modular website architectures aligned with enterprise architecture standards and business requirements.\nOwn the end-to-end website development lifecycle, including requirements analysis, solution design, development, code reviews, unit testing, integration testing, deployment, production support, and continuous enhancement.\nOptimize website performance, Core Web Vitals, SEO, accessibility, caching, and rendering strategies such as server-side rendering (SSR), static site generation (SSG), and incremental static regeneration (ISR), as appropriate.\nIntegrate websites with enterprise systems and services, including REST APIs, CRM platforms, lead management systems, authentication services, search platforms, analytics, and third-party applications.\nImplement secure web application practices, including authentication and authorization, API security, input validation, secure session management, vulnerability remediation, and compliance with enterprise security standards.\nConfigure and maintain CI/CD pipelines and automated deployment processes using Git-based workflows and enterprise DevOps tools, supporting controlled releases across development, UAT, and production environments.\nCollaborate with business stakeholders, UX/UI designers, solution architects, backend developers, QA teams, and external vendors to translate business requirements into reliable, maintainable, and high-quality digital experiences.\nTroubleshoot complex frontend, CMS, API integration, content delivery, and production issues, performing root cause analysis and implementing sustainable solutions to improve platform stability and reliability.\nContribute to technical documentation, code quality standards, architectural reviews, reusable development practices, and continuous improvements across enterprise website initiatives.\nExplore and adopt emerging technologies, headless digital experience capabilities, and AI-enabled development practices to improve developer productivity, accelerate delivery, and enhance digital platform capabilities.",
       "postedAgo": "8 hours ago",
@@ -10418,38 +10436,6 @@
       "status": "gone"
     },
     {
-      "id": "4480934514",
-      "title": "IT Applications & Solutions Specialist",
-      "company": "Peergrowth",
-      "location": "Dubai, United Arab Emirates",
-      "posted": "2026-10-19",
-      "salary": "",
-      "queries": [
-        "Senior Frontend Engineer | Dubai, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4480934514/",
-      "firstSeen": "2026-10-19T07:25:07.732Z",
-      "lastSeen": "2026-10-19T07:25:07.732Z",
-      "filterReason": null,
-      "status": "gone"
-    },
-    {
-      "id": "4480890487",
-      "title": "Junior Front-End Developer - Remote",
-      "company": "PULSE",
-      "location": "Ajman, Ajman Emirate, United Arab Emirates",
-      "posted": "2026-10-18",
-      "salary": "",
-      "queries": [
-        "Senior Frontend Engineer | Dubai, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4480890487/",
-      "firstSeen": "2026-10-19T07:25:07.732Z",
-      "lastSeen": "2026-10-19T07:25:07.732Z",
-      "filterReason": "title matches \"Junior\"",
-      "status": "filtered"
-    },
-    {
       "id": "4480887531",
       "title": "Senior Salesforce Developer",
       "company": "Arcsen",
@@ -16084,7 +16070,7 @@
         "Lead Engineer JavaScript | United Arab Emirates"
       ],
       "firstSeen": "2026-09-28T06:30:55.239Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-19T02:12:52.835Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-09-28T06:53:03.446Z",
@@ -16814,7 +16800,7 @@
         "Industries": "IT Services and IT Consulting"
       },
       "detailsFetchedAt": "2026-11-18T02:13:01.040Z",
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4434547106",
