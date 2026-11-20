@@ -1,20 +1,84 @@
 {
-  "fetchedAt": "2026-11-19T02:12:52.835Z",
+  "fetchedAt": "2026-11-20T02:12:35.220Z",
   "blocked": true,
   "searchComplete": false,
   "errors": [
-    "blocked (429) on \"Senior Frontend Engineer\" / Dubai, United Arab Emirates"
+    "blocked (429) on \"Senior Full Stack Engineer\" / United Arab Emirates"
   ],
-  "count": 669,
-  "seenThisRun": 10,
+  "count": 675,
+  "seenThisRun": 20,
   "adsRead": 0,
   "statusCounts": {
-    "active": 132,
+    "new": 6,
+    "active": 133,
     "filtered": 54,
-    "new": 1,
     "gone": 482
   },
   "jobs": [
+    {
+      "id": "4492719609",
+      "title": "FDE/ Specialist Builder, SWAT",
+      "company": "Salesforce",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-19",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4492719609/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
+      "id": "4492253068",
+      "title": "Mendix Developer",
+      "company": "Dicetek LLC",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-19",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4492253068/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
+      "id": "4492140473",
+      "title": "Full Stack Engineer",
+      "company": "Staff Connect UAE",
+      "location": "Dubai, United Arab Emirates",
+      "posted": "2026-11-19",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4492140473/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
+      "id": "4492042635",
+      "title": "Senior Technical Consultant",
+      "company": "Salesforce",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-18",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4492042635/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": null,
+      "status": "new"
+    },
     {
       "id": "4491779689",
       "title": "Senior Frontend React Engineer - Gen AI",
@@ -208,6 +272,22 @@
       "status": "active"
     },
     {
+      "id": "4491380720",
+      "title": "Full Stack Engineer",
+      "company": "LNKD",
+      "location": "Dubai, United Arab Emirates",
+      "posted": "2026-11-19",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4491380720/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
       "id": "4491280391",
       "title": "AI Full-Stack Engineer Graduate Corporate Service System - Frontend - 2027 Start",
       "company": "TALENTMATE",
@@ -344,9 +424,9 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4491037147/",
       "firstSeen": "2026-11-19T02:12:52.835Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4490981366",
@@ -387,7 +467,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490979365/",
       "firstSeen": "2026-11-18T02:13:01.040Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "This is a remote position.\n\n\n\n\nExperience Level: Overall 3+ Years with 1+ Years in MarTech\n\nWork Hours: 10:00 AM to 6:00 PM (Melbourne, Australia Time)\n\n\n\n\nRole Overview\n\nCandidates with familiarity with the Indian market and its business environment would be preferred.\n\n\n\n\nWe are looking for a full stack engineer who wants real depth across AEM Assets, Dynamic Media, and Content Hub – from asset pipelines and rendition workflows through to setting up multi-brand portals that distribute content and assets to the right channels for each brand – while working closely with senior engineers and architects.\n\n\n\n\nKey Responsibilities\n\nConfigure and support AEM Assets, including Dynamic Media renditions/Smart Crops and Digital Asset Management (DAM) workflows\nSet up and maintain multi-brand portals in Content Hub – brand-specific collections, permissions, and distribution channels\nStructure, tag, and distribute content and assets across brands through Content Hub\nBuild and maintain AEM Sites components, templates, and Sling Models under senior guidance\nDevelop backend services in Java, contributing to integration work with enterprise systems\nTake ownership of features within a sprint, escalating design questions to senior engineers or architects, and participate fully in Agile ceremonies\n\n\n\n\nRequirement\n\n4+ years in full stack software engineering, with hands-on experience on AEM\nHands-on with AEM Assets, Dynamic Media (renditions, Smart Crops), and DAM workflows/metadata\nExperience configuring multi-brand portals in Content Hub, including collections, permissions, and distribution channels across brands\nAEM Sites component/template development; Sling Models, HTL/Sightly, OSGi services\nStrong core Java (Java 8+), Spring, RESTful API design; React JS or an equivalent modern frontend framework\nExperience working in Agile teams, including active participation in Scrum ceremonies\n\n\n\n\nNice to Have\n\nExposure to multi-brand content governance, metadata taxonomy design, or DAM information architecture\nExposure to AEMaaCS Cloud Manager/Dispatcher/CDN configuration, and to Playwright, Cypress, or Selenium\nAn Adobe Certification (e.g. AEM Assets/Sites Developer) is well regarded, not required to apply",
       "postedAgo": "23 hours ago",
@@ -470,6 +550,22 @@
       "firstSeen": "2026-11-18T02:13:01.040Z",
       "lastSeen": "2026-11-18T02:13:01.040Z",
       "filterReason": "title matches \"Graduate\"",
+      "status": "filtered"
+    },
+    {
+      "id": "4490881816",
+      "title": "Senior Technical Software Engineer - Java Full Stack - Emiratisation)",
+      "company": "Emirates",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-18",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4490881816/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": "title matches \"Java\"",
       "status": "filtered"
     },
     {
@@ -624,6 +720,22 @@
       "status": "active"
     },
     {
+      "id": "4490579926",
+      "title": "Software Developer",
+      "company": "ALTEN",
+      "location": "Dubai, United Arab Emirates",
+      "posted": "2026-11-13",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4490579926/",
+      "firstSeen": "2026-11-20T02:12:35.220Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
       "id": "4490467375",
       "title": "Front end developer - NAS Neuron",
       "company": "The Cigna Group",
@@ -636,7 +748,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490467375/",
       "firstSeen": "2026-11-18T02:13:01.040Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "JOB PURPOSE\n\n\nWe're looking for a mid-level Front-End Engineer who can move fluidly between web and mobile development. You'll build and maintain applications using React, React Native, and Angular, work with headless CMS platforms and GraphQL APIs, and write clean, type-safe code with TypeScript. Exposure to design tools like Figma, Adobe XD, and experience working within a design system will be a strong advantage. You will work closely with our product, design, and QA teams to deliver scalable, high-quality applications for web and mobile platforms.\n\n\nRESPONSIBILITIES AND DUTIES\nDevelop, maintain, and optimize responsive web applications using React.js/or Angular and Next.js\nBuild and deploy cross-platform mobile applications using React Native and Expo\nDesign and implement RESTful APIs and backend services using Node.js and Express.js.\nIntegrate front-end applications with headless CMS platforms (WordPress).\nCollaborate with designers to create user-friendly interfaces with clean and maintainable code.\nOptimize application performance for maximum speed, scalability, and efficiency.\nTranslate Figma/XD designs into pixel-accurate, responsive UI components.\nIntegrate third-party APIs, authentication systems, and cloud services.\nContribute to and maintain a shared design system/component library across web and mobile.\nParticipate in code reviews, unit testing, and continuous integration/deployment (CI/CD) processes.\nStay updated on emerging technologies and best practices to continuously improve the product.\nKNOWLEDGE, SKILLS AND EXPERIENCE\n3+ years of experience in front-end development with React.js.\nHands-on experience with React Native for mobile app development.\nWorking experience with Angular (recent or prior projects).\nExperience with Next.js for server-side rendering and static site generation.\nSolid understanding of Node.js, Express.js, and REST API design.\nProficiency in JavaScript (ES6+) and familiarity with TypeScript.\nExperience with state management tools like Redux, Zustand, or Context API.\nKnowledge of responsive design, CSS frameworks (Tailwind, Material UI, etc.).\nUnderstanding Git workflows and version control best practices.\nFamiliarity with cloud platforms like AWS, Firebase, or Supabase.\nGood understanding of deployment processes for web and mobile apps.\nAbility to work across both web and mobile front-end codebases as required by project needs.\nExperience with GraphQL (Apollo/Relay).\nFamiliarity with Docker and containerized environments.\nExperience with automated testing tools (Jest, Cypress, Detox).\nKnowledge of CI/CD tools like GitHub Actions, Jenkins, or Bitbucket Pipelines.\nUnderstanding of mobile app publishing for iOS App Store and Google Play Store.\nExposure to WebSockets, real-time data handling, and push notifications.\n\n\nSoft Skills\n\n\nStrong problem-solving and analytical skills.\nAbility to work independently and in a team environment.\nExcellent communication and documentation skills.\nEagerness to learn and adapt to new tools and technologies.\nCOMMUNICATIONS AND WORKING RELATIONSHIPS\n\n\nThe job holder interacts with all Departments within NNHS and other service providers. He/ She must ensure seamless communication between all departments for the smooth operations and to achieve the organizational objective. He/ She must be able to foster strong internal & external communication standards.\n\n\nOPERATING ENVIRONMENT\n\n\nHe/she works in an air-conditioned environment and spends most of the day at desk. The Jobholder’s working hours are flexible as per weekly schedule within the boundaries of the UAE labor law. The job holder is not exposed to any obvious hazards.\n\nStatements in this Job Description are intended to reflect, in general, the duties and responsibilities of the position, but they\n\nare not to be interpreted as totally inclusive. NAS Neuron Heath Services LLC is an equal opportunity employer.\n\nAbout The Cigna Group\n\nDoing something meaningful starts with a simple decision, a commitment to changing lives. At The Cigna Group, we’re dedicated to improving the health and vitality of those we serve. Through our divisions Cigna Healthcare and Evernorth Health Services, we are committed to enhancing the lives of our clients, customers and patients. Join us in driving growth and improving lives.\n\nQualified applicants will be considered without regard to race, color, age, disability, sex, childbirth (including pregnancy) or related medical conditions including but not limited to lactation, sexual orientation, gender identity or expression, veteran or military status, religion, national origin, ancestry, marital or familial status, genetic information, status with regard to public assistance, citizenship status or any other characteristic protected by applicable equal employment opportunity laws.\n\nIf you require reasonable accommodation in completing the online application process, please email: SeeYourselfEMEA@cigna.com for support. Do not email SeeYourselfEMEA@cigna.com for an update on your application or to provide your resume as you will not receive a response.",
       "postedAgo": "1 day ago",
@@ -844,7 +956,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490346559/",
       "firstSeen": "2026-11-13T02:11:06.029Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": "title matches \"Java\"",
       "status": "filtered"
     },
@@ -863,7 +975,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490339833/",
       "firstSeen": "2026-11-13T02:11:06.029Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "Senior Full-Stack AI Engineer\n\nBuild production-grade AI applications that support high-impact investment decisions.\n\n\n\n\nWho is Parser?\n\nTechnology alone does not create impact—the right teams do. Founded in 2018, Parser is a boutique technology services and consulting firm helping global organisations solve complex business challenges through digital transformation, product development and AI enablement. We are a fast-growing team of 340+ engineers and consultants across Europe, the Americas and the Middle East. We combine global reach with agility, senior expertise and close collaboration.\n\nWe work as an extension of our clients’ teams, helping them define the right problems, shape solutions and deliver technology-driven outcomes that create measurable business value. Our expertise spans software engineering, AI and data, product development, and customer experience.\n\nIf you want to think beyond execution, take ownership of outcomes, influence decisions and keep learning alongside top-tier specialists in a global environment, we’d love to meet you.\n\n\n\n\nHow will you impact?\n\nYou’ll help build and evolve an AI-enabled investment platform for a sovereign investor managing high-value assets across more than 50 countries.\n\nThe platform supports the investment lifecycle—from origination and due diligence to portfolio monitoring and valuation.\n\nWe value engineers who are resilient, adaptable, proactive, and comfortable operating in fast-paced, high-pressure environments, delivering high-quality software against demanding timelines and evolving priorities.\n\n\n\n\nYour key responsibilities:\n\nDesign, build and deploy production-grade applications using Python, TypeScript/JavaScript, React/Next.js and FastAPI.\nDevelop AI-powered features such as LLM applications, RAG pipelines, vector search, AI agents and document intelligence.\nBuild high-performance APIs, microservices, data integrations and intuitive frontend experiences.\nDeploy and operate containerised applications on Microsoft Azure and Azure Kubernetes Service (AKS), using Infrastructure as Code and CI/CD.\nPrototype and validate AI features, then turn successful experiments into secure, scalable products.\nApply engineering best practices across system design, testing, security, AI guardrails and production observability.\nCollaborate with product, investment, data and technology teams to turn business needs into practical solutions.\nTake end-to-end ownership, troubleshoot production issues and keep delivery moving as priorities evolve.\n\n\n\n\nWhat you’ll bring to the role:\n\nEssential requirements:\n\n8+ years of professional software engineering experience delivering production-grade applications.\nStrong hands-on Full Stack Expertise, particularly advanced Python and TypeScript/JavaScript, with experience in React/Next.js and backend development using FastAPI.\nPractical AI experience, building and deploying LLM-powered applications, RAG systems, vector search and AI agent workflows.\nProduction experience with Microsoft Azure, Docker, Kubernetes—AKS required—and CI/CD.\nAdvanced SQL, database design and API development skills, including experience working with structured and unstructured data.\nFamiliarity with Snowflake, Oracle, Kafka, Event Hubs or large-scale data lakehouse architectures.\nProven end-to-end ownership and the ability to solve complex problems with minimal supervision.\nResilience and adaptability, ability to perform effectively under pressure, manage shifting priorities, and maintain delivery momentum in demanding environments.\nStrong communication, collaboration, and problem-solving skills, with a pragmatic, results-oriented engineering mindset.\n\n\n\n\nDesirable requirements:\n\nExperience in financial services, fintech, investment management, private equity or capital markets technology.\nExperience working in the UAE or wider GCC, with distributed international teams, or on enterprise AI platforms.\nExperience in high-growth startups, AI product companies, or fast-paced engineering teams.\nExposure to advanced agentic AI, LLM evaluation, performance optimisation, and enterprise AI platforms.\n\n\n\n\nLocation & work model\n\nDubai or Abu Dhabi.\n\nHybrid with a requirement to work onsite in Abu Dhabi 3–4 days per week. Specific working arrangements and expectations can be discussed further during the recruitment process.\n\n\n\n\nYou will receive:\n\nThe chance to join a fast-growing organisation changing how software products are built.\nThe opportunity to be part of a multicultural community of technology experts.\nDirect access to greenfield AI projects operating at institutional, global scale.\nThe chance to join an organization with triple-digit growth that is changing the paradigm on how software products are built.\nA highly competitive compensation package.\nMedical insurance\n\n\n\n\nParser is committed to fostering an inclusive workplace and providing equal employment opportunities to all applicants regardless of race, religion, gender, sexual orientation, age, disability or any other protected characteristic under applicable law.\n\nIf you require reasonable accommodations during the recruitment process, please let us know and we will work with you to support your participation.\n\nBy applying to this role, you acknowledge that your personal data will be processed in accordance with Parser’s Privacy Notice for recruitment purposes.\n\nParser may use AI-assisted tools during certain stages of the recruitment process to support operational efficiency. Our recruiting teams use AI to streamline note-taking and scheduling. All hiring decisions are made by people, with human review and oversight.\n\n\n\n\nCome and join our #ParserCommunity.\n\nhttps://parserdigital.com/\n\nFollow us on Linkedin",
       "postedAgo": "12 hours ago",
@@ -1504,7 +1616,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4489642434/",
       "firstSeen": "2026-11-12T02:12:25.968Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "Canonical is a leading provider of open source software and operating systems to the global enterprise and technology markets. Our platform, Ubuntu, is very widely used in breakthrough enterprise initiatives such as public cloud, data science, AI, engineering innovation, and IoT. Our customers include the world's leading public cloud and silicon providers, and industry leaders in many sectors. The company is a pioneer of global distributed collaboration, with 1200+ colleagues in 75+ countries and very few office-based roles. Teams meet two to four times yearly in person, in interesting locations around the world, to align on strategy and execution.\n\nThe company is founder-led, profitable, and growing.\n\nThe role\n\nWe build internal systems to the same standard as our public products: specified, tested, reviewed and observable. We want engineers who enjoy that rigour and take full ownership of what they ship.\n\nWhat You Will Do\n\n\nDesign and deliver systems and platforms, including intuitive UIs\nBuild Go services and APIs that connect many data sources\nDesign data models and architecture for connected systems\nTurn data into clear dashboards and visualisations\nBuild LLM-powered features into everyday workflows\nWrite specs, estimate work and deliver to agreed criteria\nSet a high bar in code review, testing and documentation\nPartner with non-technical colleagues to turn needs into tools\nMentor engineers and improve how the team works\n\n\nWho You Are\n\nYou have deep expertise in at least two of:\n\n\nBack-end services in Go\nModern front-end engineering [React/Svelte/TypeScript]\nData engineering and analytics\nData visualisation\nApplied LLM/ML in production workflows\n\n\nYou Also\n\n\nTreat testing, security, performance and accessibility as part of the job\nHandle sensitive people data with care\nWrite clearly and work well in a distributed team\nOwn your work from first spec to production\n\n\nNice to have: Python, Go, React, Svelte, PostgreSQL, Kubernetes, a history of building tools for HR, finance or operations.\n\nThe ideal candidate will use their passion for experimentation and analytics to build tomorrow’s tech organisation. This team will help us gain insights into the business and our talent pool, and use those insights to improve the experience of working at Canonical.\n\nAs a Workplace Engineer at Canonical, you need an analytical, data-driven mind and a passion to connect and make sense of interesting data from APIs. We focus heavily on the collection of metrics, optimising processes, and ways of working across Canonical. You need to demonstrate leadership, excellence, and consistency and will mentor others in the team.\n\nWhat We Offer Colleagues\n\nWe consider geographical location, experience, and performance in shaping compensation worldwide. We revisit compensation annually (and more often for graduates and associates) to ensure we recognize outstanding performance. In addition to base pay, we offer a performance-driven annual bonus or commission. We provide all team members with additional benefits which reflect our values and ideals. We balance our programs to meet local needs and ensure fairness globally.\n\n\nDistributed work environment with twice-yearly team sprints in person\nPersonal learning and development budget of USD 2,000 per year\nAnnual compensation review\nRecognition rewards\nAnnual holiday leave\nMaternity and paternity leave\nTeam Member Assistance Program & Wellness Platform\nOpportunity to travel to new locations to meet colleagues\nPriority Pass and travel upgrades for long-haul company events\n\n\nAbout Canonical\n\nCanonical is a pioneering tech firm at the forefront of the global move to open source. As the company that publishes Ubuntu, one of the most important open-source projects and the platform for AI, IoT, and the cloud, we are changing the world of software. We recruit on a global basis and set a very high standard for people joining the company. We expect excellence; in order to succeed, we need to be the best at what we do. Most colleagues at Canonical have worked from home since our inception in 2004. Working here is a step into the future and will challenge you to think differently, work smarter, learn new skills, and raise your game.\n\nCanonical is an equal opportunity employer\n\nWe are proud to foster a workplace free from discrimination. Diversity of experience, perspectives, and background create a better work environment and better products. Whatever your identity, we will give your application fair consideration.",
       "postedAgo": "1 day ago",
@@ -1875,7 +1987,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4489316550/",
       "firstSeen": "2026-11-15T02:12:43.163Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "Job Title\n\nFront-End Developer (Angular / React)\n\nJob Scope\n\nWe are looking for a talented Front-End Developer with strong experience in AngularJS, Angular, or ReactJS to build and enhance web applications. The ideal candidate has a solid understanding of modern JavaScript frameworks, UI/UX implementation, and front-end best practices. This role involves collaborating with back-end teams, designing responsive interfaces, and delivering high-quality user experiences.\n\nMain Duties And Responsibilities\n\n\nDevelop, enhance, and maintain front-end features using AngularJS, Angular, or ReactJS.\nBuild responsive, high-performance web applications optimized for all devices.\nCollaborate closely with back-end developers and UI/UX designers to translate requirements into functional interfaces.\nWrite clean, efficient, and reusable code following industry standards.\nIntegrate APIs and ensure seamless front-end/back-end communication.\nTroubleshoot and debug code to resolve performance or usability issues.\nParticipate in code reviews to maintain code quality and consistency.\nOptimize applications for maximum speed and scalability.\nEnsure cross-browser compatibility and adherence to accessibility standards.\nMaintain documentation of front-end components and technical designs.\n\n\n\nPosition Requirements\n\n\nStrong experience with AngularJS, Angular, or ReactJS (at least one framework required).\nProficiency in HTML5, CSS3, JavaScript (ES6+), TypeScript.\nExperience with REST API integration.\nFamiliarity with responsive design and mobile-first development.\nKnowledge of version control systems (e.g., Git).\nUnderstanding of UI/UX principles and front-end architecture.\nStrong problem-solving and debugging skills.\n\n\n\nEducation\n\nBachelor’s degree in Computer Science or equivalent\n\nExperience\n\n\nExperience with state management libraries (Redux, NgRx, MobX, etc.).\nFamiliarity with modern build tools: Webpack, Vite, Gulp, npm, etc.\nKnowledge of unit testing frameworks (Jasmine, Jest, Karma).\nExperience with Agile/Scrum methodologies.\nUnderstanding of CI/CD workflows.",
       "postedAgo": "19 hours ago",
@@ -2223,7 +2335,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4488902387/",
       "firstSeen": "2026-11-14T02:12:59.358Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "Job Purpose\n\nAt Emirates, we believe in connecting the world, to and through, our global hub in Dubai; and in constantly innovating to ensure our customers ‘Fly Better’. Join us in Cosmopolitan Dubai as a Senior Technical Software Engineer – Frontend Development and make your mark on the aviation world!\n\nThe Senior Technical Software Engineer – Frontend Development is a fully participating member of an agile feature team who will help shape and scale modern frontend engineering across the organisation. You’ll bring deep expertise in React, Next.js and TypeScript, with a strong track record of building scalable design systems, accessible component libraries and shared engineering frameworks. From performance, security and automated testing to CI/CD and frontend governance, you’ll champion engineering quality while helping teams adopt modern practices, including AI-assisted development and Figma-to-code workflows.\n\nIn This Role, You Will\n\n\nCollaborate with the team to deliver technical design, development and deployment of complex solutions within relevant product. Carry out effective technical design reviews to ensure that the right architecture patterns are used by the team.\nDrive the adoption of Engineering practices , implement development process automation, lean software development, built-in-quality, test driven development, agile practices, and timely root cause analysis and blameless incident post-mortems.\nPartner with cross-functional teams to determine viability of solutions. Evaluate current problems, future requirements and existing solutions in medium to large projects to enable high level design and drive proof-of-concepts and implement prototypes to validate ideas.\nInvestigate, debug and fix complex issues involving corner cases and rare conditions. Support continuous improvement by investigating alternatives and new technologies and presenting these for architectural review.\nContribute to sprint/work design and planning by providing subject matter expertise on business domain and relevant technologies and actively contribute to technology specific community of practices.\nManage and mentor Software Engineers to allow for skill/knowledge development through advice, coaching, and training opportunities. Responsible for their technical deliveries and adherence to design and coding standards and practices.\nEnsure optimal use of enterprise application platforms, tools and libraries in line with the approved technology architecture.\nResponsible for corrective, adaptive, preventative and perfective maintenance of products in collaboration with other capabilities for the relevant product.\n\n\nQualification\n\nTo be considered for the role you must meet the below requirements:\n\n\nDegree in a relevant field such as Computer Science, Computer Engineering or Software Engineering.\nMinimum of 5+ years of experience in Information Technology.\n\n\nKnowledge And Skills\n\n\nHands-on expertise in React (18/19), Next.js (App Router, Server Components), and TypeScript\nProven track record of architecting scalable design systems, accessible UI component libraries (Storybook, Radix, Tailwind)\nStrong breadth across the modern web stack—including monorepo tooling (Turborepo, pnpm), client-side security (OAuth 2.0/OIDC, CSP), performance tuning, and CI/CD pipelines—with an emphasis on building shared npm packages, design tokens, and CLI scaffolding tools consumed across enterprise teams.\nExperience of developing advanced/Complex technology Software solutions for large, complex organisations in a multi-functional environment.\nSolid experience in data modelling, systems design and expert coder in the technology listed in the skills category\nExperience in providing production support for business solutions using ITIL framework\nExpert in Technology technical evaluation, vendor selection and technology vendor management using data driven models\nImplementation of contemporary engineering practices like lean software development, test driven development, continuous integration and continuous deployment\nEstablishing and managing leveraging technology platforms for DevOps, Code Management, Testing, Continuous Integration and Continuous Deployment for ensuring robust and reliable code base is always maintained.\n\n\nLeadership: No\n\nSalary & benefits\n\nJoin us in Dubai and enjoy an attractive tax-free salary and travel benefits that are exclusive to our industry, including discounts on flights and hotel stays around the world. Find out what it’s like to live and work in our fast-paced, cosmopolitan home city in the Dubai Lifestyle section of our website www.emirates.com/careers.",
       "postedAgo": "20 hours ago",
@@ -2357,7 +2469,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4488772327/",
       "firstSeen": "2026-11-09T02:13:04.769Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-13T02:11:06.029Z",
@@ -2832,7 +2944,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4488496865/",
       "firstSeen": "2026-11-14T02:12:59.358Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "description": "About The Client\n\nOur client is a Dubai-based real estate and hospitality developer creating technology-led, design-driven communities. They combine smart living systems, ambient AI and longevity-focused environments in every project. Digital innovation sits at the core of their customer experience and long-term vision. They are now building a next-generation mobile ecosystem to connect residents, services and intelligent agents.\n\nRole Overview\n\nWe are looking for a Senior Mobile Systems Engineer who views mobile development not just as \"building screens,\" but as architecting the primary interface for Agentic Intelligence. You will build a high-performance Super App that seamlessly integrates financial services, identity and ambient AI.\n\nThis is a hybrid role requiring deep Flutter expertise and strong Backend engineering skills. You will lead the transition from static, menu-driven interfaces to Agentic UIs that leverage Voice (TTS/STT), Vision and Generative UI patterns to anticipate and serve user needs.\n\nKey Responsibilities\n\n\nSuper App Orchestration\nArchitect and maintain a scalable Flutter codebase capable of hosting multiple \"mini-apps\" (Fintech, Lifestyle, Identity) within a single ecosystem\nImplement complex user lifecycles, including SSO (Single Sign-On), multi-factor authentication and tiered KYC (Know Your Customer) workflows\nLead the integration of multi-provider Payment Systems (Apple/Google Pay, Stripe and direct banking APIs)\nAgentic & Conversational Interfaces\nDesign and build Agentic Interfaces where the UI dynamically adapts based on AI-inferred user intent (GenUI)\nImplement low-latency, streaming TTS (Text-to-Speech) and STT (Speech-to-Text) systems for ambient and voice-first interactions\nIntegrate mobile-side AI agents that can perform actions on behalf of the user across different modules of the Super App\nFullstack Engineering\nDevelop and optimise high-concurrency Backend APIs (Python/Node.js/Go) that power the mobile experience\nDesign secure data synchronisation patterns for offline-first capabilities and real-time state management\nManage infrastructure for mobile-specific needs, such as push notification orchestration and OTA (Over-The-Air) updates\nPerformance & Security\nEnsure the Super App maintains a 60fps+ performance profile even with heavy AI and media processing\nImplement rigorous security standards for handling sensitive financial and identity data (biometrics, secure enclave, encrypted storage)\n\n\nRequirements\n\nTechnical Requirements\n\n\nMobile Framework: Flutter (Expert), Dart, Platform Channels (Swift/Kotlin)\nAI Integration: TTS/STT (Whisper, ElevenLabs, Google Cloud Speech), OpenAI/Claude SDKs\nSuper App Features: SSO (OAuth2, OpenID Connect), KYC (Sumsub, Jumio), Payments (Stripe, Adyen)\nBackend: Python (FastAPI/Django) or Node.js, REST/GraphQL, WebSockets\nState Management: Riverpod, Bloc or Signals\nDevOps / Mobile Ops: CI/CD (GitHub Actions, Fastlane), App Store/Play Store automation\nSecurity: JWT, OAuth2, Biometric Auth, ProGuard/R8, SSL Pinning\n\n\nMandatory Keywords: Flutter, Dart, Super App, Backend APIs, TTS/STT, SSO, KYC, Payments\n\nPeripheral Keywords: Swift, Kotlin, Platform Channels, Whisper, ElevenLabs, Google Cloud Speech, OpenAI, Claude, OAuth2, OpenID Connect, Sumsub, Jumio, Stripe, Adyen, Apple Pay, Google Pay, Python, FastAPI, Django, Node.js, Go, REST, GraphQL, WebSockets, Riverpod, Bloc, Signals, CI/CD, GitHub Actions, Fastlane, JWT, Biometric Auth, SSL Pinning, ProGuard, TensorFlow Lite, CoreML, Micro-frontend, GenUI, Agentic UI, Offline-First, Push Notifications\n\nThe \"Modern Take\": What We Expect\n\n\nBeyond the Grid: You don't just build lists and buttons. You think about how an AI agent can \"drive\" the UI for the user\nVoice-Native: You understand the nuances of voice UX: handling interruptions, background noise and emotional prosody in TTS\nSecurity by Design: You treat KYC and Payment flows as mission-critical infrastructure, not just API calls\nProduct Mindset: You bridge the gap between \"what is technically possible\" and \"what feels like magic for the user.\"\n\n\nPreferred Qualifications\n\n\nExperience building apps with 1M+ MAU (Monthly Active Users)\nContributions to the Flutter ecosystem (open-source packages or plugins)\nExperience with on-device ML (TensorFlow Lite, CoreML) for privacy-preserving AI features\nStrong understanding of Micro-frontend or Micro-app architectures in a mobile context\n\n\nWhy Join\n\nWe are moving past the era of \"apps as tools\" into the era of \"apps as partners.\" You will be the lead architect of this transition, building the most sophisticated mobile entry point for agentic systems in the market.\n\nBenefits\n\nCompensation & Benefits\n\n\nCompetitive Tax-Free Salary: A market-leading monthly package in AED, commensurate with experience\nPerformance Incentives: Rewards linked to quality and delivery outcomes, as per Company Internal Policy\nVisa & Medical Insurance: Full UAE visa sponsorship and comprehensive health cover\nPaid Leave: As per Company Internal Policy and UAE Labour Law\nAnnual Flight Ticket & End-of-Service Gratuity: As per UAE market practice and Labour Law\nTop-Tier Tooling: Modern hardware and cloud tools to build and test at scale\nLearning & Career Growth: Certification and conference support, with a clear path to leadership\nAutonomy & Impact: Architect the Super App from the ground up and shape how agentic AI reaches everyday users",
       "postedAgo": "6 days ago",
@@ -3636,7 +3748,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4487496003/",
       "firstSeen": "2026-11-12T02:12:25.968Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-13T02:11:06.029Z",
@@ -4404,7 +4516,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4486646190/",
       "firstSeen": "2026-11-08T02:12:52.470Z",
-      "lastSeen": "2026-11-19T02:12:52.835Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-14T02:12:59.358Z",
@@ -4843,7 +4955,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4486164397/",
       "firstSeen": "2026-11-03T02:13:20.700Z",
-      "lastSeen": "2026-11-18T02:13:01.040Z",
+      "lastSeen": "2026-11-20T02:12:35.220Z",
       "filterReason": null,
       "status": "active",
       "detailsFetchedAt": "2026-11-04T02:11:48.393Z",
@@ -11745,22 +11857,6 @@
         "Employment type": "Full-time",
         "Industries": "IT Services and IT Consulting"
       }
-    },
-    {
-      "id": "4479372512",
-      "title": "Java FullStack Developer",
-      "company": "Ampstek",
-      "location": "Dubai, United Arab Emirates",
-      "posted": "2026-10-16",
-      "salary": "",
-      "queries": [
-        "Senior Frontend Engineer | Dubai, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4479372512/",
-      "firstSeen": "2026-10-18T07:02:09.245Z",
-      "lastSeen": "2026-10-20T07:16:05.149Z",
-      "filterReason": "title matches \"Java\"",
-      "status": "filtered"
     },
     {
       "id": "4479371829",
