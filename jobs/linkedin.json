@@ -1,18 +1,18 @@
 {
-  "fetchedAt": "2026-11-24T02:12:54.669Z",
+  "fetchedAt": "2026-11-25T02:13:23.948Z",
   "blocked": true,
   "searchComplete": false,
   "errors": [
     "blocked (429) on \"Senior Frontend Engineer\" / Dubai, United Arab Emirates"
   ],
-  "count": 623,
+  "count": 622,
   "seenThisRun": 10,
   "adsRead": 0,
   "statusCounts": {
-    "new": 2,
-    "active": 162,
+    "active": 164,
+    "new": 1,
     "filtered": 54,
-    "gone": 405
+    "gone": 403
   },
   "jobs": [
     {
@@ -27,9 +27,9 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4493652049/",
       "firstSeen": "2026-11-24T02:12:54.669Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4493545923",
@@ -97,6 +97,22 @@
       "status": "active"
     },
     {
+      "id": "4492687196",
+      "title": "𝗙𝗿𝗼𝗻𝘁-𝗘𝗻𝗱 𝗥𝗲𝗮𝗰𝘁.𝗷𝘀 + 𝗧𝘆𝗽𝗲𝗦𝗰𝗿𝗶𝗽𝘁 𝗘𝗻𝗴𝗶𝗻𝗲𝗲𝗿 (𝗜𝗻𝘀𝗶𝗱𝗲 𝗨𝗔𝗘 𝗖𝗮𝗻𝗱𝗶𝗱𝗮𝘁𝗲 𝗢𝗻𝗹𝘆)",
+      "company": "Suadeo",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "posted": "2026-11-24",
+      "salary": "",
+      "queries": [
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
+      ],
+      "linkedinUrl": "https://www.linkedin.com/jobs/view/4492687196/",
+      "firstSeen": "2026-11-25T02:13:23.948Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
+      "filterReason": null,
+      "status": "new"
+    },
+    {
       "id": "4492407019",
       "title": "Chief Technology Officer, SC Ventures (MyZoi)",
       "company": "Standard Chartered",
@@ -124,9 +140,9 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4492370740/",
       "firstSeen": "2026-11-24T02:12:54.669Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
-      "status": "new"
+      "status": "active"
     },
     {
       "id": "4492302648",
@@ -283,7 +299,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4491623269/",
       "firstSeen": "2026-11-21T02:12:05.019Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "status": "active"
     },
@@ -406,11 +422,12 @@
       "queries": [
         "Senior Full Stack Engineer | United Arab Emirates",
         "Full Stack Developer Node.js | Dubai, United Arab Emirates",
-        "Lead Engineer JavaScript | United Arab Emirates"
+        "Lead Engineer JavaScript | United Arab Emirates",
+        "Senior Frontend Engineer | Dubai, United Arab Emirates"
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4491539259/",
       "firstSeen": "2026-11-18T02:13:01.040Z",
-      "lastSeen": "2026-11-23T02:14:23.710Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "description": "Role\n\nAs Sokin continues to expand its global payments platform, we're building a talent pipeline of experienced Software engineers to support future hiring needs.\n\nWe are looking for a passionate Senior Engineer who wants to join our growing team, helping us to transform and scale our payments platform.\n\nThis role will involve ownership of the entire engineering lifecycle from concept to production and release, being involved primarily in backend development with contribution to the frontend as well.\n\nAs a Senior team member you will have influence with technical direction, work collaboratively with stakeholders and drive high standards for code quality and performance. To help us drive success and achieve business goals you will be responsible for designing, building, deploying and maintaining new long-term features and services that are both scalable and reliable.\n\n\n\n\nAbout Us\n\nSokin is a next-generation B2B financial services provider, enabling businesses to make and receive global payments with greater speed, lower cost, and total transparency.\n\nOur mission is simple: we’re simplifying global business - so businesses thrive wherever they choose to grow. We deliver services across:\n\n\n\n\n• Global payments and receivables\n\n• Foreign Exchange (FX)\n\n• Treasury management\n\n• Finance reconciliations\n\n\n\n\nWe are rapidly expanding, with established presence in EMEA, APAC, and North America, backed by a strong global infrastructure and industry-leading partners, we are redefining how businesses move money worldwide.\n\nOur clients span industries from sports and entertainment to logistics and travel, and our community is growing rapidly. As we continue to expand, we’re building a team of exceptional people who share our ambition to transform the future of global payments.\n\n\n\n\nKey Responsibilities:\n\nOwn the full lifecycle of software engineering, from initial design and development through deployment, monitoring, and maintenance in production.\nCollaborate with PMs, designers, and cross-functional teams to shape and refine feature requirements, ensuring alignment with business and user needs.\nLead architectural decisions, ensuring that solutions are scalable, maintainable, and aligned with industry best practices.\nDrive the operational success of features by establishing monitoring, alerting, and support processes to ensure reliability and responsiveness.\nMentor and guide junior developers, fostering a culture of ownership, accountability, and continuous improvement within the team.\nParticipate in code reviews, ensuring that team members adhere to high standards for quality, security, and performance.\nActively engage in troubleshooting and incident response to address production issues, continually learning from these experiences to improve future resilience.\nDesign, develop, and maintain full-stack applications using Python, Flask, FastAPI, AWS, Angular and SQL databases.\nOptimize application performance, troubleshoot and resolve complex technical issues.\nStay current with industry trends and emerging technologies, advocating for their application when they benefit the organization.\n\n\n\n\nRequired Qualifications:\n\nMinimum of 5 years of professional software engineering experience, with a proven track record of end-to-end feature ownership and delivery in production environments.\nFamiliarity with modern frameworks, cloud platforms, and CI/CD pipelines that support full lifecycle engineering.\nStrong ability to translate business requirements into technical solutions that are scalable and maintainable.\nExperience managing both the development and operational aspects of software, with a focus on performance, reliability, and scalability.\nExcellent communication skills with the ability to effectively collaborate across technical and non-technical stakeholders.\nA proactive mindset for identifying potential improvements, optimizations, and innovations.\nPrior experience in a senior role with responsibilities for mentoring or guiding other team members.\nBachelor’s degree in Computer Science, Engineering, or a related field (or equivalent experience).\n\n\n\n\nSokin is an equal opportunities employer and committed to maintaining an inclusive work environment. As a growing global startup with bases across multiple countries, we were established on and continue to promote an agile, flexible working culture. Please reach out to discuss any accommodations you may require during the recruitment process.",
       "postedAgo": "1 day ago",
@@ -948,7 +965,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490579926/",
       "firstSeen": "2026-11-20T02:12:35.220Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "status": "active"
     },
@@ -966,7 +983,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4490467375/",
       "firstSeen": "2026-11-18T02:13:01.040Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "description": "JOB PURPOSE\n\n\nWe're looking for a mid-level Front-End Engineer who can move fluidly between web and mobile development. You'll build and maintain applications using React, React Native, and Angular, work with headless CMS platforms and GraphQL APIs, and write clean, type-safe code with TypeScript. Exposure to design tools like Figma, Adobe XD, and experience working within a design system will be a strong advantage. You will work closely with our product, design, and QA teams to deliver scalable, high-quality applications for web and mobile platforms.\n\n\nRESPONSIBILITIES AND DUTIES\nDevelop, maintain, and optimize responsive web applications using React.js/or Angular and Next.js\nBuild and deploy cross-platform mobile applications using React Native and Expo\nDesign and implement RESTful APIs and backend services using Node.js and Express.js.\nIntegrate front-end applications with headless CMS platforms (WordPress).\nCollaborate with designers to create user-friendly interfaces with clean and maintainable code.\nOptimize application performance for maximum speed, scalability, and efficiency.\nTranslate Figma/XD designs into pixel-accurate, responsive UI components.\nIntegrate third-party APIs, authentication systems, and cloud services.\nContribute to and maintain a shared design system/component library across web and mobile.\nParticipate in code reviews, unit testing, and continuous integration/deployment (CI/CD) processes.\nStay updated on emerging technologies and best practices to continuously improve the product.\nKNOWLEDGE, SKILLS AND EXPERIENCE\n3+ years of experience in front-end development with React.js.\nHands-on experience with React Native for mobile app development.\nWorking experience with Angular (recent or prior projects).\nExperience with Next.js for server-side rendering and static site generation.\nSolid understanding of Node.js, Express.js, and REST API design.\nProficiency in JavaScript (ES6+) and familiarity with TypeScript.\nExperience with state management tools like Redux, Zustand, or Context API.\nKnowledge of responsive design, CSS frameworks (Tailwind, Material UI, etc.).\nUnderstanding Git workflows and version control best practices.\nFamiliarity with cloud platforms like AWS, Firebase, or Supabase.\nGood understanding of deployment processes for web and mobile apps.\nAbility to work across both web and mobile front-end codebases as required by project needs.\nExperience with GraphQL (Apollo/Relay).\nFamiliarity with Docker and containerized environments.\nExperience with automated testing tools (Jest, Cypress, Detox).\nKnowledge of CI/CD tools like GitHub Actions, Jenkins, or Bitbucket Pipelines.\nUnderstanding of mobile app publishing for iOS App Store and Google Play Store.\nExposure to WebSockets, real-time data handling, and push notifications.\n\n\nSoft Skills\n\n\nStrong problem-solving and analytical skills.\nAbility to work independently and in a team environment.\nExcellent communication and documentation skills.\nEagerness to learn and adapt to new tools and technologies.\nCOMMUNICATIONS AND WORKING RELATIONSHIPS\n\n\nThe job holder interacts with all Departments within NNHS and other service providers. He/ She must ensure seamless communication between all departments for the smooth operations and to achieve the organizational objective. He/ She must be able to foster strong internal & external communication standards.\n\n\nOPERATING ENVIRONMENT\n\n\nHe/she works in an air-conditioned environment and spends most of the day at desk. The Jobholder’s working hours are flexible as per weekly schedule within the boundaries of the UAE labor law. The job holder is not exposed to any obvious hazards.\n\nStatements in this Job Description are intended to reflect, in general, the duties and responsibilities of the position, but they\n\nare not to be interpreted as totally inclusive. NAS Neuron Heath Services LLC is an equal opportunity employer.\n\nAbout The Cigna Group\n\nDoing something meaningful starts with a simple decision, a commitment to changing lives. At The Cigna Group, we’re dedicated to improving the health and vitality of those we serve. Through our divisions Cigna Healthcare and Evernorth Health Services, we are committed to enhancing the lives of our clients, customers and patients. Join us in driving growth and improving lives.\n\nQualified applicants will be considered without regard to race, color, age, disability, sex, childbirth (including pregnancy) or related medical conditions including but not limited to lactation, sexual orientation, gender identity or expression, veteran or military status, religion, national origin, ancestry, marital or familial status, genetic information, status with regard to public assistance, citizenship status or any other characteristic protected by applicable equal employment opportunity laws.\n\nIf you require reasonable accommodation in completing the online application process, please email: SeeYourselfEMEA@cigna.com for support. Do not email SeeYourselfEMEA@cigna.com for an update on your application or to provide your resume as you will not receive a response.",
       "postedAgo": "1 day ago",
@@ -2240,7 +2257,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4489316550/",
       "firstSeen": "2026-11-15T02:12:43.163Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "description": "Job Title\n\nFront-End Developer (Angular / React)\n\nJob Scope\n\nWe are looking for a talented Front-End Developer with strong experience in AngularJS, Angular, or ReactJS to build and enhance web applications. The ideal candidate has a solid understanding of modern JavaScript frameworks, UI/UX implementation, and front-end best practices. This role involves collaborating with back-end teams, designing responsive interfaces, and delivering high-quality user experiences.\n\nMain Duties And Responsibilities\n\n\nDevelop, enhance, and maintain front-end features using AngularJS, Angular, or ReactJS.\nBuild responsive, high-performance web applications optimized for all devices.\nCollaborate closely with back-end developers and UI/UX designers to translate requirements into functional interfaces.\nWrite clean, efficient, and reusable code following industry standards.\nIntegrate APIs and ensure seamless front-end/back-end communication.\nTroubleshoot and debug code to resolve performance or usability issues.\nParticipate in code reviews to maintain code quality and consistency.\nOptimize applications for maximum speed and scalability.\nEnsure cross-browser compatibility and adherence to accessibility standards.\nMaintain documentation of front-end components and technical designs.\n\n\n\nPosition Requirements\n\n\nStrong experience with AngularJS, Angular, or ReactJS (at least one framework required).\nProficiency in HTML5, CSS3, JavaScript (ES6+), TypeScript.\nExperience with REST API integration.\nFamiliarity with responsive design and mobile-first development.\nKnowledge of version control systems (e.g., Git).\nUnderstanding of UI/UX principles and front-end architecture.\nStrong problem-solving and debugging skills.\n\n\n\nEducation\n\nBachelor’s degree in Computer Science or equivalent\n\nExperience\n\n\nExperience with state management libraries (Redux, NgRx, MobX, etc.).\nFamiliarity with modern build tools: Webpack, Vite, Gulp, npm, etc.\nKnowledge of unit testing frameworks (Jasmine, Jest, Karma).\nExperience with Agile/Scrum methodologies.\nUnderstanding of CI/CD workflows.",
       "postedAgo": "19 hours ago",
@@ -2590,7 +2607,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4488902387/",
       "firstSeen": "2026-11-14T02:12:59.358Z",
-      "lastSeen": "2026-11-24T02:12:54.669Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "description": "Job Purpose\n\nAt Emirates, we believe in connecting the world, to and through, our global hub in Dubai; and in constantly innovating to ensure our customers ‘Fly Better’. Join us in Cosmopolitan Dubai as a Senior Technical Software Engineer – Frontend Development and make your mark on the aviation world!\n\nThe Senior Technical Software Engineer – Frontend Development is a fully participating member of an agile feature team who will help shape and scale modern frontend engineering across the organisation. You’ll bring deep expertise in React, Next.js and TypeScript, with a strong track record of building scalable design systems, accessible component libraries and shared engineering frameworks. From performance, security and automated testing to CI/CD and frontend governance, you’ll champion engineering quality while helping teams adopt modern practices, including AI-assisted development and Figma-to-code workflows.\n\nIn This Role, You Will\n\n\nCollaborate with the team to deliver technical design, development and deployment of complex solutions within relevant product. Carry out effective technical design reviews to ensure that the right architecture patterns are used by the team.\nDrive the adoption of Engineering practices , implement development process automation, lean software development, built-in-quality, test driven development, agile practices, and timely root cause analysis and blameless incident post-mortems.\nPartner with cross-functional teams to determine viability of solutions. Evaluate current problems, future requirements and existing solutions in medium to large projects to enable high level design and drive proof-of-concepts and implement prototypes to validate ideas.\nInvestigate, debug and fix complex issues involving corner cases and rare conditions. Support continuous improvement by investigating alternatives and new technologies and presenting these for architectural review.\nContribute to sprint/work design and planning by providing subject matter expertise on business domain and relevant technologies and actively contribute to technology specific community of practices.\nManage and mentor Software Engineers to allow for skill/knowledge development through advice, coaching, and training opportunities. Responsible for their technical deliveries and adherence to design and coding standards and practices.\nEnsure optimal use of enterprise application platforms, tools and libraries in line with the approved technology architecture.\nResponsible for corrective, adaptive, preventative and perfective maintenance of products in collaboration with other capabilities for the relevant product.\n\n\nQualification\n\nTo be considered for the role you must meet the below requirements:\n\n\nDegree in a relevant field such as Computer Science, Computer Engineering or Software Engineering.\nMinimum of 5+ years of experience in Information Technology.\n\n\nKnowledge And Skills\n\n\nHands-on expertise in React (18/19), Next.js (App Router, Server Components), and TypeScript\nProven track record of architecting scalable design systems, accessible UI component libraries (Storybook, Radix, Tailwind)\nStrong breadth across the modern web stack—including monorepo tooling (Turborepo, pnpm), client-side security (OAuth 2.0/OIDC, CSP), performance tuning, and CI/CD pipelines—with an emphasis on building shared npm packages, design tokens, and CLI scaffolding tools consumed across enterprise teams.\nExperience of developing advanced/Complex technology Software solutions for large, complex organisations in a multi-functional environment.\nSolid experience in data modelling, systems design and expert coder in the technology listed in the skills category\nExperience in providing production support for business solutions using ITIL framework\nExpert in Technology technical evaluation, vendor selection and technology vendor management using data driven models\nImplementation of contemporary engineering practices like lean software development, test driven development, continuous integration and continuous deployment\nEstablishing and managing leveraging technology platforms for DevOps, Code Management, Testing, Continuous Integration and Continuous Deployment for ensuring robust and reliable code base is always maintained.\n\n\nLeadership: No\n\nSalary & benefits\n\nJoin us in Dubai and enjoy an attractive tax-free salary and travel benefits that are exclusive to our industry, including discounts on flights and hotel stays around the world. Find out what it’s like to live and work in our fast-paced, cosmopolitan home city in the Dubai Lifestyle section of our website www.emirates.com/careers.",
       "postedAgo": "20 hours ago",
@@ -10730,33 +10747,6 @@
       "status": "gone"
     },
     {
-      "id": "4480779571",
-      "title": "AI Workflow Engineer",
-      "company": "AppliedAI",
-      "location": "Abu Dhabi, Abu Dhabi Emirate, United Arab Emirates",
-      "posted": "2026-10-21",
-      "salary": "",
-      "queries": [
-        "Shopify Developer | United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4480779571/",
-      "firstSeen": "2026-10-25T02:19:50.751Z",
-      "lastSeen": "2026-10-25T02:19:50.751Z",
-      "filterReason": null,
-      "description": "AI Workflow Engineer\n\nOn-site | Abu Dhabi\n\n\n\n\nAppliedAI Co is a fast-growing Enterprise AI SaaS company delivering mission-critical AI solutions to large-scale enterprise clients across the region and globally. We operate at the intersection of advanced AI, robust cloud infrastructure, and enterprise-grade reliability — and we're building the team to match our ambition.\n\n\n\n\nWe are seeking an AI Workflow Engineer to join our growing team. In this technical, customer-facing role, you will deliver, implement, and support AI-powered workflow automation solutions tailored to client needs.\n\n\n\n\nYou’ll work closely with one of our key strategic partners, collaborating on joint client projects and integration initiatives. This role may require occasional travel to client and partner sites (both local and international) to support project delivery, onboarding, and training.\n\n\n\n\n\n\n\nKey Responsibilities:\n\n\n\n\nTechnical Solution Delivery\n\n\n\n\nLead the technical implementation and configuration of our AI workflow automation platform for customers and partners.\nDesign, build, and deliver PoCs and pilot projects that showcase the value of AI-powered workflows.\nIntegrate our solutions with third-party systems (APIs, web services), focusing on seamless data flow and interoperability.\n\n\n\n\n\n\n\nIntegrations & APIs\n\n\n\n\nWork hands-on with APIs, data connectors, and middleware to enable integration with ERP, CRM, and other enterprise platforms.\nTroubleshoot and resolve integration issues, quickly diagnosing and addressing technical challenges.\n\n\n\n\n\n\n\nPartner & Customer Interaction\n\n\n\n\nCollaborate closely with our strategic partner’s technical and project teams on joint solutions and client engagements.\nEngage with customer technical teams to understand their environments, integration needs, and business processes.\nSupport onboarding, technical training, and enablement sessions for client and partner teams.\nTravel for project delivery, onsite workshops, and partner collaboration.\n\n\n\n\nDocumentation & Handover\n\n\n\n\nPrepare clear technical documentation, integration guides, and handover materials for both customers, partners, and internal teams.\n\n\n\n\n\n\n\nInternal Collaboration\n\n\n\n\nRelay customer and partner feedback to Product and Engineering, helping to drive product improvement.\nStay current on trends in AI, workflow automation, and enterprise system integration.\n\n\n\n\n\n\n\nWhat We’re Looking For:\n\n\n\n\nProven technical background in AI, machine learning, workflow automation, or related fields.\nStrong hands-on experience with system integrations and APIs (REST, SOAP, webhooks, etc.).\nExperience integrating with enterprise platforms (ERP, CRM, HR, finance systems, etc.) is highly desirable.\nAbility to work directly with partner and customer technical teams—solving problems and building trust.\nExcellent troubleshooting, documentation, and communication skills.\nOrganized, proactive, and comfortable managing multiple projects in a fast-paced startup environment.\nWillingness and ability to travel as required for client and partner engagements.\nEagerness to learn, share, and grow with the team.\n\n\n\n\n\n\n\nBonus Points:\n\n\n\n\nHands-on integration experience with major ERP or CRM platforms (e.g., SAP, Oracle, Microsoft Dynamics, Salesforce, etc.).\nFamiliarity with workflow orchestration engines.\nCoding or scripting skills (Python preferred).\nExperience delivering technical workshops or training sessions.\nKnowledge of security and compliance best practices in integrations.\n\n\n\n\n\n\n\nWhat We Offer:\n\n\n\n\nOpportunity to shape the marketing analytics strategy at a leading AI company.\nExposure to cutting-edge AI/ML applications in real-world business contexts.\nCollaborative, innovative, and growth-driven work environment.\nCompetitive compensation, benefits, and career advancement opportunities.",
-      "postedAgo": "3 days ago",
-      "applicants": "Over 200 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Mid-Senior level",
-        "Employment type": "Full-time",
-        "Industries": "IT Services and IT Consulting"
-      },
-      "detailsFetchedAt": "2026-10-25T02:19:50.751Z",
-      "status": "gone"
-    },
-    {
       "id": "4480751497",
       "title": "Zoho Developer",
       "company": "Blue Hat HR Services",
@@ -12641,33 +12631,6 @@
       "status": "gone"
     },
     {
-      "id": "4477589501",
-      "title": "Lead Dotnet Developer",
-      "company": "LTM",
-      "location": "Abu Dhabi Emirate, United Arab Emirates",
-      "posted": "2026-10-12",
-      "salary": "",
-      "queries": [
-        "Frontend Engineer | Abu Dhabi, United Arab Emirates"
-      ],
-      "linkedinUrl": "https://www.linkedin.com/jobs/view/4477589501/",
-      "firstSeen": "2026-10-23T07:05:32.461Z",
-      "lastSeen": "2026-10-25T02:19:50.751Z",
-      "filterReason": null,
-      "status": "gone",
-      "detailsFetchedAt": "2026-10-25T02:19:50.751Z",
-      "description": "Job Description:\n\n\n\n\nDeveloping and configuring software solutions (backend and frontend) - .Net framework\n\n8-10 Years Experience\n\n\n\n\n• Understanding of Software Development Lifecycle: Knowledge of various stages of software development, from requirements gathering and system design to implementation and maintenance.\n\n• Software Design and Development: Designing and developing clean, efficient, and maintainable code for various software applications; including Web-development (if applicable)\n\n• Development platform configuration: Building business applications based on relevant platform\n\n• Database Management: Familiarity with database technologies, SQL, and understanding of how to interact with databases from application side.\n\n• Debugging and resolving technical problems to ensure the software functions correctly.\n\n• Collaboration and Planning: Working collaboratively with other team members\n\n• Documentation: Creating and maintaining comprehensive documentation of code, software functionality, and user documentation.\n\n\n\n\n• .NET framework/technology stack\n\n• Development and version Control tools\n\n• Relevant certifications",
-      "postedAgo": "1 week ago",
-      "applicants": "Over 200 applicants",
-      "closed": false,
-      "applyUrl": "",
-      "criteria": {
-        "Seniority level": "Associate",
-        "Employment type": "Contract",
-        "Industries": "IT Services and IT Consulting"
-      }
-    },
-    {
       "id": "4477525313",
       "title": "AI Forward Deployed Engineer / AI Solutions Engineer",
       "company": "La Fosse",
@@ -13332,7 +13295,7 @@
       ],
       "linkedinUrl": "https://www.linkedin.com/jobs/view/4475573651/",
       "firstSeen": "2026-10-06T08:40:39.461Z",
-      "lastSeen": "2026-11-23T02:14:23.710Z",
+      "lastSeen": "2026-11-25T02:13:23.948Z",
       "filterReason": null,
       "description": "Role Overview:\n\nWe are looking for a Native Arabic-speaking Web Developer to manage and support the Arabic digital experience across our e-commerce platforms. The role requires hands-on experience in website development, campaign enablement, landing page creation, multilingual content management, and technical integrations while ensuring alignment between Arabic and English website experiences.\n\nThe ideal candidate should have strong technical capabilities across web technologies, website administration, hosting environments, and marketing execution support.\n\nKey Responsibilities:\n\nWebsite & Platform Management\n\n\nManage and maintain Arabic website pages ensuring alignment with English website updates.\nDevelop, update, and deploy campaign pages, landing pages, promotional microsites, and seasonal content.\nEnsure website functionality, responsiveness, and multilingual consistency.\nPerform testing across browsers, devices, and operating systems.\nSupport UX improvements and website optimization initiatives.\n\n\nDevelopment & Technical Responsibilities\n\n\nDevelop and maintain web components using:\nHTML5\nCSS3 / Bootstrap\nJavaScript (JS)\nPHP / PSP technologies\nPython\nSupport API integrations and automation workflows.\nTroubleshoot website issues, bugs, and deployment challenges.\nManage CMS and e-commerce environments.\n\n\nMarketing & Campaign Support\n\n\nSupport campaign execution across website and digital channels.\nCreate and optimize landing pages for promotions and campaigns.\nEnable website assets for omnichannel marketing initiatives.\nSupport personalized experiences and marketing automation activities.\n\n\nHosting & Administration\n\n\nManage hosting environments and deployment activities.\nWork with hosting and server environments including:\nWHM / cPanel\nDomain configurations\nEmail configurations\nMonitor website stability and uptime.\n\n\nRequired Qualifications\n\nMandatory Requirements\n\n✔ Native Arabic Speaker (Reading, Writing & Communication)\n\n✔ Bachelor’s degree in Computer Science, IT, Software Engineering, or related field\n\n✔ 2 - 5 years experience in website development / web administration\n\n✔ Experience managing Arabic websites and multilingual content environments\n\nTechnical Skills (Must Have)\n\n\nHTML5\nCSS3 / Bootstrap\nJavaScript (JS)\nPHP / PSP\nPython\nResponsive web development\nCMS management\nLanding page development\nWordPress\nShopify\nJoomla\nSEO optimization\nWHM / cPanel hosting management\nMarketing automation platforms\nUX optimization\nEmail and web push campaign execution\nAPI integration experience\nServer administration knowledge\nPhotoshop / banner editing experience\nConversion optimization exposure\n\n\n________________________________________\n\nPreferred Candidate Profile\n\n\nExperience working with e-commerce websites.\nStrong understanding of campaign operations and marketing workflows.\nAbility to manage multiple website requests simultaneously.\nStrong ownership mindset with ability to work closely with marketing and business stakeholders.\nExperience handling Arabic and English website synchronization.",
       "postedAgo": "19 hours ago",
